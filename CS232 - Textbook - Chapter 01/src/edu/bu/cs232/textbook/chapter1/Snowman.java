@@ -12,7 +12,6 @@ public class Snowman {
 	private int getMargin(int x, int largest, int current) {
 		return (x + (int)((largest - current) / 2.0f));
 	}
-	@SuppressWarnings("unused")
 	public void draw() {
 		int headX = this.getMargin(x, this.skirtSize, this.headSize);
 		int bodyX = this.getMargin(x, this.skirtSize, this.bodySize);
