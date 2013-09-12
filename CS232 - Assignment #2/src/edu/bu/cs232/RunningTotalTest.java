@@ -54,6 +54,9 @@ public class RunningTotalTest {
 	}
 	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void testGetUninitialized() {
+		// Aggregates should be 0 when uninitialized...
+		assertEquals(0.0d, this.runningTotal.getTotal(), RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
+		// ...but rows should be unavailable.
 		this.runningTotal.get(0);
 	}
 	@Test(expected = ArrayIndexOutOfBoundsException.class)

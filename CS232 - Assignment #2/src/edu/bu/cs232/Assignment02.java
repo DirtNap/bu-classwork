@@ -8,13 +8,12 @@ public class Assignment02 {
 		this.inputReader = new InputReader(input);
 	}
 	protected void Main() {
-
+		System.out.println(this.inputReader.readInteger("Enter an int"));
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Assignment02 self = new Assignment02(new Scanner(System.in));
-		self.Main();
+			Assignment02 self = new Assignment02(new Scanner(System.in));
+			self.Main();
 	}
 
 }

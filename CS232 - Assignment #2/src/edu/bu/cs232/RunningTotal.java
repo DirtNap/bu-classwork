@@ -92,17 +92,24 @@ public class RunningTotal implements Iterable<RunningTotal.TotalRow>, Iterator<R
 	}
 
 	// Methods for finding the current value of an aggregate, or the value at a particular point.
+	private double getByIndex(int index, double[] member) {
+		if (index >= 0) {
+			return member[index];
+		} else {
+			return 0;
+		}
+	}
 	public double getTotal(int index) {
-		return this.sums[index];
+		return this.getByIndex(index, this.sums);
 	}
 	public double getAverage(int index) {
-		return this.avgs[index];
+		return this.getByIndex(index, this.avgs);
 	}
 	public double getMin(int index) {
-		return this.mins[index];
+		return this.getByIndex(index, this.mins);
 	}
 	public double getMax(int index) {
-		return this.maxs[index];
+		return this.getByIndex(index, this.maxs);
 	}
 	public double getTotal() {
 		return this.getTotal(this.currentIndex);
@@ -132,23 +139,20 @@ public class RunningTotal implements Iterable<RunningTotal.TotalRow>, Iterator<R
 		return this.get();
 	}
 
-	// Iterable Interface
+	// Iterable Interfaces
 	@Override
 	public Iterator<RunningTotal.TotalRow> iterator() {
 		this.currentIterIndex = -1;
 		return this;
 	}
-
 	@Override
 	public boolean hasNext() {
 		return this.currentIterIndex < this.currentIndex;
 	}
-
 	@Override
 	public TotalRow next() {
 		return this.get(++this.currentIterIndex);
 	}
-
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("remove method not implemented");
