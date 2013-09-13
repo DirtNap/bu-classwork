@@ -8,7 +8,7 @@ public class Assignment02 {
 		this.inputReader = new InputReader(input);
 	}
 	protected void Main() {
-		System.out.println(this.inputReader.readInteger("Enter an int"));
+		System.out.println("M1ke333!D".replaceAll("[^A-Za-z]", ""));
 	}
 
 	public static void main(String[] args) {
