@@ -20,7 +20,9 @@ public class InputReader {
 		this.outputSource = output;
 	}
 	private void prompt(String prompt) {
-		this.outputSource.printf("%s:\t", prompt);
+		if (!prompt.equals("")) {
+			this.outputSource.printf("%s:\t", prompt);
+		}
 	}
 	
 	public int readInteger(String prompt) {

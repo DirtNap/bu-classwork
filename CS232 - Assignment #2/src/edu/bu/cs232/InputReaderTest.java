@@ -45,6 +45,15 @@ public class InputReaderTest {
 	}
 
 	@Test
+	public void testPrompt() {
+		this.builder.append("1\n1\n");
+		this.reader.readInteger("");
+		this.reader.readInteger("prompt");
+		String output = this.byteStream.toString();
+		assertEquals("prompt:\t", output);
+	}
+	
+	@Test
 	public void testReadInteger() {
 		this.builder.append("7\n");
 		assertEquals(7, this.reader.readInteger("prompt"));
