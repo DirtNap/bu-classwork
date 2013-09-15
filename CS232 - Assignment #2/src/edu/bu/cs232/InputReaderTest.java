@@ -141,4 +141,20 @@ public class InputReaderTest {
 		String output = this.byteStream.toString();
 		assert output.contains(InputReader.CHAR_LENGTH_ERROR);
 	}
+
+	@Test
+	public void testReadBoolean() {
+		this.builder.append("Y\nN\nUnknown\nUnknown\n");
+		assertEquals(true, this.reader.readBoolean("prompt"));
+		assertFalse(this.reader.readBoolean("prompt"));
+		assertEquals(true, this.reader.readBoolean("prompt", "Y", "N", true));
+		assertFalse(this.reader.readBoolean("prompt", "Y", "N", false));
+	}
+	@Test
+	public void testReadBooleanError() {
+		this.builder.append("Yes\nY\n");
+		assertEquals(true, this.reader.readBoolean("prompt"));
+		String output = this.byteStream.toString();
+		assert output.lastIndexOf("prompt") > output.indexOf("prompt");
+	}
 }

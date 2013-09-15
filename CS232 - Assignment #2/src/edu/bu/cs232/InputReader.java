@@ -20,8 +20,14 @@ public class InputReader {
 		this.outputSource = output;
 	}
 	private void prompt(String prompt) {
-		if (!prompt.equals("")) {
-			this.outputSource.printf("%s:\t", prompt);
+		this.prompt(prompt, ':');
+	}
+	private void prompt(String prompt, char separator) {
+		switch (prompt) {
+		case "":
+			break;
+		default:
+			this.outputSource.printf("%s%c\t", prompt, separator);
 		}
 	}
 	
@@ -127,5 +133,27 @@ public class InputReader {
 			}
 		}
 		return ret.toString();
+	}
+	public boolean readBoolean(String prompt) {
+		return this.readBoolean(prompt, "Y", "N");
+	}
+	public boolean readBoolean(String prompt, String truePrompt, String falsePrompt) {
+		return this.readBoolean(prompt, truePrompt, falsePrompt, null);
+	}
+	public boolean readBoolean(String prompt, String truePrompt, String falsePrompt, Boolean defaultResult) {
+		this.prompt(String.format("%s (%s/%s)", prompt, truePrompt,  falsePrompt), '?');
+		String input = this.inputSource.next();
+		if (input.toLowerCase().equals(truePrompt.toLowerCase())) { 
+		// switch (input.toLowerCase()) {
+			return true;
+		} else if (input.toLowerCase().equals(falsePrompt.toLowerCase())) {
+			return false;
+		} else {
+			if (defaultResult == null) {
+				return this.readBoolean(prompt, truePrompt, falsePrompt, defaultResult);
+			} else {
+				return defaultResult.booleanValue();
+			}
+		}
 	}
 }
