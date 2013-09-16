@@ -9,7 +9,7 @@ public class InputReader {
 	public static final String STRING_LENGTH_ERROR = "Enter a string with non-zero length (illegal characters may be ignored)";
 	public static final String CHAR_LENGTH_ERROR = "Enter only one character per line (last input ignored)";
 	protected Scanner inputSource;
-	private PrintStream outputSource;
+	protected PrintStream outputSource;
 
 	public InputReader(Scanner input) {
 		this(input, System.out);
