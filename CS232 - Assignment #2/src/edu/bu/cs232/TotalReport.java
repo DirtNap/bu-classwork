@@ -36,4 +36,8 @@ public class TotalReport {
 		this.output.printf(TotalReport.FOOTER_FORMAT, table.getTotal());
 	}
 	
+	public String toString() {
+		return String.format("%s: A report for %s.", this.name, this.owner);
+	}
+	
 }
