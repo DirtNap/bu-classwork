@@ -4,27 +4,38 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.CharBuffer;
-import java.util.Scanner;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class InputReaderTest {
 
-	private class StringSource implements Readable {
+	private class StringSource implements Readable, Closeable {
 		private StringBuilder buffer;
+		private boolean opened;
 		public StringSource(StringBuilder sb) {
 			this.buffer = sb;
+			this.opened = true;
 		}
 		@Override
 		public int read(CharBuffer arg0) throws IOException {
-			String inBuffer = this.buffer.toString();
-			this.buffer.setLength(0);
-			arg0.put(inBuffer);
-			return inBuffer.length();
+			if (this.opened) {
+				String inBuffer = this.buffer.toString();
+				this.buffer.setLength(0);
+				arg0.put(inBuffer);
+				return inBuffer.length();
+			} else {
+				throw new IOException("StringSource not opened.");
+			}
+		}
+		@Override
+		public void close() throws IOException {
+			this.buffer = null;
+			this.opened = false;
 		}
 		
 	}
@@ -32,7 +43,6 @@ public class InputReaderTest {
 	private StringSource input;
 	private ByteArrayOutputStream byteStream;
 	private PrintStream output;
-	private Scanner scanner;
 	private InputReader reader;
 	
 	private StringBuilder builder;
@@ -41,16 +51,16 @@ public class InputReaderTest {
 	public void setUp() throws Exception {
 		this.builder = new StringBuilder();
 		this.input = new InputReaderTest.StringSource(this.builder);
-		this.scanner = new Scanner(this.input);
 		this.byteStream = new ByteArrayOutputStream();
 		this.output = new PrintStream(this.byteStream);
-		this.reader = new InputReader(this.scanner, this.output);
+		this.reader = new InputReader(this.input, this.output);
 	}
 
 	@Test
 	public void testPrompt() {
-		this.builder.append("1\n1\n");
+		this.builder.append("1\n");
 		this.reader.readInteger("");
+		this.builder.append("1\n");
 		this.reader.readInteger("prompt");
 		String output = this.byteStream.toString();
 		assertEquals("prompt:\t", output);
@@ -70,10 +80,13 @@ public class InputReaderTest {
 	}
 	@Test
 	public void testReadBoolean() {
-		this.builder.append("Y\nN\nUnknown\nUnknown\n");
+		this.builder.append("Y\n");
 		assertEquals(true, this.reader.readBoolean("prompt"));
+		this.builder.append("N\n");
 		assertFalse(this.reader.readBoolean("prompt"));
+		this.builder.append("Unknown\n");
 		assertEquals(true, this.reader.readBoolean("prompt", "Y", "N", true));
+		this.builder.append("Unknown\n");
 		assertFalse(this.reader.readBoolean("prompt", "Y", "N", false));
 	}
 	

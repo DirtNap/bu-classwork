@@ -10,20 +10,26 @@ public class InputReader {
 	public static final String CHAR_LENGTH_ERROR = "Enter only one character per line (last input ignored)";
 	protected Scanner inputSource;
 	protected PrintStream outputSource;
+	protected Readable rawInput;
 
-	public InputReader(Scanner input) {
+	public InputReader(Readable input) {
 		this(input, System.out);
 	}
 	
-	public InputReader(Scanner input, PrintStream output) {
-		this.inputSource = input;
+	public InputReader(Readable input, PrintStream output) {
+		this.rawInput = input;
+		this.inputSource = new Scanner(this.rawInput);
 		this.outputSource = output;
 	}
 	
-	private void prompt(String prompt) {
+	protected void refreshInput() {
+		this.inputSource = new Scanner(this.rawInput);
+	}
+	
+	protected void prompt(String prompt) {
 		this.prompt(prompt, ':');
 	}
-	private void prompt(String prompt, char separator) {
+	protected void prompt(String prompt, char separator) {
 		switch (prompt) {
 		case "":
 			break;
@@ -41,19 +47,23 @@ public class InputReader {
 
 	public boolean readBoolean(String prompt, String truePrompt, String falsePrompt, Boolean defaultResult) {
 		this.prompt(String.format("%s (%s/%s)", prompt, truePrompt,  falsePrompt), '?');
-		String input = this.inputSource.next();
-		if (input.toLowerCase().equals(truePrompt.toLowerCase())) { 
-		// switch (input.toLowerCase()) {
-			return true;
-		} else if (input.toLowerCase().equals(falsePrompt.toLowerCase())) {
-			return false;
-		} else {
-			if (defaultResult == null) {
-				return this.readBoolean(prompt, truePrompt, falsePrompt, defaultResult);
+		String input = "";
+		this.refreshInput();
+		while (input.equals("")) {
+			input = this.inputSource.next();
+			if (input.toLowerCase().equals(truePrompt.toLowerCase())) { 
+				return true;
+			} else if (input.toLowerCase().equals(falsePrompt.toLowerCase())) {
+				return false;
 			} else {
-				return defaultResult.booleanValue();
+				if (defaultResult == null) {
+					input = "";
+				} else {
+					return defaultResult.booleanValue();
+				}
 			}
 		}
+		return false; // The compiler doesn't believe the above while loop returns in every case, but it does.
 	}
 	public String readByCharacter(String prompt) {
 		return this.readByCharacter(prompt, false);
@@ -62,6 +72,7 @@ public class InputReader {
 		StringBuilder ret = new StringBuilder();
 		this.prompt(prompt);
 		String chars = "";
+		this.refreshInput();
 		while (! chars.equals("") || ret.length() == 0) {
 			chars = this.inputSource.nextLine();
 			if ((force && chars.length() > 1) || (ret.length() == 0 && chars == "")) {
@@ -79,6 +90,7 @@ public class InputReader {
 		double value = 0.0d;
 		String input = "";
 		this.prompt(prompt);
+		this.refreshInput();
 		while (input == "") {
 			String error = InputReader.NUMBER_ERROR;
 			input = this.inputSource.next();
@@ -106,6 +118,7 @@ public class InputReader {
 		int value = 0;
 		String input = "";
 		this.prompt(prompt);
+		this.refreshInput();
 		while (input == "") {
 			String error = InputReader.INTEGER_ERROR;
 			input = this.inputSource.next();
@@ -133,6 +146,7 @@ public class InputReader {
 	public String readWord(String prompt, String pattern, String replacement, boolean byCharacter, boolean forceCharacter) {
 		String value = "";
 		this.prompt(prompt);
+		this.refreshInput();
 		while (value == "") {
 			if (byCharacter) {
 				value = this.readByCharacter("", forceCharacter);
