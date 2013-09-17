@@ -1,6 +1,6 @@
 package edu.bu.cs232;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,53 +18,6 @@ public class RunningTotalTest {
 	}
 
 	@Test
-	public void testLength() {
-		assertEquals(0, this.runningTotal.length());
-		int ct = 0;
-		this.runningTotal.append(++ct);
-		this.runningTotal.append(++ct);
-		assertEquals(ct, this.runningTotal.length());
-	}
-
-	@Test
-	public void testAppendDouble() {
-		this.runningTotal.append(3.14f);
-		this.runningTotal.append(1e+129);
-	}
-
-	@Test
-	public void testAppendLong() {
-		byte b = 1;
-		this.runningTotal.append(b);
-		this.runningTotal.append(3000000000L);
-	}
-	
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
-	public void testAllocation() {
-		for (int i = 0; i <= 51; ++i) {
-			this.runningTotal.append(i);
-		}
-	}
-	@Test
-	public void testGet() {
-		double x = 123.789d;
-		this.runningTotal.append(x);
-		RunningTotal.TotalRow tr = this.runningTotal.get(0);
-		Assert.assertEquals(x, tr.inputNumber, RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
-	}
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
-	public void testGetUninitialized() {
-		// Aggregates should be 0 when uninitialized...
-		assertEquals(0.0d, this.runningTotal.getTotal(), RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
-		// ...but rows should be unavailable.
-		this.runningTotal.get(0);
-	}
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
-	public void testGetOutOfBounds() {
-		this.runningTotal.append(6);
-		this.runningTotal.get(this.runningTotal.length());
-	}
-	@Test
 	public void testAggregation() {
 		this.runningTotal.append(3);
 		this.runningTotal.append(4);
@@ -79,6 +32,45 @@ public class RunningTotalTest {
 		assertEquals(3.0d, this.runningTotal.getMin(1), RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
 		assertEquals(4.0d, this.runningTotal.getMax(1), RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
 	}
+
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void testAllocation() {
+		for (int i = 0; i <= 51; ++i) {
+			this.runningTotal.append(i);
+		}
+	}
+
+	@Test
+	public void testAppendDouble() {
+		this.runningTotal.append(3.14f);
+		this.runningTotal.append(1e+129);
+	}
+	
+	@Test
+	public void testAppendLong() {
+		byte b = 1;
+		this.runningTotal.append(b);
+		this.runningTotal.append(3000000000L);
+	}
+	@Test
+	public void testGet() {
+		double x = 123.789d;
+		this.runningTotal.append(x);
+		RunningTotal.TotalRow tr = this.runningTotal.get(0);
+		Assert.assertEquals(x, tr.inputNumber, RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
+	}
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void testGetOutOfBounds() {
+		this.runningTotal.append(6);
+		this.runningTotal.get(this.runningTotal.length());
+	}
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void testGetUninitialized() {
+		// Aggregates should be 0 when uninitialized...
+		assertEquals(0.0d, this.runningTotal.getTotal(), RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
+		// ...but rows should be unavailable.
+		this.runningTotal.get(0);
+	}
 	@Test
 	public void testIteration() {
 		double [] vals = { 1.0d, 3.14d, 100.0d, 90.3d };
@@ -89,5 +81,13 @@ public class RunningTotalTest {
 		for (RunningTotal.TotalRow row : this.runningTotal) {
 			assertEquals(vals[index++], row.inputNumber, RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
 		}
+	}
+	@Test
+	public void testLength() {
+		assertEquals(0, this.runningTotal.length());
+		int ct = 0;
+		this.runningTotal.append(++ct);
+		this.runningTotal.append(++ct);
+		assertEquals(ct, this.runningTotal.length());
 	}
 }

@@ -1,6 +1,6 @@
 package edu.bu.cs232;
-import java.util.Scanner;
 import java.io.PrintStream;
+import java.util.Scanner;
 public class InputReader {
 	public static final String INTEGER_ERROR = "Please enter a valid integer";
 	public static final String MIN_VALUE_ERROR = "Enter an integer greater than or equal to %d";
@@ -19,6 +19,7 @@ public class InputReader {
 		this.inputSource = input;
 		this.outputSource = output;
 	}
+	
 	private void prompt(String prompt) {
 		this.prompt(prompt, ':');
 	}
@@ -30,34 +31,47 @@ public class InputReader {
 			this.outputSource.printf("%s%c\t", prompt, separator);
 		}
 	}
-	
-	public int readInteger(String prompt) {
-		return this.readInteger(prompt, Integer.MAX_VALUE);
+
+	public boolean readBoolean(String prompt) {
+		return this.readBoolean(prompt, "Y", "N");
 	}
-	
-	public int readInteger(String prompt, int minValue) {
-		int value = 0;
-		String input = "";
-		this.prompt(prompt);
-		while (input == "") {
-			String error = InputReader.INTEGER_ERROR;
-			input = this.inputSource.next();
-			try {
-				value = Integer.parseInt(input);
-				if (minValue < Integer.MAX_VALUE) {
-					if (value < minValue) {
-						error = String.format(InputReader.MIN_VALUE_ERROR, minValue);
-						throw new NumberFormatException();
-					}
-				}
-			} catch (NumberFormatException ex) {
-				input = "";
-				this.prompt(error);
-			}
-		}
-		return value;
+	public boolean readBoolean(String prompt, String truePrompt, String falsePrompt) {
+		return this.readBoolean(prompt, truePrompt, falsePrompt, null);
 	}
 
+	public boolean readBoolean(String prompt, String truePrompt, String falsePrompt, Boolean defaultResult) {
+		this.prompt(String.format("%s (%s/%s)", prompt, truePrompt,  falsePrompt), '?');
+		String input = this.inputSource.next();
+		if (input.toLowerCase().equals(truePrompt.toLowerCase())) { 
+		// switch (input.toLowerCase()) {
+			return true;
+		} else if (input.toLowerCase().equals(falsePrompt.toLowerCase())) {
+			return false;
+		} else {
+			if (defaultResult == null) {
+				return this.readBoolean(prompt, truePrompt, falsePrompt, defaultResult);
+			} else {
+				return defaultResult.booleanValue();
+			}
+		}
+	}
+	public String readByCharacter(String prompt) {
+		return this.readByCharacter(prompt, false);
+	}
+	public String readByCharacter(String prompt, boolean force) {
+		StringBuilder ret = new StringBuilder();
+		this.prompt(prompt);
+		String chars = "";
+		while (! chars.equals("") || ret.length() == 0) {
+			chars = this.inputSource.nextLine();
+			if ((force && chars.length() > 1) || (ret.length() == 0 && chars == "")) {
+				this.prompt(InputReader.CHAR_LENGTH_ERROR);
+			} else {
+				ret.append(chars);
+			}
+		}
+		return ret.toString();
+	}
 	public double readDouble(String prompt) {
 		return this.readDouble(prompt, false);
 	}
@@ -84,6 +98,32 @@ public class InputReader {
 		return value;
 	}
 
+
+	public int readInteger(String prompt) {
+		return this.readInteger(prompt, Integer.MAX_VALUE);
+	}
+	public int readInteger(String prompt, int minValue) {
+		int value = 0;
+		String input = "";
+		this.prompt(prompt);
+		while (input == "") {
+			String error = InputReader.INTEGER_ERROR;
+			input = this.inputSource.next();
+			try {
+				value = Integer.parseInt(input);
+				if (minValue < Integer.MAX_VALUE) {
+					if (value < minValue) {
+						error = String.format(InputReader.MIN_VALUE_ERROR, minValue);
+						throw new NumberFormatException();
+					}
+				}
+			} catch (NumberFormatException ex) {
+				input = "";
+				this.prompt(error);
+			}
+		}
+		return value;
+	}
 	public String readWord(String prompt) {
 		return this.readWord(prompt, "", "");
 	}
@@ -109,51 +149,12 @@ public class InputReader {
 		}
 		return value; 
 	}
+	
 	public String readAlphaWord(String prompt) {
 		return this.readWord(prompt, "[^a-zA-Z]", "");
 	}
+	
 	public String readAlphaWord(String prompt, boolean byCharacter, boolean forceCharacter) {
 		return this.readWord(prompt, "[^a-zA-Z]", "", byCharacter, forceCharacter);
-	}
-
-
-	public String readByCharacter(String prompt) {
-		return this.readByCharacter(prompt, false);
-	}
-	public String readByCharacter(String prompt, boolean force) {
-		StringBuilder ret = new StringBuilder();
-		this.prompt(prompt);
-		String chars = "";
-		while (! chars.equals("") || ret.length() == 0) {
-			chars = this.inputSource.nextLine();
-			if ((force && chars.length() > 1) || (ret.length() == 0 && chars == "")) {
-				this.prompt(InputReader.CHAR_LENGTH_ERROR);
-			} else {
-				ret.append(chars);
-			}
-		}
-		return ret.toString();
-	}
-	public boolean readBoolean(String prompt) {
-		return this.readBoolean(prompt, "Y", "N");
-	}
-	public boolean readBoolean(String prompt, String truePrompt, String falsePrompt) {
-		return this.readBoolean(prompt, truePrompt, falsePrompt, null);
-	}
-	public boolean readBoolean(String prompt, String truePrompt, String falsePrompt, Boolean defaultResult) {
-		this.prompt(String.format("%s (%s/%s)", prompt, truePrompt,  falsePrompt), '?');
-		String input = this.inputSource.next();
-		if (input.toLowerCase().equals(truePrompt.toLowerCase())) { 
-		// switch (input.toLowerCase()) {
-			return true;
-		} else if (input.toLowerCase().equals(falsePrompt.toLowerCase())) {
-			return false;
-		} else {
-			if (defaultResult == null) {
-				return this.readBoolean(prompt, truePrompt, falsePrompt, defaultResult);
-			} else {
-				return defaultResult.booleanValue();
-			}
-		}
 	}
 }

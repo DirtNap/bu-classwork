@@ -1,7 +1,8 @@
 package edu.bu.cs232;
-import java.io.*;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,10 @@ public class TotalReportTest {
 	private String owner;
 	private String name;
 
+	protected String runReport(TotalReport report) {
+		report.reportTotals(this.runningTotal);
+		return this.byteStream.toString();
+	}
 	@Before
 	public void setUp() throws Exception {
 		this.owner = new String("Michael Donnelly");
@@ -24,16 +29,6 @@ public class TotalReportTest {
 		}
 		this.byteStream = new ByteArrayOutputStream();
 		this.printStream = new PrintStream(this.byteStream);
-	}
-	protected String runReport(TotalReport report) {
-		report.reportTotals(this.runningTotal);
-		return this.byteStream.toString();
-	}
-	@Test
-	public void testTotalReport() {
-		TotalReport tr = new TotalReport(this.owner, this.name, this.printStream);
-		assertEquals(this.owner, tr.getOwner());
-		assertEquals(this.name, tr.getName());
 	}
 	@Test
 	public void testReportRows() {
@@ -46,6 +41,12 @@ public class TotalReportTest {
 			assert position > lastSeen;
 			lastSeen = position;
 		}
+	}
+	@Test
+	public void testTotalReport() {
+		TotalReport tr = new TotalReport(this.owner, this.name, this.printStream);
+		assertEquals(this.owner, tr.getOwner());
+		assertEquals(this.name, tr.getName());
 	}
 
 }
