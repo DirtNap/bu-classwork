@@ -10,30 +10,56 @@ public class InputReader {
 	public static final String CHAR_LENGTH_ERROR = "Enter only one character per line (last input ignored)";
 	protected Scanner inputSource;
 	protected PrintStream outputSource;
-	protected Readable rawInput;
+	protected Readable readableInput;
+	protected java.io.InputStream streamInput;
+	protected InputReader.InputType inputType;
 
 	public InputReader(Readable input) {
 		this(input, System.out);
 	}
 	
 	public InputReader(Readable input, PrintStream output) {
-		this.rawInput = input;
-		this.inputSource = new Scanner(this.rawInput);
+		this.readableInput = input;
+		this.inputType = InputReader.InputType.READABLE;
+		this.setOutput(output);
+		this.refreshInput();
+	}
+	public InputReader(java.io.InputStream input) {
+		this(input, System.out);
+	}
+	
+	public InputReader(java.io.InputStream input, PrintStream output) {
+		this.streamInput = input;
+		this.inputType = InputReader.InputType.INPUT_STREAM;
+		this.setOutput(output);
+		this.refreshInput();
+	}
+	
+	private void setOutput(PrintStream output) {
 		this.outputSource = output;
+	}
+
+	protected enum InputType {
+		INPUT_STREAM, READABLE
 	}
 	
 	protected void refreshInput() {
-		this.inputSource = new Scanner(this.rawInput);
+		switch(this.inputType) {
+		case READABLE:
+			System.out.println(this.inputType);
+			this.inputSource = new Scanner(this.readableInput);
+			break;
+		case INPUT_STREAM:
+			this.inputSource = new Scanner(this.streamInput);
+			break;
+		}
 	}
 	
 	protected void prompt(String prompt) {
 		this.prompt(prompt, ':');
 	}
 	protected void prompt(String prompt, char separator) {
-		switch (prompt) {
-		case "":
-			break;
-		default:
+		if (prompt.length() > 0) {
 			this.outputSource.printf("%s%c\t", prompt, separator);
 		}
 	}
