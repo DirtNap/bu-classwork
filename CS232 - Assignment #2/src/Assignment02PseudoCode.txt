@@ -1,0 +1,23 @@
+* print a prompt for first name
+* read first name from keyboard
+* * strip first name of all non-alpha characters
+* print a prompt for last name
+* until a blank like is entered, collect characters for a last name.
+* * strip last name of all non-alpha characters
+* until the user requests the program ends:
+* * read a line of text for the report name
+* * read an integer of 7 or greater for the number of items in the report
+* * collect an integer value for the report
+* * * display the collected value and running totals
+* * collect a decimal value for the report
+* * * display the collected value and running totals
+* * until the remaining rows in the requested number are processed
+* * * collect a numeric value of any type for the report
+* * * * display the collected value and running totals
+* * Print the report, including:
+* * * report name
+* * * owner's first and last name
+* * * an ordered table of all entered numbers, with running aggregates
+* * * a grand total for the entire report
+* * ask the user if he wishes to continue
+ 

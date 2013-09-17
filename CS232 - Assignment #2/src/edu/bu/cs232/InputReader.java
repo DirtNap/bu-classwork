@@ -46,7 +46,6 @@ public class InputReader {
 	protected void refreshInput() {
 		switch(this.inputType) {
 		case READABLE:
-			System.out.println(this.inputType);
 			this.inputSource = new Scanner(this.readableInput);
 			break;
 		case INPUT_STREAM:
