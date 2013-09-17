@@ -71,7 +71,8 @@ public class InputReader {
 	}
 
 	public boolean readBoolean(String prompt, String truePrompt, String falsePrompt, Boolean defaultResult) {
-		this.prompt(String.format("%s (%s/%s)", prompt, truePrompt,  falsePrompt), '?');
+		String promptOutput = String.format("%s (%s/%s)", prompt, truePrompt,  falsePrompt);
+		this.prompt(promptOutput, '?');
 		String input = "";
 		this.refreshInput();
 		while (input.equals("")) {
@@ -83,6 +84,7 @@ public class InputReader {
 			} else {
 				if (defaultResult == null) {
 					input = "";
+					this.prompt(promptOutput, '?');
 				} else {
 					return defaultResult.booleanValue();
 				}
