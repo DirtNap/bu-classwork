@@ -173,7 +173,7 @@ public class InputReader {
 		String value = "";
 		this.prompt(prompt);
 		this.refreshInput();
-		while (value == "") {
+		while (value.equals("")) {
 			if (byCharacter) {
 				value = this.readByCharacter("", forceCharacter);
 			}else {
@@ -188,6 +188,18 @@ public class InputReader {
 			}
 		}
 		return value; 
+	}
+	public String readLine(String prompt) {
+		String value = "";
+		this.prompt(prompt);
+		this.refreshInput();
+		while (value.equals("")) {
+			value = this.inputSource.nextLine();
+			if (value.length() == 0) {
+				this.prompt(InputReader.STRING_LENGTH_ERROR);
+			}
+		}
+		return value;
 	}
 	
 	public String readAlphaWord(String prompt) {

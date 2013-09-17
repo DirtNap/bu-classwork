@@ -155,6 +155,19 @@ public class InputReaderTest {
 		String output = this.byteStream.toString();
 		assert output.contains(String.format(InputReader.MIN_VALUE_ERROR, 7));
 	}
+
+	@Test
+	public void testReadLine() {
+		String testValue = "multiple tokens";
+		this.builder.append(testValue);
+		this.builder.append("\n");
+		assertEquals(testValue,this.reader.readLine("prompt"));
+		this.builder.append("\n");
+		this.builder.append(testValue);
+		this.builder.append("\n");
+		assertEquals(testValue,this.reader.readLine("prompt"));
+	}
+	
 	@Test
 	public void testReadString() {
 		String testValue = "Testing";
