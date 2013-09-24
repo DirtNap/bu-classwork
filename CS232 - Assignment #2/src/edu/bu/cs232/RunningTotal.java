@@ -55,6 +55,9 @@ public class RunningTotal implements Iterable<RunningTotal.TotalRow>, Iterator<R
 	public void append(double value) {
 		this.append(value, RunningTotal.DECIMAL_FORMAT);
 	}
+	public void append(long value) {
+		this.append((double)value, RunningTotal.INTEGER_FORMAT);
+	}
 	private void append(double value, String format) {
 		++this.currentIndex;
 		this.inputNumbers[this.currentIndex] = value;
@@ -78,9 +81,6 @@ public class RunningTotal implements Iterable<RunningTotal.TotalRow>, Iterator<R
 			}
 		}
 		this.avgs[this.currentIndex] = this.sums[this.currentIndex] / this.length();
-	}
-	public void append(long value) {
-		this.append((double)value, RunningTotal.INTEGER_FORMAT);
 	}
 
 	// Methods for retrieving individual rows.
