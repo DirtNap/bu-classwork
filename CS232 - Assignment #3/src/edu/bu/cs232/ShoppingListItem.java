@@ -68,14 +68,18 @@ public class ShoppingListItem implements Comparable<ShoppingListItem>, Cloneable
 	@Override
 	public boolean equals(Object o) {
 		if (o == null) {
+			// Never equals null
 			return false;
 		}
 		if (this == o) {
+			// Always equals itself
 			return true;
 		}
 		try {
+			// See if it represents the same item.
 			return this.getName().equalsIgnoreCase(((ShoppingListItem)(o)).getName());	
 		} catch (ClassCastException ex) {
+			// Wasn't a ShoppingListItem
 			return false;
 		}
 	}
