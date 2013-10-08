@@ -31,6 +31,40 @@ public class ShoppingListTest {
 		assertEquals(1, sl.length());
 	}
 	@Test
+	public void testPut() {
+		ShoppingList sl = new ShoppingList(3);
+		ShoppingListItem sli1 = new ShoppingListItem("1", 1, 1.0d);
+		ShoppingListItem sli2 = new ShoppingListItem("2", 2, 2.0d);
+		ShoppingListItem sli3 = new ShoppingListItem("3", 3, 3.0d);
+		sl.put(sli3);
+		assertEquals("First item is entered at index 0", sli3, sl.get(0));
+		sl.put(sli2);
+		sl.put(sli1);
+		assertEquals("Sorted item is entered at index 0", sli1, sl.get(0));
+		assertEquals("Checking length", 3, sl.length());
+	}
+	@Test(expected=IllegalArgumentException.class)
+	public void testPutDuplicate() {
+		ShoppingList sl = new ShoppingList(3);
+		ShoppingListItem sli1 = new ShoppingListItem("1", 1, 1.0d);
+		sl.put(sli1);
+		sl.put(sli1);
+	}
+	@Test
+	public void testGet() {
+		ShoppingList sl = new ShoppingList(3);
+		ShoppingListItem sli1 = new ShoppingListItem("1", 1, 1.0d);
+		ShoppingListItem sli2 = new ShoppingListItem("2", 2, 2.0d);
+		ShoppingListItem sli3 = new ShoppingListItem("3", 3, 3.0d);
+		sl.put(sli3);
+		sl.put(sli2);
+		sl.put(sli1);
+		assertEquals("Sorted item is entered at index 0", sli1, sl.get(0));
+		assertEquals("Get object by name", sli2, sl.get("2"));
+		assertEquals("Get index by name", 0, sl.getIndexByName("1"));
+		assertEquals("Checking length", 3, sl.length());
+	}
+	@Test
 	public void testEquality() {
 		ShoppingList sl1 = new ShoppingList(3);
 		ShoppingList sl2 = new ShoppingList(3);

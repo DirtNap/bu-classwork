@@ -20,6 +20,7 @@ public class Shopper {
 		this.randomGenerator = new Random();
 	}
 	protected double getRandomPrice() {
+		// Get a price which is between 80% and 130% of the target price.
 		return this.priceTarget * (0.8f + (this.randomGenerator.nextFloat() * 0.5f)) ;
 	}
 	public ShoppingList getShoppingList() {
