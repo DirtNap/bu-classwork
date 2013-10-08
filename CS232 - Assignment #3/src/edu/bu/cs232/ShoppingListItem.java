@@ -35,7 +35,7 @@ public class ShoppingListItem implements Comparable<ShoppingListItem>, Cloneable
 		return itemPriceCents / 100.0d;
 	}
 	public void setPrice(double itemPrice) {
-		this.itemPriceCents = (int)itemPrice * 100;
+		this.itemPriceCents = (int)(itemPrice * 100);
 		this.hasPrice = true;
 	}
 	public int getPriority() {

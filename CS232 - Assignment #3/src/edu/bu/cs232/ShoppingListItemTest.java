@@ -40,6 +40,12 @@ public class ShoppingListItemTest {
 		assertEquals(12, sli.getPriority());
 	}
 	@Test
+	public void testPrice() {
+		double targetPrice = 2.20d;
+		ShoppingListItem sli = new ShoppingListItem("Name", 1, targetPrice);
+		assertEquals(targetPrice, sli.getPrice(), ShoppingListItemTest.ALLOWABLE_FLOAT_VARIANCE);
+	}
+	@Test
 	public void testEquality() {
 		ShoppingListItem sli = new ShoppingListItem("Name", 1, 2.20d);
 		assertFalse("Testing inequality of null", sli.equals(null));
