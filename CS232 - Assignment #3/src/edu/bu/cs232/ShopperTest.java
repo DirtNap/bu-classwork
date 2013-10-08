@@ -45,4 +45,13 @@ public class ShopperTest {
 		assertEquals(ShoppingList.DEFAULT_ARRAY_SIZE, sObj.length());
 	}
 
+	@Test
+	public void testAddItem() {
+		Shopper sObj = new Shopper(ShoppingList.DEFAULT_ARRAY_SIZE, 59.0d);
+		sObj.addItem("Item 1", 2);
+		sObj.addItem("Item 2", 1, 7.5d);
+		ShoppingList sl = sObj.getShoppingList();
+		assertEquals("Test that random prices are being set to reasonable values", -1,
+				Double.compare(sl.get(0).getPrice(), sl.get(1).getPrice()));
+	}
 }

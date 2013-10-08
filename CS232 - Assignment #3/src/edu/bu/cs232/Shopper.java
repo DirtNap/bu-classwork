@@ -29,5 +29,10 @@ public class Shopper {
 	public int length() {
 		return this.itemCount;
 	}
-	
+	public void addItem(String itemName, int priority) {
+		this.addItem(itemName, priority, this.getRandomPrice());
+	}
+	public void addItem(String itemName, int priority, double price) {
+		this.shoppingList.put(new ShoppingListItem(itemName, priority, price));
+	}
 }
