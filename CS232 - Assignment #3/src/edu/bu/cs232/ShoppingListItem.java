@@ -85,7 +85,7 @@ public class ShoppingListItem implements Comparable<ShoppingListItem>, Cloneable
 	}
 	@Override
 	public int hashCode() {
-		return this.getName().hashCode();
+		return this.getName().toLowerCase().hashCode();
 	}
 	public String toString() {
 		return this.getName();

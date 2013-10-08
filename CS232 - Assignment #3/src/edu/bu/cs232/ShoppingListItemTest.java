@@ -82,12 +82,12 @@ public class ShoppingListItemTest {
 		String name = new String("Test Name");
 		ShoppingListItem sli = new ShoppingListItem(name, 1, 2.20d);
 		assertEquals("", sli.hashCode(), sli.hashCode());
-		assertEquals("", name.hashCode(), sli.hashCode());
+		assertEquals("", name.toLowerCase().hashCode(), sli.hashCode());
 		sli = new ShoppingListItem(name, 2, 2.20d);
-		assertEquals("", name.hashCode(), sli.hashCode());
+		assertEquals("", name.toLowerCase().hashCode(), sli.hashCode());
 		sli = new ShoppingListItem("New Name", 2, 2.20d);
 		assertEquals("", sli.hashCode(), sli.hashCode());
-		assertFalse("",(name.hashCode() == sli.hashCode()));
+		assertFalse("",(name.toLowerCase().hashCode() == sli.hashCode()));
 	}
 	@Test
 	public void testClone() throws CloneNotSupportedException {
