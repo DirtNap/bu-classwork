@@ -82,6 +82,12 @@ public abstract class ListSorter {
 		}
 	}
 
+	
+	
+	public void defaultSort(ShoppingListItem[]  theList) {
+		Arrays.sort(theList);
+	}
+	
 	protected int compareToWithNullsLast(ShoppingListItem item1, ShoppingListItem item2) {
 		try {
 			return item1.compareTo(item2);
