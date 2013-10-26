@@ -13,9 +13,7 @@ public class Shopper {
 
 	public Shopper(int itemCount, double budget) {
 		this.itemCount = itemCount;
-		this.budget = budget;
-		this.targetTotal = (int)(this.budget/0.59f);
-		this.priceTarget = this.targetTotal / this.itemCount;
+		this.setBudget(budget);
 		this.shoppingList = new ShoppingList(this.itemCount);
 		this.randomGenerator = new Random();
 	}
@@ -34,5 +32,44 @@ public class Shopper {
 	}
 	public void addItem(String itemName, int priority, double price) {
 		this.shoppingList.put(new ShoppingListItem(itemName, priority, price));
+	}
+	public double getBudget() {
+		return this.budget;
+	}
+	private void setBudget(double budget) {
+		this.setBudget(budget, true);
+	}
+	private void setBudget(double budget, boolean reset) {
+		this.budget = budget;
+		if (reset) {
+			this.targetTotal = this.budget/0.59f;
+			this.priceTarget = this.targetTotal / this.itemCount;
+		}
+	}
+	public ShoppingList shop() {
+		int purchaseCount = 0;
+		double amountSpent = 0.0d;
+		ShoppingList returnValue, resetValue;
+		for (ShoppingListItem sli : this.getShoppingList()) {
+			if (this.budget >= amountSpent + sli.getPrice()) {
+				purchaseCount++;
+				amountSpent += sli.getPrice();
+			} else {
+				break;
+			}
+		}
+		this.setBudget(this.getBudget() - amountSpent, false);
+		returnValue = new ShoppingList(purchaseCount);
+		resetValue = this.getShoppingList();
+		this.shoppingList = new ShoppingList(this.length());
+		for (int i = 0; i < this.length(); ++i) {
+			ShoppingListItem sli = resetValue.get(i);
+			if (i < purchaseCount) {
+				returnValue.put(sli);
+			} else {
+				this.addItem( sli.getName(), sli.getPriority(), sli.getPrice());
+			}
+		}
+		return returnValue;
 	}
 }
