@@ -1,5 +1,6 @@
 package edu.bu.cs232;
 
+import java.text.NumberFormat;
 import java.util.Random;
 
 public class Shopper {
@@ -62,14 +63,26 @@ public class Shopper {
 		returnValue = new ShoppingList(purchaseCount);
 		resetValue = this.getShoppingList();
 		this.shoppingList = new ShoppingList(this.length());
+		int resetPriority = 0;
 		for (int i = 0; i < this.length(); ++i) {
 			ShoppingListItem sli = resetValue.get(i);
 			if (i < purchaseCount) {
+				sli.setPriority(i + 1);
 				returnValue.put(sli);
 			} else {
-				this.addItem( sli.getName(), sli.getPriority(), sli.getPrice());
+				this.addItem( sli.getName(), ++resetPriority, sli.getPrice());
 			}
 		}
 		return returnValue;
+	}
+	@Override
+	public String toString() {
+		StringBuilder retVal = new StringBuilder();
+		NumberFormat money = NumberFormat.getCurrencyInstance();
+		retVal.append(String.format("Shopping List%nBudget:\t%s%n", money.format(this.getBudget())));
+		retVal.append(this.getShoppingList().toString());
+		retVal.append(String.format("------------------------------------------%nTotal:\t%s%n",
+				money.format(this.getShoppingList().getTotal())));
+		return retVal.toString();
 	}
 }

@@ -1,5 +1,6 @@
 package edu.bu.cs232;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -116,5 +117,27 @@ public class ShoppingList implements Iterator<ShoppingListItem>, Iterable<Shoppi
 			// Wasn't a ShoppingList
 			return false;
 		}
+	}
+	@Override
+	public String toString() {
+		StringBuilder retVal = new StringBuilder();
+		NumberFormat money = NumberFormat.getCurrencyInstance();
+		this.sortItems();
+		for (ShoppingListItem sli : this.listItems) {
+			if (sli != null) {
+				retVal.append(String.format("%d\t%s (%s)%n", sli.getPriority(),
+						sli.getName(), money.format(sli.getPrice())));
+			}
+		}
+		return retVal.toString();
+	}
+	public double getTotal() {
+		double total = 0;
+		for (ShoppingListItem sli : this.listItems) {
+			if (sli != null) {
+				total += sli.getPrice();
+			}
+		}
+		return total;
 	}
 }

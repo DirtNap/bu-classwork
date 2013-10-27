@@ -1,0 +1,20 @@
+* Get information about a shopping list.
+* * Get the number of items (minimum 7)
+* * Get the budget.  The budget will be 59% of the target total for all items.  (Ex:  budget - $59, target total - $100)
+* Get the names of the items for the list
+* * item names must be unique
+* Add the item to the list
+* * Initial priority is the order in which items were added.
+* * Assign random price:
+* * * Divide the target total for all items by the length of the list (ex:  length - 10, target total - $100, item target - $10)
+* * * Choose a price between 75% and 150% of the item target (ex: item target - $10, range: $7.50 - $15.00)
+* Until the user is satisfied:
+* * Display the list, inlcuding priorities, budget and total
+* * Ask if the user wants to change the priority
+* * get the item name and new priority
+* * * Priority *may* be duplicated, and *may* leave a sparse list
+* Purchase the items as the budget permits
+* Display the list of purchased items
+* Display the remaining budget and the remaining items
+* * collapse the priorities of the remaining items. 
+ 
