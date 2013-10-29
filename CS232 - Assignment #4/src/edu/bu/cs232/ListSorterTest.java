@@ -79,6 +79,23 @@ public class ListSorterTest extends ListSorter {
 		this.selectionSort(this.sparseArray);
 		assertNull(this.sparseArray[this.sparseArray.length - 1]);
 	}
+	@Test
+	public void testMergeSparse() {
+		this.mergeSort(this.sparseArray);
+		assertNull(this.sparseArray[this.sparseArray.length - 1]);
+	}
+	
+
+	@Test
+	public void testMergeSort() {
+		Arrays.sort(this.baseArray);
+		this.mergeSort(this.testArray);
+		assertArrayEquals(this.baseArray, this.testArray);
+	}
+	@Test
+	public void testMergeEmpty() {
+		this.mergeSort(this.emptyArray);
+	}
 
 
 	@Test

@@ -3,6 +3,23 @@ package edu.bu.cs232;
 import java.util.Arrays;
 
 public abstract class ListSorter {
+	public void selectionSort(ShoppingListItem[] theList) {
+		for (int i = 0; i < theList.length; ++i) {
+			//Move the smallest to the beginning, and leave it there.
+			int lowest = i;
+			for (int j = i; j < theList.length; ++j) {
+				if (this.compareToWithNullsLast(theList[lowest], theList[j]) > 0) {
+					lowest = j;
+				}
+				if (theList[lowest] == null) {
+					this.exchangeItems(theList, lowest, j);
+				}
+			}
+			if (lowest != i) {
+				this.exchangeItems(theList, i, lowest);
+			}
+		}
+	}
 	public void bubbleSort(ShoppingListItem[] theList) {
 		boolean repeat = true;
 		// If we had to change anything, sort again.
@@ -23,26 +40,6 @@ public abstract class ListSorter {
 				}
 			}
 		}
-	}
-	private int getPivot(ShoppingListItem[] theList) {
-		int result = 0;
-		if (theList.length > 2) {
-			// Find the first target pivot
-			result = theList.length / 2;
-			// If it's null, we won't be able to compare, so first try to find
-			//  a non-null pivot to the left
-			while (result >= 0 && theList[result] == null) {
-				--result;
-			}
-			// If we didn't find a non-null result on the left, try the right
-			if (result < 0) {
-				result = ((theList.length / 2) + 1);
-				while (result < theList.length && theList[result] == null) {
-					++result;
-				}
-			}
-		}
-		return result;
 	}
 	public void quickSort(ShoppingListItem[] theList) {
 		// If the length is less than 2, we don't need to sort
@@ -93,33 +90,105 @@ public abstract class ListSorter {
 			}
 		}
 	}
-
-	public void selectionSort(ShoppingListItem[] theList) {
-		for (int i = 0; i < theList.length; ++i) {
-			//Move the smallest to the beginning, and leave it there.
-			int lowest = i;
-			for (int j = i; j < theList.length; ++j) {
-				if (this.compareToWithNullsLast(theList[lowest], theList[j]) > 0) {
-					lowest = j;
-				}
-				if (theList[lowest] == null) {
-					this.exchangeItems(theList, lowest, j);
-				}
-			}
-			if (lowest != i) {
-				this.exchangeItems(theList, i, lowest);
-			}
-		}
-	}
-	
 	public void defaultSort(ShoppingListItem[]  theList) {
 		Arrays.sort(theList);
 	}
+	public void mergeSort(ShoppingListItem[] theList) {
+		class MergeSort {
+			  private ShoppingListItem[] inputList;
+			  private ShoppingListItem[] swap;
+
+			  private int number;
+
+			  public void sort(ShoppingListItem [] theList) {
+			    this.inputList = theList;
+			    number = this.inputList.length;
+			    this.swap = new ShoppingListItem[number];
+			    mergesort(0, number - 1);
+			  }
+
+			  private void mergesort(int low, int high) {
+			    // check if low is smaller then high, if not then the array is sorted
+			    if (low < high) {
+			      // Get the index of the element which is in the middle
+			      int middle = low + (high - low) / 2;
+			      // Sort the left side of the array
+			      mergesort(low, middle);
+			      // Sort the right side of the array
+			      mergesort(middle + 1, high);
+			      // Combine them both
+			      merge(low, middle, high);
+			    }
+			  }
+
+			  private void merge(int low, int middle, int high) {
+
+			    // Copy both parts into the helper array
+			    for (int i = low; i <= high; i++) {
+			      this.swap[i] = this.inputList[i];
+			    }
+
+			    int i = low;
+			    int j = middle + 1;
+			    int k = low;
+			    // Copy the smallest values from either the left or the right side back
+			    // to the original array
+			    while (i <= middle && j <= high) {
+			      if (ListSorter.this.compareToWithNullsLast(this.swap[i], this.swap[j]) <= 0) {
+			        this.inputList[k] = this.swap[i];
+			        i++;
+			      } else {
+			        this.inputList[k] = this.swap[j];
+			        j++;
+			      }
+			      k++;
+			    }
+			    // Copy the rest of the left side of the array into the target array
+			    while (i <= middle) {
+			      this.inputList[k] = this.swap[i];
+			      k++;
+			      i++;
+			    }
+
+			  }
+			} 
+		MergeSort ms = new MergeSort();
+		ms.sort(theList);
+	}
 	
+	
+	// Utility functions
+	private int getPivot(ShoppingListItem[] theList) {
+		int result = 0;
+		if (theList.length > 2) {
+			// Find the first target pivot
+			result = theList.length / 2;
+			// If it's null, we won't be able to compare, so first try to find
+			//  a non-null pivot to the left
+			while (result >= 0 && theList[result] == null) {
+				--result;
+			}
+			// If we didn't find a non-null result on the left, try the right
+			if (result < 0) {
+				result = ((theList.length / 2) + 1);
+				while (result < theList.length && theList[result] == null) {
+					++result;
+				}
+			}
+		}
+		return result;
+	}
 	protected int compareToWithNullsLast(ShoppingListItem item1, ShoppingListItem item2) {
 		try {
 			return item1.compareTo(item2);
 		} catch (NullPointerException ex) {
+			if (item1 == null) {
+				if (item2 == null) {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
 			return -1;
 		}
 	}
@@ -128,5 +197,7 @@ public abstract class ListSorter {
 		items[index2] = items[index1];
 		items[index1] = sli;
 	}
+
+	// Abstract Methods
 	public abstract void doSorting(ShoppingListItem[] theList);
 }
