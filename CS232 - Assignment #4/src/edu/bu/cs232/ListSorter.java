@@ -24,24 +24,30 @@ public abstract class ListSorter {
 			}
 		}
 	}
-
+	private int getPivot(ShoppingListItem[] theList) {
+		int result = 0;
+		if (theList.length > 2) {
+			// Find the first target pivot
+			result = theList.length / 2;
+			// If it's null, we won't be able to compare, so first try to find
+			//  a non-null pivot to the left
+			while (result >= 0 && theList[result] == null) {
+				--result;
+			}
+			// If we didn't find a non-null result on the left, try the right
+			if (result < 0) {
+				result = ((theList.length / 2) + 1);
+				while (result < theList.length && theList[result] == null) {
+					++result;
+				}
+			}
+		}
+		return result;
+	}
 	public void quickSort(ShoppingListItem[] theList) {
 		// If the length is less than 2, we don't need to sort
 		if (theList.length > 2) {
-			// Find the first target pivot
-			int pivot = theList.length / 2;
-			// If it's null, we won't be able to compare, so first try to find
-			//  a non-null pivot to the left
-			while (pivot >= 0 && theList[pivot] == null) {
-				--pivot;
-			}
-			// If we didn't find a non-null pivot on the left, try the right
-			if (pivot < 0) {
-				pivot = ((theList.length / 2) + 1);
-				while (pivot < theList.length && theList[pivot] == null) {
-					++pivot;
-				}
-			}
+			int pivot = this.getPivot(theList);
 			// If we didn't find any non-null pivot, move on.
 			if (pivot < theList.length) {
 				ShoppingListItem[] less = new ShoppingListItem[theList.length - 1];
