@@ -31,7 +31,13 @@ public class ListSorterTest extends ListSorter {
 	public void testTest() {
 		assertArrayEquals(this.baseArray, this.testArray);
 	}
-	
+
+	@Test
+	public void testBubbleSort() {
+		Arrays.sort(this.baseArray);
+		this.bubbleSort(testArray);
+		assertArrayEquals(this.baseArray, this.testArray);
+	}
 	@Test
 	public void testBubbleEmpty() {
 		this.bubbleSort(this.emptyArray);
@@ -40,12 +46,6 @@ public class ListSorterTest extends ListSorter {
 	public void testBubbleSparse() {
 		this.bubbleSort(this.sparseArray);
 		assertNull(this.sparseArray[this.sparseArray.length - 1]);
-	}
-	@Test
-	public void testBubbleSort() {
-		Arrays.sort(this.baseArray);
-		this.bubbleSort(testArray);
-		assertArrayEquals(this.baseArray, this.testArray);
 	}
 
 	@Test
@@ -60,8 +60,44 @@ public class ListSorterTest extends ListSorter {
 	}
 	@Test
 	public void testQuickSparse() {
-		this.bubbleSort(this.sparseArray);
+		this.quickSort(this.sparseArray);
 		assertNull(this.sparseArray[this.sparseArray.length - 1]);
 	}
 
+	@Test
+	public void testSelectionSort() {
+		Arrays.sort(this.baseArray);
+		this.selectionSort(this.testArray);
+		assertArrayEquals(this.baseArray, this.testArray);
+	}
+	@Test
+	public void testSelectionEmpty() {
+		this.selectionSort(this.emptyArray);
+	}
+	@Test
+	public void testSelectionSparse() {
+		this.selectionSort(this.sparseArray);
+		assertNull(this.sparseArray[this.sparseArray.length - 1]);
+	}
+
+
+	@Test
+	public void testDefaultSort() {
+		Arrays.sort(this.baseArray);
+		this.defaultSort(this.testArray);
+		assertArrayEquals(this.baseArray, this.testArray);
+	}
+	@Test(expected=NullPointerException.class)
+	public void testDefaultEmpty() {
+		this.defaultSort(this.emptyArray);
+	}
+	@Test(expected=NullPointerException.class)
+	public void testDefaultSparse() {
+		this.defaultSort(this.sparseArray);
+	}
+
+	@Override
+	public void doSorting(ShoppingListItem[] theList) {
+		this.defaultSort(theList);
+	}
 }

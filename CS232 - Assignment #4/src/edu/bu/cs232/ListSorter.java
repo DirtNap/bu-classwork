@@ -17,7 +17,7 @@ public abstract class ListSorter {
 				} else {
 					result = this.compareToWithNullsLast(theList[i], theList[next]);
 				}
-				if (result == 1) {
+				if (result > 0) {
 					repeat = true;
 					this.exchangeItems(theList, i, next);
 				}
@@ -45,15 +45,19 @@ public abstract class ListSorter {
 			// If we didn't find any non-null pivot, move on.
 			if (pivot < theList.length) {
 				ShoppingListItem[] less = new ShoppingListItem[theList.length - 1];
-				ShoppingListItem[] more = new ShoppingListItem[theList.length];
-				int ctLess = 0, ctMore = 0;
+				ShoppingListItem[] more = new ShoppingListItem[theList.length - 1];
+				ShoppingListItem[] equal = new ShoppingListItem[theList.length];
+				int ctLess = 0, ctMore = 0, ctEqual = 0;
 				for (int i = 0; i < theList.length; ++i) {
-					if (this.compareToWithNullsLast(theList[pivot], theList[i]) == 1) {
+					if (this.compareToWithNullsLast(theList[pivot], theList[i]) > 0) {
 						less[ctLess++] = theList[i];
-					} else {
+					} else if (this.compareToWithNullsLast(theList[pivot], theList[i]) < 0) {
 						more[ctMore++] = theList[i];
+					} else {
+						equal[ctEqual++] = theList[i];
 					}
 				}
+				equal = Arrays.copyOfRange(equal, 0, ctEqual);
 				if (ctLess >= 0) {
 					less = Arrays.copyOfRange(less, 0, ctLess);
 					this.quickSort(less);
@@ -62,12 +66,14 @@ public abstract class ListSorter {
 					more = Arrays.copyOfRange(more, 0, ctMore);
 					this.quickSort(more);
 				}
-				for (int i = 0; i < theList.length; ++i) {
-					if (i < less.length) {
-						theList[i] = less[i];
-					} else {
-						theList[i] = more[i - less.length];
-					}
+				for (int i = 0; i < less.length; ++i) {
+					theList[i] = less[i];
+				}
+				for (int i = 0; i < equal.length; ++i) {
+					theList[less.length + i] = equal[i];
+				}
+				for (int i = 0; i< more.length; ++i) {
+					theList[less.length + equal.length + i] = more[i];
 				}
 			}
 		} else if (theList.length == 2) {
@@ -75,14 +81,30 @@ public abstract class ListSorter {
 			if (theList[0] == null && theList[1] != null) {
 				this.exchangeItems(theList, 0, 1);
 			} else if (theList[0] != null) {
-				if (this.compareToWithNullsLast(theList[0], theList[1]) == 1) {
+				if (this.compareToWithNullsLast(theList[0], theList[1]) > 0) {
 					this.exchangeItems(theList, 0, 1);
 				}
 			}
 		}
 	}
 
-	
+	public void selectionSort(ShoppingListItem[] theList) {
+		for (int i = 0; i < theList.length; ++i) {
+			//Move the smallest to the beginning, and leave it there.
+			int lowest = i;
+			for (int j = i; j < theList.length; ++j) {
+				if (this.compareToWithNullsLast(theList[lowest], theList[j]) > 0) {
+					lowest = j;
+				}
+				if (theList[lowest] == null) {
+					this.exchangeItems(theList, lowest, j);
+				}
+			}
+			if (lowest != i) {
+				this.exchangeItems(theList, i, lowest);
+			}
+		}
+	}
 	
 	public void defaultSort(ShoppingListItem[]  theList) {
 		Arrays.sort(theList);
@@ -100,4 +122,5 @@ public abstract class ListSorter {
 		items[index2] = items[index1];
 		items[index1] = sli;
 	}
+	public abstract void doSorting(ShoppingListItem[] theList);
 }
