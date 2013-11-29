@@ -110,14 +110,13 @@ public class LList<E> implements List<E> {
 
 		@Override
 		public int nextIndex() {
-			// TODO Auto-generated method stub
-			return 0;
+			return -1;
 		}
 
 		@Override
 		public int previousIndex() {
 			// TODO Auto-generated method stub
-			return 0;
+			return -1;
 		}
 		@Override
 		public void set(T e) {
@@ -215,8 +214,8 @@ public class LList<E> implements List<E> {
 
 	@Override
 	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+		E data = this.remove(this.indexOf(o));
+		return (data != null); 
 	}
 
 	@Override
@@ -231,26 +230,41 @@ public class LList<E> implements List<E> {
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.addAll(this.elementCount - 1, c);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
-		// TODO Auto-generated method stub
-		return false;
+		for (E element : c) {
+			try {
+				this.add(element);
+			} catch (Exception ex) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		for (Object o : c) {
+			try {
+				this.remove(o);
+			} catch (Exception ex) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		for (Object o : this) {
+			if (!c.contains(o)) {
+				this.remove(o);
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -282,14 +296,35 @@ public class LList<E> implements List<E> {
 
 	@Override
 	public void add(int index, E element) {
-		// TODO Auto-generated method stub
-		
+		if (index > this.elementCount) {
+			throw new ArrayIndexOutOfBoundsException();
+		}
+		LListItem<E> follower = this.getListItem(index);
+		LListItem<E> insert = new LListItem<>(element, follower.previous, follower);
+		if (index == 0) {
+			this.first = insert;
+		}
 	}
 
 	@Override
 	public E remove(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		LListItem<E> item = this.getListItem(index);
+		if (item == null) {
+			return null;
+		}
+		if (item.next != null) {
+			item.next.setPrevious(item.previous);
+		}
+		if (item.previous != null) {
+			item.previous.setNext(item.next);
+		}
+		if (this.first == item) {
+			this.first = item.next;
+		}
+		if (this.last == item) {
+			this.last = item.previous;
+		}
+		return item.data;
 	}
 
 	@Override
