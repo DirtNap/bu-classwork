@@ -5,17 +5,21 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class ShoppingList implements Iterator<ShoppingListItem>, Iterable<ShoppingListItem> {
+public class ShoppingList implements SortProvider<ShoppingListItem>,
+									 Iterator<ShoppingListItem>,
+									 Iterable<ShoppingListItem> {
 	public static final int DEFAULT_ARRAY_SIZE = 7;
 	private ShoppingListItem[] listItems;
 	private HashMap<String, Integer> itemIndex;
 	private int currentIndex;
 	private int currentIterIndex;
+	protected SortProvider<ShoppingListItem> sortProvider;
 
 	private ShoppingList(ShoppingListItem [] listItems, boolean existing) {
 		this.listItems = listItems;
 		this.itemIndex = new HashMap<String, Integer>(this.listItems.length);
 		this.currentIndex = 0;
+		this.setSortProvider(this);
 		if (existing) {
 			for (ShoppingListItem sli : listItems) {
 				this.addToItemIndex(sli.getName(), this.currentIndex++);
@@ -49,7 +53,7 @@ public class ShoppingList implements Iterator<ShoppingListItem>, Iterable<Shoppi
 		return index;
 	}
 	protected void sortItems() {
-		Arrays.sort(this.listItems, 0, this.currentIndex);
+		this.getSortProvider().doSorting(this.listItems);
 		for (int i = 0; i < this.currentIndex; ++i) {
 			if (this.addToItemIndex(this.listItems[i].getName(), i)) {
 				throw new RuntimeException("Corrupt map.  Unable to continue");
@@ -139,5 +143,15 @@ public class ShoppingList implements Iterator<ShoppingListItem>, Iterable<Shoppi
 			}
 		}
 		return total;
+	}
+	public SortProvider<ShoppingListItem> getSortProvider() {
+		return sortProvider;
+	}
+	public void setSortProvider(SortProvider<ShoppingListItem> sortProvider) {
+		this.sortProvider = sortProvider;
+	}
+	@Override
+	public void doSorting(ShoppingListItem[] theList) {
+		Arrays.sort(this.listItems, 0, this.currentIndex);
 	}
 }
