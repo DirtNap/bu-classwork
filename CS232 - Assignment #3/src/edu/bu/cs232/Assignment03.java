@@ -30,8 +30,8 @@ public class Assignment03 {
 	
 	public int Main() {
 		int itemCount = this.inputReader.readInteger("How many items are on your list?", 7);
-		double budget = this.inputReader.readDouble("What is your budget?");
-		this.shopper = this.createShopper(itemCount, budget); 
+		double bankAccount = this.inputReader.readDouble("What is your budget?");
+		this.shopper = this.createShopper(itemCount, bankAccount); 
 		this.addItems();
 		System.out.println(this.shopper);
 		while (this.inputReader.readBoolean("Would you like to change priorities?")) {
