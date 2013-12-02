@@ -15,7 +15,7 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 	private int currentIterIndex;
 	protected SortProvider<ShoppingListItem> sortProvider;
 
-	private ShoppingList(ShoppingListItem [] listItems, boolean existing) {
+	protected ShoppingList(ShoppingListItem [] listItems, boolean existing) {
 		this.listItems = listItems;
 		this.itemIndex = new HashMap<String, Integer>(this.listItems.length);
 		this.currentIndex = 0;
