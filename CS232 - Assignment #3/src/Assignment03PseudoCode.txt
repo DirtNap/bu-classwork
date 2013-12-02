@@ -9,7 +9,7 @@
 * * * Divide the target total for all items by the length of the list (ex:  length - 10, target total - $100, item target - $10)
 * * * Choose a price between 75% and 150% of the item target (ex: item target - $10, range: $7.50 - $15.00)
 * Until the user is satisfied:
-* * Display the list, inlcuding priorities, budget and total
+* * Display the list, including priorities, budget and total
 * * Ask if the user wants to change the priority
 * * get the item name and new priority
 * * * Priority *may* be duplicated, and *may* leave a sparse list
