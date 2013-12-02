@@ -85,4 +85,21 @@ public class Shopper {
 				money.format(this.getShoppingList().getTotal())));
 		return retVal.toString();
 	}
+	@Override
+	public boolean equals(Object o) {
+		if (o != null) {
+			if (o == this) {
+				return true;
+			}
+			if (o instanceof Shopper) {
+				Shopper s = (Shopper) o;
+				if (this.getBudget() == s.getBudget()) {
+					if (this.getShoppingList().equals(s.getShoppingList())) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 }

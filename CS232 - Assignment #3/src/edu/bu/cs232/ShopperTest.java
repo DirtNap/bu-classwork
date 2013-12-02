@@ -83,4 +83,21 @@ public class ShopperTest {
 			assertTrue("Un-purchased Items outside of budget", Double.compare(budget, price) < 0);
 		}
 	}
+	@Test
+	public void testEquals() {
+		assertFalse(this.shopper.equals(null));
+		assertFalse(this.shopper.equals("String"));
+		assertTrue(this.shopper.equals(this.shopper));
+		Shopper testShopper = new Shopper(ShoppingList.DEFAULT_ARRAY_SIZE, ShopperTest.DEFAULT_BUDGET);
+		Shopper testRichShopper = new Shopper(ShoppingList.DEFAULT_ARRAY_SIZE, ShopperTest.DEFAULT_BUDGET * 2);
+		for (int i = 0; i < this.shopper.length(); ++i) {
+			String itemName = String.format("Item %d", i);
+			this.shopper.addItem(itemName, i);
+			testShopper.addItem(itemName, i);
+			testRichShopper.addItem(itemName, i);
+		}
+		assertTrue(this.shopper.equals(this.shopper));
+		assertTrue(this.shopper.equals(testShopper));
+		assertFalse(this.shopper.equals(testRichShopper));
+	}
 }
