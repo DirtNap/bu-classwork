@@ -104,13 +104,12 @@ public class ListSorterTest extends ListSorter {
 		this.defaultSort(this.testArray);
 		assertArrayEquals(this.baseArray, this.testArray);
 	}
-	@Test(expected=NullPointerException.class)
 	public void testDefaultEmpty() {
 		this.defaultSort(this.emptyArray);
 	}
-	@Test(expected=NullPointerException.class)
 	public void testDefaultSparse() {
 		this.defaultSort(this.sparseArray);
+		assertNull(this.sparseArray[this.sparseArray.length - 1]);
 	}
 
 	@Override

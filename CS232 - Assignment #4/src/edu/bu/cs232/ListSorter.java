@@ -2,7 +2,18 @@ package edu.bu.cs232;
 
 import java.util.Arrays;
 
-public abstract class ListSorter {
+
+
+/**
+ * @author dirtnap
+ * Abstract class providing a selection of sort types for sorting an array of 
+ * {@link ShoppingListItem} elements.  Unlike traditional implementations, these
+ * sort methods <i>can</i> sort sparse or empty arrays.  <code>null</code> elements
+ * will sort last, and move to the end of the array.
+ * 
+ * @see SortProvider
+ */
+public abstract class ListSorter implements SortProvider<ShoppingListItem> {
 	public void selectionSort(ShoppingListItem[] theList) {
 		for (int i = 0; i < theList.length; ++i) {
 			//Move the smallest to the beginning, and leave it there.
@@ -91,7 +102,17 @@ public abstract class ListSorter {
 		}
 	}
 	public void defaultSort(ShoppingListItem[]  theList) {
-		Arrays.sort(theList);
+		int itemCount = 0;
+		ShoppingListItem[] packedList = new ShoppingListItem[theList.length];
+		for (ShoppingListItem sli : theList) {
+			if (sli != null) {
+				packedList[itemCount++] = sli;
+			}
+		}
+		Arrays.sort(packedList, 0, itemCount);
+		for (int i = 0; i < packedList.length; ++i) {
+			theList[i] = packedList[i];
+		}
 	}
 	public void mergeSort(ShoppingListItem[] theList) {
 		class MergeSort {
@@ -199,5 +220,11 @@ public abstract class ListSorter {
 	}
 
 	// Abstract Methods
+	/**
+	 * Sorts the array using one of the concrete sorting methods provided by this class.
+	 * The particular sorting method is left to the concrete class.
+	 * 
+	 * @param theList the ShoppingListItem array to be sorted 
+	 */
 	public abstract void doSorting(ShoppingListItem[] theList);
 }
