@@ -24,10 +24,14 @@ public class Assignment03 {
 		this.inputReader = reader;
 	}
 
+	protected Shopper createShopper(int itemCount, double budget) {
+		return new Shopper(itemCount, budget);
+	}
+	
 	public int Main() {
 		int itemCount = this.inputReader.readInteger("How many items are on your list?", 7);
 		double budget = this.inputReader.readDouble("What is your budget?");
-		this.shopper = new Shopper(itemCount, budget); 
+		this.shopper = this.createShopper(itemCount, budget); 
 		this.addItems();
 		System.out.println(this.shopper);
 		while (this.inputReader.readBoolean("Would you like to change priorities?")) {
