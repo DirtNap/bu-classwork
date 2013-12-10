@@ -1,0 +1,7 @@
+This program runs according to the semantics described for Assignment 3, and includes the changes made in Assignment 4.
+The difference is that the Shopper class in use is subclassed as ALShopper, a subclass of SortingShopper.  ALShopper is
+functionally identical to Shopper from Assignment 3, except that it creates does the sorting discussed in Assignment 4,
+and creates an ArrayList to be the backing storage for the Shopper.  The SortProvider for this throws a custom exception,
+ArrayListItemMismatchException, if the array passed through the SortProvider interface is different from the contents of the
+ArrayList which backs the ShoppingList.  Display of the shopping list contents and purchased items is done through the
+interface ShoppingListDisplay, which is implemented by ConsoleShoppingListDisplay.
