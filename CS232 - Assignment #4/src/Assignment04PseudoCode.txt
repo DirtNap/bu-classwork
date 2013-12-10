@@ -1,0 +1,8 @@
+This program runs according to the semantics described for Assignment 3.  The difference is that the Shopper class in use is
+subclassed as SortingShopper.  SortingShopper is functionally identical to Shopper from Assignment 3, except that it creates
+a new type of instance implementing the SortProvider interface, called ListSorterSortProvider.  ListSorterSortProvider is the
+concrete implementation of the abstract class ListSorter.  ListSorter implements the SelectionSort, BubbleSort, QuickSort and
+MergeSort sorting algorithms, but extends these algorithms to deal with sparse collections, by moving all "null" elements to
+the end of the array.  The default java implementation Arrays.sort is also wrapped to provide this functionality for sparse
+arrays.  The current code uses the wrapped default sort to sort shopping list items, but this can be changed in the constructor
+of SortingShopper.
