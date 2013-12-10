@@ -11,7 +11,7 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 	public static final int DEFAULT_ARRAY_SIZE = 7;
 	private ShoppingListItem[] listItems;
 	private HashMap<String, Integer> itemIndex;
-	private int currentIndex;
+	protected int currentIndex;
 	private int currentIterIndex;
 	protected SortProvider<ShoppingListItem> sortProvider;
 
@@ -21,10 +21,7 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 		this.currentIndex = 0;
 		this.setSortProvider(this);
 		if (existing) {
-			for (ShoppingListItem sli : listItems) {
-				this.addToItemIndex(sli.getName(), this.currentIndex++);
-			}
-			this.sortItems();
+			this.buildIndex(this.listItems);
 		}
 	}
 	public ShoppingList(ShoppingListItem [] listItems) {
@@ -39,11 +36,17 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 	public int length() {
 		return this.currentIndex;
 	}
+	protected void buildIndex(ShoppingListItem[] listItems) {
+		for (ShoppingListItem sli : listItems) {
+			this.addToItemIndex(sli.getName(), this.currentIndex++);
+		}
+		this.sortItems();
+	}
 	public ShoppingListItem get(int index) {
 		return this.listItems[index];
 	}
 	public ShoppingListItem get(String itemName) {
-		return this.listItems[this.getIndexByName(itemName)];
+		return this.get(this.getIndexByName(itemName));
 	}
 	public int getIndexByName(String itemName) {
 		Integer index = this.itemIndex.get(itemName.toLowerCase());
@@ -52,13 +55,16 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 		}
 		return index;
 	}
-	protected void sortItems() {
-		this.getSortProvider().doSorting(this.listItems);
+	protected void validateItemMap() {
 		for (int i = 0; i < this.currentIndex; ++i) {
-			if (this.addToItemIndex(this.listItems[i].getName(), i)) {
+			if (this.addToItemIndex(this.get(i).getName(), i)) {
 				throw new RuntimeException("Corrupt map.  Unable to continue");
 			}
 		}
+	}
+	protected void sortItems() {
+		this.getSortProvider().doSorting(this.listItems);
+		this.validateItemMap();
 	}
 	protected boolean addToItemIndex(String itemName, Integer index) {
 		Integer previous = this.itemIndex.put(itemName.toLowerCase(), index);
@@ -127,7 +133,7 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 		StringBuilder retVal = new StringBuilder();
 		NumberFormat money = NumberFormat.getCurrencyInstance();
 		this.sortItems();
-		for (ShoppingListItem sli : this.listItems) {
+		for (ShoppingListItem sli : this) {
 			if (sli != null) {
 				retVal.append(String.format("%d\t%s (%s)%n", sli.getPriority(),
 						sli.getName(), money.format(sli.getPrice())));
@@ -137,7 +143,7 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 	}
 	public double getTotal() {
 		double total = 0;
-		for (ShoppingListItem sli : this.listItems) {
+		for (ShoppingListItem sli : this) {
 			if (sli != null) {
 				total += sli.getPrice();
 			}
@@ -152,6 +158,6 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 	}
 	@Override
 	public void doSorting(ShoppingListItem[] theList) {
-		Arrays.sort(this.listItems, 0, this.currentIndex);
+		Arrays.sort(theList, 0, this.currentIndex);
 	}
 }

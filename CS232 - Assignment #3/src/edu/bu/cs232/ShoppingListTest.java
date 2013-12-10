@@ -2,10 +2,13 @@ package edu.bu.cs232;
 
 import static org.junit.Assert.*;
 
+import java.text.NumberFormat;
+
 import org.junit.Before;
 import org.junit.Test;
 
 public class ShoppingListTest {
+	public static final double ALLOWABLE_FLOAT_VARIANCE = 1.0e-10d;
 
 	@Before
 	public void setUp() throws Exception {
@@ -80,6 +83,17 @@ public class ShoppingListTest {
 		assertTrue("Testing equality of different shopping lists with the same items", sl1.equals(sl2));
 	}
 	@Test
+	public void testTotal() {
+		int testCount = 10;
+		ShoppingList sl = new ShoppingList(testCount);
+		double total =  0.0d;
+		for (int i = 0; i < testCount; ++i) {
+			sl.put(new ShoppingListItem(Integer.toString(i), i, i));
+			total += i;
+		}
+		assertEquals(total, sl.getTotal(), ShoppingListTest.ALLOWABLE_FLOAT_VARIANCE);
+	}
+	@Test
 	public void testIterator() {
 		ShoppingListItem[] items = new ShoppingListItem[] {
 				new ShoppingListItem("1", 1, 1.0d),
@@ -92,4 +106,20 @@ public class ShoppingListTest {
 		}
 		assertEquals("Test that we made it through all items", 2, ct);
 	}
+	@Test
+	public void testToString() {
+		int testCount = 10;
+		StringBuilder testString = new StringBuilder();
+		NumberFormat money = NumberFormat.getCurrencyInstance();
+		ShoppingList sl = new ShoppingList(testCount);
+		for (int i = 0; i < testCount; ++i) {
+			ShoppingListItem sli = new ShoppingListItem(Integer.toString(i), i, i); 
+			sl.put(sli);
+			testString.append(String.format("%d\t%s (%s)%n", sli.getPriority(),
+					sli.getName(), money.format(sli.getPrice())));
+
+		}
+		assertEquals(testString.toString(), sl.toString());
+	}
+
 }
