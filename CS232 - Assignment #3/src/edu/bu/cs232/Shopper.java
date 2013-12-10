@@ -15,8 +15,11 @@ public class Shopper {
 	public Shopper(int itemCount, double budget) {
 		this.itemCount = itemCount;
 		this.setBudget(budget);
-		this.shoppingList = new ShoppingList(this.itemCount);
+		this.shoppingList = this.createShoppingList(this.itemCount);
 		this.randomGenerator = new Random();
+	}
+	protected ShoppingList createShoppingList(int itemCount) {
+		return new ShoppingList(itemCount);
 	}
 	protected double getRandomPrice() {
 		// Get a price which is between 80% and 130% of the target price.
