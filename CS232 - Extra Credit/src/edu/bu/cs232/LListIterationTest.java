@@ -50,6 +50,17 @@ public class LListIterationTest extends LListTestBase {
 		li = this.testLList.listIterator(0);
 		assertFalse(li.hasPrevious());
 	}
+	
+	@Test
+	public final void testListIteratorIndexIteratorEquality() {
+		ListIterator<String> li = this.testLList.listIterator();
+		while (li.hasNext()) {
+			assertEquals(this.testLList.get(li.nextIndex()), li.next());
+		}
+		while (li.hasPrevious()) {
+			assertEquals(this.testLList.get(li.previousIndex()), li.previous());
+		}
+	}
 
 	@Test
 	public final void testListIteratorIdentity() {
