@@ -67,18 +67,46 @@ public class LListBasicTest extends LListTestBase {
 		}
 	}
 
+	@Test(expected=ArrayIndexOutOfBoundsException.class)
+	public final void testGetUpperBoundary() {
+		this.testLList.get(this.testLList.size());
+	}
+	
+	@Test(expected=ArrayIndexOutOfBoundsException.class)
+	public final void testGetLowerBoundary() {
+		this.testLList.get(-1);
+	}
+
 	@Test
 	public final void testIndexOf() {
 		for (int i = 0; i < this.testArray.length; ++i) {
 			assertEquals(i, this.testLList.indexOf(this.testArray[i]));
 		}
+		assertEquals(-1, this.testLList.indexOf("Missing"));
 	}
 
+	@Test
+	public final void testRemove() {
+		this.localTestList.add("Test 1");
+		this.localTestList.add("Test 2");
+		this.localTestList.add("Test 3");
+		assertEquals(3, this.localTestList.size());
+		assertTrue(this.localTestList.remove("Test 1"));
+		assertEquals(2, this.localTestList.size());
+		assertEquals("Test 2", this.localTestList.remove(0));
+		assertEquals(1, this.localTestList.size());
+		assertFalse(this.localTestList.remove("Test 4"));
+		assertEquals(1, this.localTestList.size());
+		assertEquals("Test 3", this.localTestList.remove(0));
+		assertEquals(0, this.localTestList.size());
+	}
+	
 	@Test
 	public final void testLastIndexOf() {
 		String unique = "Unique";
 		String repeat1 = "Repeated 1";
 		String repeat2 = "Repeated 2";
+		String missing = "Missing";
 		this.localTestList.add(unique);
 		this.localTestList.add(repeat1);
 		this.localTestList.add(repeat2);
@@ -90,6 +118,8 @@ public class LListBasicTest extends LListTestBase {
 		assertEquals(2, this.localTestList.indexOf(repeat2));
 		assertEquals(3, this.localTestList.lastIndexOf(repeat2));
 		assertEquals(4, this.localTestList.lastIndexOf(repeat1));
+		assertEquals(4, this.localTestList.lastIndexOf(repeat1));
+		assertEquals(-1, this.localTestList.lastIndexOf(missing));
 	}
 
 }
