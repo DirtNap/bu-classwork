@@ -67,12 +67,12 @@ public class LListBasicTest extends LListTestBase {
 		}
 	}
 
-	@Test(expected=ArrayIndexOutOfBoundsException.class)
+	@Test(expected=IndexOutOfBoundsException.class)
 	public final void testGetUpperBoundary() {
 		this.testLList.get(this.testLList.size());
 	}
 	
-	@Test(expected=ArrayIndexOutOfBoundsException.class)
+	@Test(expected=IndexOutOfBoundsException.class)
 	public final void testGetLowerBoundary() {
 		this.testLList.get(-1);
 	}

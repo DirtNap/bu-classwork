@@ -1,14 +1,9 @@
 package edu.bu.cs232;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 
 public class LListTestBase {
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
 
 	protected LList<String> testLList;
 	protected LList<String> localTestList;

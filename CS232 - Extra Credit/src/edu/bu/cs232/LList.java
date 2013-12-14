@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 public class LList<E> implements List<E> {
 	protected class LListItem<T> {
@@ -21,11 +22,10 @@ public class LList<E> implements List<E> {
 			this.setNext(next);
 			this.setPrevious(previous);
 		}
-		
+
 		public T get() {
 			return this.data;
 		}
-		
 		
 		public LListItem<T> setNext(LListItem<T> next) {
 			LListItem<T> result = this.next;
@@ -37,6 +37,41 @@ public class LList<E> implements List<E> {
 			this.previous = previous;
 			return result;
 		}
+
+		protected String getStringRepresentation(LListItem<T> node) {
+			if (null == node) {
+				return "null";
+			} else {
+				T data = node.get();
+				if (null == data) {
+					return "<null>";
+				} else {
+					return data.toString();
+				}
+			}
+		}
+		@Override
+		public String toString() {
+			return String.format("%s <- %s -> %s", this.getStringRepresentation(this.previous),
+											       this.getStringRepresentation(this),
+											       this.getStringRepresentation(this.next));
+		}
+		@Override
+		public boolean equals(Object o) {
+			if (null == o) {
+				return false;
+			}
+			if (this == o) {
+				return true;
+			}
+			try {
+				@SuppressWarnings("unchecked")
+				LListItem<T> node = (LListItem<T>)o;
+				return this.get().equals(node.get());
+			} catch (ClassCastException ex) {
+				return false;
+			}
+		}
 	}
 
 	protected class LListIterator<T> implements Iterator<T> {
@@ -45,7 +80,7 @@ public class LList<E> implements List<E> {
 		protected LListItem<T> next;
 
 		LListIterator(LListItem<T> first) {
-			this.current = first; 
+			this.current = null; 
 			this.next = first;
 		}
 		@Override
@@ -56,7 +91,7 @@ public class LList<E> implements List<E> {
 		@Override
 		public T next() {
 			if (!this.hasNext()) {
-				throw new ArrayIndexOutOfBoundsException();
+				throw new NoSuchElementException();
 			}
 			LListItem<T> result = this.next;
 			this.current = result;
@@ -66,7 +101,16 @@ public class LList<E> implements List<E> {
 
 		@Override
 		public void remove() {
-			throw new UnsupportedOperationException("Remove not available.");
+			if (null == this.current) {
+				throw new IllegalStateException("Element at current position does not exist.");
+			}
+			if (null != this.current.previous) {
+				this.current.previous.next = this.current.previous;
+			}
+			if (null != this.current.next) {
+				this.current.next.previous = this.current.previous;
+			}
+			this.current = null;
 		}
 		
 	}
@@ -88,6 +132,9 @@ public class LList<E> implements List<E> {
 		@Override
 		public T next() {
 			this.previous = this.current;
+			if (null == this.previous) {
+				this.previous = this.next;
+			}
 			return super.next();
 		}
 		
@@ -99,7 +146,7 @@ public class LList<E> implements List<E> {
 		@Override
 		public T previous() {
 			if (!this.hasPrevious()) {
-				throw new ArrayIndexOutOfBoundsException();
+				throw new NoSuchElementException();
 			}
 			LListItem<T> result = this.previous;
 			this.current = result;
@@ -110,22 +157,52 @@ public class LList<E> implements List<E> {
 
 		@Override
 		public int nextIndex() {
-			return -1;
+			if (this.current == null) {
+				return 0;
+			}
+			if (null == this.current.next) {
+				return this.theList.size();
+			}
+			int result = this.theList.indexOf(this.current.next.data);
+			if (0 > result) {
+				throw new IllegalStateException();
+			}
+			return result;
 		}
 
 		@Override
 		public int previousIndex() {
-			// TODO Auto-generated method stub
-			return -1;
+			if (this.current == null) {
+				return this.theList.size() - 1;
+			}
+			if (null == this.current.previous) {
+				return -1;
+			}
+			int result = this.theList.indexOf(this.current.previous.data);
+			if (0 > result) {
+				throw new IllegalStateException();
+			}
+			return result;
 		}
+		@SuppressWarnings("unchecked")
 		@Override
 		public void set(T e) {
-			throw new UnsupportedOperationException("Set not available.");
+			this.current = new LListItem<T>(e, this.current.previous, this.current.next);
+			if (null == this.current.previous) {
+				this.theList.first = (LList<T>.LListItem<T>) this.current;
+			} else {
+				this.current.previous.setNext(this.current);
+			}
+			if (null == this.current.next) {
+				this.theList.last = (LList<T>.LListItem<T>) this.current;
+			} else {
+				this.next.setPrevious(this.current);
+			}
 		}
 
 		@Override
 		public void add(T e) {
-			throw new UnsupportedOperationException("Add not available.");
+			this.theList.add(this.theList.indexOf(this.current.data), e);
 		}
 		
 	}
@@ -182,8 +259,7 @@ public class LList<E> implements List<E> {
 	@Override
 	public <T> T[] toArray(T[] a) {
 		if (a.length < this.elementCount) {
-			a = (T[]) Array.newInstance(a.getClass(), this.elementCount);
-			System.out.println(a.getClass().toString());
+			a = (T[]) Array.newInstance(a.getClass().getComponentType(), this.elementCount);
 		}
 		int i = 0;
 		for (E element : this) {
@@ -214,8 +290,12 @@ public class LList<E> implements List<E> {
 
 	@Override
 	public boolean remove(Object o) {
-		E data = this.remove(this.indexOf(o));
-		return (data != null); 
+		int index = this.indexOf(o);
+		if (-1 == index) {
+			return false;
+		}
+		this.remove(index);
+		return true; 
 	}
 
 	@Override
@@ -230,14 +310,14 @@ public class LList<E> implements List<E> {
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
-		return this.addAll(this.elementCount - 1, c);
+		return this.addAll(this.elementCount, c);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
 		for (E element : c) {
 			try {
-				this.add(element);
+				this.add(index++, element);
 			} catch (Exception ex) {
 				return false;
 			}
@@ -247,38 +327,45 @@ public class LList<E> implements List<E> {
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
+		boolean result = false;
 		for (Object o : c) {
-			try {
-				this.remove(o);
-			} catch (Exception ex) {
-				return false;
+			if (this.remove(o)) {
+				result = true;
 			}
 		}
-		return true;
+		return result;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
+		boolean result = false;
 		for (Object o : this) {
 			if (!c.contains(o)) {
+				result = true;
 				this.remove(o);
 			}
 		}
-		return true;
+		return result;
 	}
 
 	@Override
 	public void clear() {
-		this.elementCount = 0;
+		for (E element : this) {
+			this.remove(element);
+		}
 		this.first = null;
+		this.last = null;
 	}
 
 	protected LListItem<E> getListItem(int index) {
+		if (0 > index || index >= this.elementCount) {
+			throw new IndexOutOfBoundsException();
+		}
 		LListItem<E> current = this.first;
 		for (int i = 1; i <= index; ++i) {
 			current = current.next;
 			if (current == null) {
-				throw new ArrayIndexOutOfBoundsException();
+				throw new IllegalStateException();
 			}
 		}
 		return current;
@@ -291,18 +378,48 @@ public class LList<E> implements List<E> {
 
 	@Override
 	public E set(int index, E element) {
-		return null;
+		if (0 > index || index >= this.elementCount) {
+			throw new IndexOutOfBoundsException();
+		}
+		LListItem<E> node = this.getListItem(index);
+		if (null == node) {
+			throw new IllegalStateException();
+		}
+		E result = node.get();
+		LListItem<E> insert = new LListItem<E>(element, node.previous, node.next);
+		if (this.first == node) {
+			this.first = insert;
+		} else {
+			node.previous.setNext(insert);
+		}
+		if (this.last == node) {
+			this.last = insert;
+		} else {
+			node.next.setPrevious(insert);
+		}
+		return result;
 	}
 
 	@Override
 	public void add(int index, E element) {
-		if (index > this.elementCount) {
-			throw new ArrayIndexOutOfBoundsException();
+		if (0 > index || index > this.elementCount) {
+			throw new IndexOutOfBoundsException();
 		}
-		LListItem<E> follower = this.getListItem(index);
-		LListItem<E> insert = new LListItem<>(element, follower.previous, follower);
-		if (index == 0) {
-			this.first = insert;
+		if (index == this.elementCount) {
+			this.push(element);
+		} else {
+			LListItem<E> follower = this.getListItem(index);
+			LListItem<E> insert = new LListItem<>(element);
+			insert.setPrevious(follower.setPrevious(insert));
+			if (null == insert.previous) {
+				insert.setNext(follower);
+			} else {
+				insert.setNext(insert.previous.setNext(insert));
+			}
+			++this.elementCount;
+			if (index == 0) {
+				this.first = insert;
+			}
 		}
 	}
 
@@ -324,33 +441,43 @@ public class LList<E> implements List<E> {
 		if (this.last == item) {
 			this.last = item.previous;
 		}
+		--this.elementCount;
 		return item.data;
 	}
 
 	@Override
 	public int indexOf(Object o) {
 		int result = -1;
+		boolean found = false;
 		for (E element : this) {
 			++result;
 			if (element.equals(o)) {
+				found = true;
 				break;
 			}
 		}
-		return result;
+		if (found) {
+			return result;
+		}
+		return -1;
 	}
 
 	@Override
 	public int lastIndexOf(Object o) {
-		int result = -1;
+		int result;
+		boolean found = false;
 		LListItem<E> current = this.last;
-		for (int i = this.elementCount - 1; current != null; --i) {
-			result = i;
+		for (result = this.elementCount - 1; current != null; --result) {
 			if (current.data.equals(o)) {
+				found = true;
 				break;
 			}
 			current = current.previous;
 		}
-		return result;
+		if (found) {
+			return result;
+		}
+		return -1;
 	}
 
 	@Override
@@ -371,4 +498,54 @@ public class LList<E> implements List<E> {
 		}
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for (E element : this) {
+			if (first) {
+				first = false;
+			} else {
+				result.append(" <-> ");
+			}
+			if (null == element) {
+				result.append("<null>");
+			} else {
+				result.append(element.toString());
+			}
+		}
+		return result.toString();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (null == o) {
+			return false;
+		}
+		if (this == o) {
+			return true;
+		}
+		try {
+			@SuppressWarnings("unchecked")
+			Collection<E> c = (Collection<E>)o;
+			if (c.size() != this.size()) {
+				return false;
+			}
+			for (E element : this) {
+				if (!c.contains(element)) {
+					return false;
+				}
+			}
+			for (E element : c) {
+				if (!this.contains(element)) {
+					return false;
+				}
+			}
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+	
 }
