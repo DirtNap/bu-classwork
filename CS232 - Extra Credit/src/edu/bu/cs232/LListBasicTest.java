@@ -122,4 +122,18 @@ public class LListBasicTest extends LListTestBase {
 		assertEquals(-1, this.localTestList.lastIndexOf(missing));
 	}
 
+	@Test
+	public final void testSet() {
+		String testString = "Test String";
+		this.testLList.set(3, testString);
+		assertEquals(testString, this.testLList.get(3));
+		this.testLList.set(3, this.testArray[3]);
+		this.testLList.set(0, testString);
+		assertEquals(testString, this.testLList.get(0));
+		for (String s : this.testLList) {
+			assertEquals(testString, s);
+			break;
+		}
+	}
+	
 }
