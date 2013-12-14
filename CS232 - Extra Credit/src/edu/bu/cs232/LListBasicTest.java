@@ -33,6 +33,20 @@ public class LListBasicTest extends LListTestBase {
 	}
 
 	@Test
+	public final void testAddByIndex() {
+		int testElement = 3;
+		for (int i = 0; i < this.testArray.length; ++i) {
+			if (i != testElement) {
+				this.localTestList.add(this.testArray[i]);
+			}
+		}
+		this.localTestList.add(testElement, this.testArray[testElement]);
+		for (int i = 0; i < this.testArray.length; ++i) {
+			assertEquals(this.testArray[i], this.localTestList.get(i));
+		}
+	}
+	
+	@Test
 	public final void testPush() {
 		for (int i = 0; i < this.testArray.length; ++i) {
 			this.localTestList.push(this.testArray[i]);
