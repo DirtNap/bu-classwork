@@ -7,24 +7,6 @@ import org.junit.Test;
 public class LListBasicTest extends LListTestBase {
 
 	@Test
-	public final void testSize() {
-		assertEquals(0, this.localTestList.size());
-		assertEquals(5, this.testLList.size());
-	}
-
-	@Test
-	public final void testIsEmpty() {
-		assertTrue(this.localTestList.isEmpty());
-		assertFalse(this.testLList.isEmpty());
-	}
-
-	@Test
-	public final void testContains() {
-		assertTrue(this.testLList.contains("second"));
-		assertFalse(this.testLList.contains("sixth"));
-	}
-
-	@Test
 	public final void testAdd() {
 		assertTrue(this.localTestList.add("test"));
 		assertEquals("test", this.localTestList.get(0));
@@ -45,14 +27,6 @@ public class LListBasicTest extends LListTestBase {
 			assertEquals(this.testArray[i], this.localTestList.get(i));
 		}
 	}
-	
-	@Test
-	public final void testPush() {
-		for (int i = 0; i < this.testArray.length; ++i) {
-			this.localTestList.push(this.testArray[i]);
-			assertEquals(this.testArray[i], this.localTestList.get(i));
-		}
-	}
 
 	@Test
 	public final void testClear() {
@@ -61,20 +35,26 @@ public class LListBasicTest extends LListTestBase {
 	}
 
 	@Test
+	public final void testContains() {
+		assertTrue(this.testLList.contains("second"));
+		assertFalse(this.testLList.contains("sixth"));
+	}
+
+	@Test
 	public final void testGet() {
 		for (int i = 0; i < this.testArray.length; ++i) {
 			assertEquals(this.testArray[i], this.testLList.get(i));
 		}
 	}
-
-	@Test(expected=IndexOutOfBoundsException.class)
-	public final void testGetUpperBoundary() {
-		this.testLList.get(this.testLList.size());
-	}
 	
 	@Test(expected=IndexOutOfBoundsException.class)
 	public final void testGetLowerBoundary() {
 		this.testLList.get(-1);
+	}
+
+	@Test(expected=IndexOutOfBoundsException.class)
+	public final void testGetUpperBoundary() {
+		this.testLList.get(this.testLList.size());
 	}
 
 	@Test
@@ -86,19 +66,9 @@ public class LListBasicTest extends LListTestBase {
 	}
 
 	@Test
-	public final void testRemove() {
-		this.localTestList.add("Test 1");
-		this.localTestList.add("Test 2");
-		this.localTestList.add("Test 3");
-		assertEquals(3, this.localTestList.size());
-		assertTrue(this.localTestList.remove("Test 1"));
-		assertEquals(2, this.localTestList.size());
-		assertEquals("Test 2", this.localTestList.remove(0));
-		assertEquals(1, this.localTestList.size());
-		assertFalse(this.localTestList.remove("Test 4"));
-		assertEquals(1, this.localTestList.size());
-		assertEquals("Test 3", this.localTestList.remove(0));
-		assertEquals(0, this.localTestList.size());
+	public final void testIsEmpty() {
+		assertTrue(this.localTestList.isEmpty());
+		assertFalse(this.testLList.isEmpty());
 	}
 	
 	@Test
@@ -123,6 +93,30 @@ public class LListBasicTest extends LListTestBase {
 	}
 
 	@Test
+	public final void testPush() {
+		for (int i = 0; i < this.testArray.length; ++i) {
+			this.localTestList.push(this.testArray[i]);
+			assertEquals(this.testArray[i], this.localTestList.get(i));
+		}
+	}
+
+	@Test
+	public final void testRemove() {
+		this.localTestList.add("Test 1");
+		this.localTestList.add("Test 2");
+		this.localTestList.add("Test 3");
+		assertEquals(3, this.localTestList.size());
+		assertTrue(this.localTestList.remove("Test 1"));
+		assertEquals(2, this.localTestList.size());
+		assertEquals("Test 2", this.localTestList.remove(0));
+		assertEquals(1, this.localTestList.size());
+		assertFalse(this.localTestList.remove("Test 4"));
+		assertEquals(1, this.localTestList.size());
+		assertEquals("Test 3", this.localTestList.remove(0));
+		assertEquals(0, this.localTestList.size());
+	}
+	
+	@Test
 	public final void testSet() {
 		String testString = "Test String";
 		this.testLList.set(3, testString);
@@ -134,6 +128,12 @@ public class LListBasicTest extends LListTestBase {
 			assertEquals(testString, s);
 			break;
 		}
+	}
+
+	@Test
+	public final void testSize() {
+		assertEquals(0, this.localTestList.size());
+		assertEquals(5, this.testLList.size());
 	}
 	
 }

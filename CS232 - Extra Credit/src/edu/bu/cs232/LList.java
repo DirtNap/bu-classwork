@@ -9,10 +9,10 @@ import java.util.NoSuchElementException;
 
 public class LList<E> implements List<E> {
 	protected class LListItem<T> {
-		private LListItem<T> next;
-		private LListItem<T> previous;
-		
 		private final T data;
+		private LListItem<T> next;
+		
+		private LListItem<T> previous;
 		
 		public LListItem(T data) {
 			this(data, null, null);
@@ -23,39 +23,6 @@ public class LList<E> implements List<E> {
 			this.setPrevious(previous);
 		}
 
-		public T get() {
-			return this.data;
-		}
-		
-		public LListItem<T> setNext(LListItem<T> next) {
-			LListItem<T> result = this.next;
-			this.next = next;
-			return result;
-		}
-		public LListItem<T> setPrevious(LListItem<T> previous) {
-			LListItem<T> result = this.previous;
-			this.previous = previous;
-			return result;
-		}
-
-		protected String getStringRepresentation(LListItem<T> node) {
-			if (null == node) {
-				return "null";
-			} else {
-				T data = node.get();
-				if (null == data) {
-					return "<null>";
-				} else {
-					return data.toString();
-				}
-			}
-		}
-		@Override
-		public String toString() {
-			return String.format("%s <- %s -> %s", this.getStringRepresentation(this.previous),
-											       this.getStringRepresentation(this),
-											       this.getStringRepresentation(this.next));
-		}
 		@Override
 		public boolean equals(Object o) {
 			if (null == o) {
@@ -71,6 +38,39 @@ public class LList<E> implements List<E> {
 			} catch (ClassCastException ex) {
 				return false;
 			}
+		}
+		
+		public T get() {
+			return this.data;
+		}
+		protected String getStringRepresentation(LListItem<T> node) {
+			if (null == node) {
+				return "null";
+			} else {
+				T data = node.get();
+				if (null == data) {
+					return "<null>";
+				} else {
+					return data.toString();
+				}
+			}
+		}
+
+		public LListItem<T> setNext(LListItem<T> next) {
+			LListItem<T> result = this.next;
+			this.next = next;
+			return result;
+		}
+		public LListItem<T> setPrevious(LListItem<T> previous) {
+			LListItem<T> result = this.previous;
+			this.previous = previous;
+			return result;
+		}
+		@Override
+		public String toString() {
+			return String.format("%s <- %s -> %s", this.getStringRepresentation(this.previous),
+											       this.getStringRepresentation(this),
+											       this.getStringRepresentation(this.next));
 		}
 	}
 
@@ -116,17 +116,27 @@ public class LList<E> implements List<E> {
 	}
 
 	protected class LListListIterator<T> extends LListIterator<T> implements ListIterator<T> {
-		protected LList<T> theList;
 		protected LListItem<T> previous;
+		protected LList<T> theList;
 		
+		@SuppressWarnings("unchecked")
+		LListListIterator(LList<T> theList) {
+			this(theList, (LListItem<T>) theList.getListItem(0));
+		}
 		LListListIterator(LList<T> theList, LListItem<T> first) {
 			super(first);
 			this.theList = theList;
 			this.previous = first.previous;
 		}
-		@SuppressWarnings("unchecked")
-		LListListIterator(LList<T> theList) {
-			this(theList, (LListItem<T>) theList.getListItem(0));
+
+		@Override
+		public void add(T e) {
+			this.theList.add(this.theList.indexOf(this.current.data), e);
+		}
+		
+		@Override
+		public boolean hasPrevious() {
+			return (this.previous != null);
 		}
 
 		@Override
@@ -136,23 +146,6 @@ public class LList<E> implements List<E> {
 				this.previous = this.next;
 			}
 			return super.next();
-		}
-		
-		@Override
-		public boolean hasPrevious() {
-			return (this.previous != null);
-		}
-
-		@Override
-		public T previous() {
-			if (!this.hasPrevious()) {
-				throw new NoSuchElementException();
-			}
-			LListItem<T> result = this.previous;
-			this.current = result;
-			this.next = result.next;
-			this.previous = result.previous;
-			return result.data;
 		}
 
 		@Override
@@ -171,6 +164,17 @@ public class LList<E> implements List<E> {
 		}
 
 		@Override
+		public T previous() {
+			if (!this.hasPrevious()) {
+				throw new NoSuchElementException();
+			}
+			LListItem<T> result = this.previous;
+			this.current = result;
+			this.next = result.next;
+			this.previous = result.previous;
+			return result.data;
+		}
+		@Override
 		public int previousIndex() {
 			if (this.current == null) {
 				return this.theList.size() - 1;
@@ -184,6 +188,7 @@ public class LList<E> implements List<E> {
 			}
 			return result;
 		}
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public void set(T e) {
@@ -198,11 +203,6 @@ public class LList<E> implements List<E> {
 			} else {
 				this.next.setPrevious(this.current);
 			}
-		}
-
-		@Override
-		public void add(T e) {
-			this.theList.add(this.theList.indexOf(this.current.data), e);
 		}
 		
 	}
@@ -226,178 +226,8 @@ public class LList<E> implements List<E> {
 	}
 	
 	@Override
-	public int size() {
-		return this.elementCount;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return (this.elementCount == 0);
-	}
-
-	@Override
-	public boolean contains(Object o) {
-		for (E element : this) {
-			if (element.equals(o)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public Iterator<E> iterator() {
-		return new LListIterator<E>(this.first);
-	}
-
-	@Override
-	public Object[] toArray() {
-		return this.toArray(new Object[this.elementCount]);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T[] toArray(T[] a) {
-		if (a.length < this.elementCount) {
-			a = (T[]) Array.newInstance(a.getClass().getComponentType(), this.elementCount);
-		}
-		int i = 0;
-		for (E element : this) {
-			a[i++] = (T) element;
-		}
-		if (a.length > this.elementCount) {
-			a[this.elementCount] = null;
-		}
-		return a;
-	}
-
-	@Override
 	public boolean add(E e) {
 		return this.push(e);
-	}
-
-	public boolean push(E e) {
-		LListItem<E> item = new LListItem<>(e, this.last, null);
-		if (this.last == null) {
-			this.first = item;
-		} else {
-			this.last.setNext(item);
-		}
-		this.last = item;
-		++this.elementCount;
-		return true;
-	}
-
-	@Override
-	public boolean remove(Object o) {
-		int index = this.indexOf(o);
-		if (-1 == index) {
-			return false;
-		}
-		this.remove(index);
-		return true; 
-	}
-
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		for (E element : this) {
-			if (!c.contains((Object) element)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public boolean addAll(Collection<? extends E> c) {
-		return this.addAll(this.elementCount, c);
-	}
-
-	@Override
-	public boolean addAll(int index, Collection<? extends E> c) {
-		for (E element : c) {
-			try {
-				this.add(index++, element);
-			} catch (Exception ex) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		boolean result = false;
-		for (Object o : c) {
-			if (this.remove(o)) {
-				result = true;
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		boolean result = false;
-		for (Object o : this) {
-			if (!c.contains(o)) {
-				result = true;
-				this.remove(o);
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public void clear() {
-		for (E element : this) {
-			this.remove(element);
-		}
-		this.first = null;
-		this.last = null;
-	}
-
-	protected LListItem<E> getListItem(int index) {
-		if (0 > index || index >= this.elementCount) {
-			throw new IndexOutOfBoundsException();
-		}
-		LListItem<E> current = this.first;
-		for (int i = 1; i <= index; ++i) {
-			current = current.next;
-			if (current == null) {
-				throw new IllegalStateException();
-			}
-		}
-		return current;
-	}
-	
-	@Override
-	public E get(int index) {
-		return this.getListItem(index).data;
-	}
-
-	@Override
-	public E set(int index, E element) {
-		if (0 > index || index >= this.elementCount) {
-			throw new IndexOutOfBoundsException();
-		}
-		LListItem<E> node = this.getListItem(index);
-		if (null == node) {
-			throw new IllegalStateException();
-		}
-		E result = node.get();
-		LListItem<E> insert = new LListItem<E>(element, node.previous, node.next);
-		if (this.first == node) {
-			this.first = insert;
-		} else {
-			node.previous.setNext(insert);
-		}
-		if (this.last == node) {
-			this.last = insert;
-		} else {
-			node.next.setPrevious(insert);
-		}
-		return result;
 	}
 
 	@Override
@@ -424,98 +254,49 @@ public class LList<E> implements List<E> {
 	}
 
 	@Override
-	public E remove(int index) {
-		LListItem<E> item = this.getListItem(index);
-		if (item == null) {
-			return null;
-		}
-		if (item.next != null) {
-			item.next.setPrevious(item.previous);
-		}
-		if (item.previous != null) {
-			item.previous.setNext(item.next);
-		}
-		if (this.first == item) {
-			this.first = item.next;
-		}
-		if (this.last == item) {
-			this.last = item.previous;
-		}
-		--this.elementCount;
-		return item.data;
+	public boolean addAll(Collection<? extends E> c) {
+		return this.addAll(this.elementCount, c);
 	}
 
 	@Override
-	public int indexOf(Object o) {
-		int result = -1;
-		boolean found = false;
+	public boolean addAll(int index, Collection<? extends E> c) {
+		for (E element : c) {
+			try {
+				this.add(index++, element);
+			} catch (Exception ex) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public void clear() {
 		for (E element : this) {
-			++result;
+			this.remove(element);
+		}
+		this.first = null;
+		this.last = null;
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		for (E element : this) {
 			if (element.equals(o)) {
-				found = true;
-				break;
+				return true;
 			}
 		}
-		if (found) {
-			return result;
-		}
-		return -1;
+		return false;
 	}
 
 	@Override
-	public int lastIndexOf(Object o) {
-		int result;
-		boolean found = false;
-		LListItem<E> current = this.last;
-		for (result = this.elementCount - 1; current != null; --result) {
-			if (current.data.equals(o)) {
-				found = true;
-				break;
-			}
-			current = current.previous;
-		}
-		if (found) {
-			return result;
-		}
-		return -1;
-	}
-
-	@Override
-	public ListIterator<E> listIterator() {
-		return this.listIterator(0);
-	}
-
-	@Override
-	public ListIterator<E> listIterator(int index) {
-		return new LListListIterator<E>(this, this.getListItem(index));
-	}
-
-	@Override
-	public List<E> subList(int fromIndex, int toIndex) {
-		LList<E> result = new LList<E>();
-		for (int i = fromIndex; i <= toIndex; ++i) {
-			result.add(this.get(i));
-		}
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		boolean first = true;
+	public boolean containsAll(Collection<?> c) {
 		for (E element : this) {
-			if (first) {
-				first = false;
-			} else {
-				result.append(" <-> ");
-			}
-			if (null == element) {
-				result.append("<null>");
-			} else {
-				result.append(element.toString());
+			if (!c.contains((Object) element)) {
+				return false;
 			}
 		}
-		return result.toString();
+		return true;
 	}
 
 	@Override
@@ -546,6 +327,225 @@ public class LList<E> implements List<E> {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public E get(int index) {
+		return this.getListItem(index).data;
+	}
+
+	protected LListItem<E> getListItem(int index) {
+		if (0 > index || index >= this.elementCount) {
+			throw new IndexOutOfBoundsException();
+		}
+		LListItem<E> current = this.first;
+		for (int i = 1; i <= index; ++i) {
+			current = current.next;
+			if (current == null) {
+				throw new IllegalStateException();
+			}
+		}
+		return current;
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		int result = -1;
+		boolean found = false;
+		for (E element : this) {
+			++result;
+			if (element.equals(o)) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
+			return result;
+		}
+		return -1;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return (this.elementCount == 0);
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return new LListIterator<E>(this.first);
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		int result;
+		boolean found = false;
+		LListItem<E> current = this.last;
+		for (result = this.elementCount - 1; current != null; --result) {
+			if (current.data.equals(o)) {
+				found = true;
+				break;
+			}
+			current = current.previous;
+		}
+		if (found) {
+			return result;
+		}
+		return -1;
+	}
+
+	@Override
+	public ListIterator<E> listIterator() {
+		return this.listIterator(0);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		return new LListListIterator<E>(this, this.getListItem(index));
+	}
+	
+	public boolean push(E e) {
+		LListItem<E> item = new LListItem<>(e, this.last, null);
+		if (this.last == null) {
+			this.first = item;
+		} else {
+			this.last.setNext(item);
+		}
+		this.last = item;
+		++this.elementCount;
+		return true;
+	}
+
+	@Override
+	public E remove(int index) {
+		LListItem<E> item = this.getListItem(index);
+		if (item == null) {
+			return null;
+		}
+		if (item.next != null) {
+			item.next.setPrevious(item.previous);
+		}
+		if (item.previous != null) {
+			item.previous.setNext(item.next);
+		}
+		if (this.first == item) {
+			this.first = item.next;
+		}
+		if (this.last == item) {
+			this.last = item.previous;
+		}
+		--this.elementCount;
+		return item.data;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		int index = this.indexOf(o);
+		if (-1 == index) {
+			return false;
+		}
+		this.remove(index);
+		return true; 
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		boolean result = false;
+		for (Object o : c) {
+			if (this.remove(o)) {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		boolean result = false;
+		for (Object o : this) {
+			if (!c.contains(o)) {
+				result = true;
+				this.remove(o);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public E set(int index, E element) {
+		if (0 > index || index >= this.elementCount) {
+			throw new IndexOutOfBoundsException();
+		}
+		LListItem<E> node = this.getListItem(index);
+		if (null == node) {
+			throw new IllegalStateException();
+		}
+		E result = node.get();
+		LListItem<E> insert = new LListItem<E>(element, node.previous, node.next);
+		if (this.first == node) {
+			this.first = insert;
+		} else {
+			node.previous.setNext(insert);
+		}
+		if (this.last == node) {
+			this.last = insert;
+		} else {
+			node.next.setPrevious(insert);
+		}
+		return result;
+	}
+
+	@Override
+	public int size() {
+		return this.elementCount;
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		LList<E> result = new LList<E>();
+		for (int i = fromIndex; i <= toIndex; ++i) {
+			result.add(this.get(i));
+		}
+		return result;
+	}
+
+	@Override
+	public Object[] toArray() {
+		return this.toArray(new Object[this.elementCount]);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T[] toArray(T[] a) {
+		if (a.length < this.elementCount) {
+			a = (T[]) Array.newInstance(a.getClass().getComponentType(), this.elementCount);
+		}
+		int i = 0;
+		for (E element : this) {
+			a[i++] = (T) element;
+		}
+		if (a.length > this.elementCount) {
+			a[this.elementCount] = null;
+		}
+		return a;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for (E element : this) {
+			if (first) {
+				first = false;
+			} else {
+				result.append(" <-> ");
+			}
+			if (null == element) {
+				result.append("<null>");
+			} else {
+				result.append(element.toString());
+			}
+		}
+		return result.toString();
 	}
 	
 }

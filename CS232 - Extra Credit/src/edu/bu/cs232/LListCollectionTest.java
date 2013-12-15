@@ -32,19 +32,47 @@ public class LListCollectionTest extends LListTestBase {
 		}
 	}
 
-	
 	@Test
-	public final void testToObjectArray() {
-		Object[] oArray = this.testLList.toArray();
-		for (int i = 0; i < oArray.length; ++i) {
-			assertEquals(this.testArray[i], oArray[i]);
+	public final void testAddAll() {
+		this.localTestList.addAll(this.testArrayList);
+		assertEquals(this.testLList, this.localTestList);
+		this.localTestList.addAll(this.testArrayList);
+		for (int i = 0; i < this.testArray.length; ++i) {
+			assertEquals(this.testArray[i], this.localTestList.get(this.testArray.length + i));
 		}
+		Collections.reverse(this.testArrayList);
+		this.localTestList.addAll(this.testArray.length, this.testArrayList);
+		assertEquals(this.testArrayList.get(0), this.localTestList.get(this.testArray.length));
+	}
+
+	@Test
+	public final void testRemoveAll() {
+		this.testArrayList.removeAll(this.testPartialArrayList);
+		this.testLList.removeAll(testPartialArrayList);
+		assertTrue(this.testLList.containsAll(this.testArrayList));
+		assertTrue(this.testArrayList.containsAll(this.testLList));
+	}
+	
+	public final void testRetainAll() {
+		this.testArrayList.retainAll(this.testPartialArrayList);
+		this.testLList.retainAll(testPartialArrayList);
+		assertTrue(this.testLList.containsAll(this.testPartialArrayList));
+		assertTrue(this.testPartialArrayList.containsAll(this.testLList));
 	}
 
 	@Test
 	public final void testToArray() {
 		String[] sArray = new String[this.testArray.length];
 		sArray = this.testLList.toArray(sArray);
+		assertArrayEquals(this.testArray, sArray);
+	}
+	
+	@Test
+	public final void testToArrayEmpty() {
+		String[] sArray = new String[0];
+		assertEquals(0, sArray.length);
+		sArray = this.testLList.toArray(sArray);
+		assertEquals(this.testArray.length, sArray.length);
 		assertArrayEquals(this.testArray, sArray);
 	}
 	
@@ -66,38 +94,10 @@ public class LListCollectionTest extends LListTestBase {
 	}
 
 	@Test
-	public final void testToArrayEmpty() {
-		String[] sArray = new String[0];
-		assertEquals(0, sArray.length);
-		sArray = this.testLList.toArray(sArray);
-		assertEquals(this.testArray.length, sArray.length);
-		assertArrayEquals(this.testArray, sArray);
-	}
-	
-	@Test
-	public final void testAddAll() {
-		this.localTestList.addAll(this.testArrayList);
-		assertEquals(this.testLList, this.localTestList);
-		this.localTestList.addAll(this.testArrayList);
-		for (int i = 0; i < this.testArray.length; ++i) {
-			assertEquals(this.testArray[i], this.localTestList.get(this.testArray.length + i));
+	public final void testToObjectArray() {
+		Object[] oArray = this.testLList.toArray();
+		for (int i = 0; i < oArray.length; ++i) {
+			assertEquals(this.testArray[i], oArray[i]);
 		}
-		Collections.reverse(this.testArrayList);
-		this.localTestList.addAll(this.testArray.length, this.testArrayList);
-		assertEquals(this.testArrayList.get(0), this.localTestList.get(this.testArray.length));
-	}
-	
-	@Test
-	public final void testRemoveAll() {
-		this.testArrayList.removeAll(this.testPartialArrayList);
-		this.testLList.removeAll(testPartialArrayList);
-		assertTrue(this.testLList.containsAll(this.testArrayList));
-		assertTrue(this.testArrayList.containsAll(this.testLList));
-	}
-	public final void testRetainAll() {
-		this.testArrayList.retainAll(this.testPartialArrayList);
-		this.testLList.retainAll(testPartialArrayList);
-		assertTrue(this.testLList.containsAll(this.testPartialArrayList));
-		assertTrue(this.testPartialArrayList.containsAll(this.testLList));
 	}
 }

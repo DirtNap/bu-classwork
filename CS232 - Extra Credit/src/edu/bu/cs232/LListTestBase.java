@@ -5,9 +5,9 @@ import org.junit.Before;
 
 public class LListTestBase {
 
-	protected LList<String> testLList;
 	protected LList<String> localTestList;
 	protected String[] testArray;
+	protected LList<String> testLList;
 
 	@Before
 	public void setUp() throws Exception {
