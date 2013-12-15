@@ -33,7 +33,7 @@ public class RunningTotalTest {
 		assertEquals(4.0d, this.runningTotal.getMax(1), RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
 	}
 
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	@Test(expected = IndexOutOfBoundsException.class)
 	public void testAllocation() {
 		for (int i = 0; i <= 51; ++i) {
 			this.runningTotal.append(i);
@@ -59,12 +59,12 @@ public class RunningTotalTest {
 		RunningTotal.TotalRow tr = this.runningTotal.get(0);
 		Assert.assertEquals(x, tr.inputNumber, RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);
 	}
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	@Test(expected = IndexOutOfBoundsException.class)
 	public void testGetOutOfBounds() {
 		this.runningTotal.append(6);
 		this.runningTotal.get(this.runningTotal.length());
 	}
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	@Test(expected = IndexOutOfBoundsException.class)
 	public void testGetUninitialized() {
 		// Aggregates should be 0 when uninitialized...
 		assertEquals(0.0d, this.runningTotal.getTotal(), RunningTotalTest.ALLOWABLE_FLOAT_VARIANCE);

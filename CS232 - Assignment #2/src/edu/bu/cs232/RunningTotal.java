@@ -89,7 +89,7 @@ public class RunningTotal implements Iterable<RunningTotal.TotalRow>, Iterator<R
 	}
 	public TotalRow get(int index) {
 		if (index > this.currentIndex || index < 0) {
-			throw new ArrayIndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException();
 		}
 		return new TotalRow(this.inputNumbers[index], this.sums[index], this.avgs[index],
 				this.mins[index], this.maxs[index], this.fmts[index]);
