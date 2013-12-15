@@ -42,7 +42,7 @@ public class Assignment05 {
 				ShoppingListItem sli = this.shopper.getShoppingList().get(itemName);
 				int priority = this.inputReader.readInteger(String.format("New priority for %s", itemName), 1);
 				sli.setPriority(priority);
-			} catch (ArrayIndexOutOfBoundsException ex) {
+			} catch (IndexOutOfBoundsException ex) {
 				System.err.printf("Error:  %s\n", ex.getMessage());
 			}
 			display.DisplayList(this.shopper);
