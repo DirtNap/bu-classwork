@@ -51,7 +51,7 @@ public class ShoppingList implements SortProvider<ShoppingListItem>,
 	public int getIndexByName(String itemName) {
 		Integer index = this.itemIndex.get(itemName.toLowerCase());
 		if (index == null) {
-			throw new ArrayIndexOutOfBoundsException(String.format("Item %s not in ShoppingList", itemName));
+			throw new IndexOutOfBoundsException(String.format("Item %s not in ShoppingList", itemName));
 		}
 		return index;
 	}
