@@ -418,6 +418,7 @@ public class LList<E> implements List<E> {
 	@Override
 	public E remove(int index) {
 		LListItem<E> item = this.getListItem(index);
+		E result;
 		if (item == null) {
 			return null;
 		}
@@ -434,7 +435,9 @@ public class LList<E> implements List<E> {
 			this.last = item.previous;
 		}
 		--this.elementCount;
-		return item.data;
+		result = item.data;
+		item = null;
+		return result;
 	}
 
 	@Override

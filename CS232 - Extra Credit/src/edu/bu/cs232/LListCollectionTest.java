@@ -3,6 +3,7 @@ package edu.bu.cs232;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Before;
@@ -98,6 +99,15 @@ public class LListCollectionTest extends LListTestBase {
 		Object[] oArray = this.testLList.toArray();
 		for (int i = 0; i < oArray.length; ++i) {
 			assertEquals(this.testArray[i], oArray[i]);
+		}
+	}
+
+	@Test
+	public final void testSorting() {
+		Arrays.sort(this.testArray);
+		Collections.sort(this.testLList);
+		for (int i = 0; i < this.testArray.length; ++i) {
+			assertEquals(this.testArray[i], this.testLList.get(i));
 		}
 	}
 }
