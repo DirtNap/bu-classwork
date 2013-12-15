@@ -1,0 +1,1 @@
+Creates a double-linked list which implements java.util.List, java.util.Collection and java.util.Iterable.
