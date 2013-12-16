@@ -48,6 +48,13 @@ public class CatalogItemTest {
 	}
 
 	@Test
+	public final void testAvailable() {
+		assertTrue(this.testItem.isAvailable());
+		CatalogItem localTestItem = new CatalogItem(this.testName, this.testPrice, false);
+		assertFalse(localTestItem.isAvailable());
+	}
+	
+	@Test
 	public final void testEquals() {
 		CatalogItem localTestItem = new CatalogItem(this.testName, this.testPrice);
 		assertFalse(this.testItem.equals(null));

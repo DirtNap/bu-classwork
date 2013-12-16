@@ -7,10 +7,16 @@ public class CatalogItem implements Serializable, Comparable<CatalogItem> {
 	private static final long serialVersionUID = -3695407328615414842L;
 	private double price;
 	private String name;
+	private boolean available;
 
-	public CatalogItem(String name, double price) {
+	public CatalogItem(String name, double price, boolean available) {
 		this.setName(name);
 		this.setPrice(price);
+		this.setAvailable(available);
+	}
+	
+	public CatalogItem(String name, double price) {
+		this(name, price, true);
 	}
 
 	public double getPrice() {
@@ -27,6 +33,14 @@ public class CatalogItem implements Serializable, Comparable<CatalogItem> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isAvailable() {
+		return this.available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
 	}
 
 	@Override
