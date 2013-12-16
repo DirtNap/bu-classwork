@@ -120,5 +120,9 @@ public class QLLShoppingList implements Iterable<QShoppingListItem> {
 		}
 	}
 
+	public boolean remove(String name) {
+		return this.itemList.remove(this.get(name));
+	}
+
 	
 }

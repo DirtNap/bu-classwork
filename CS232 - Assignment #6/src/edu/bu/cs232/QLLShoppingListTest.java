@@ -108,6 +108,19 @@ public class QLLShoppingListTest {
 		assertEquals("Test that we made it through all items", 2, ct);
 	}
 	@Test
+	public void testRemove() {
+		QLLShoppingList sl = new QLLShoppingList(3);
+		QShoppingListItem sli1 = new QShoppingListItem("1", 1, 1.0d);
+		QShoppingListItem sli2 = new QShoppingListItem("2", 2, 2.0d);
+		QShoppingListItem sli3 = new QShoppingListItem("3", 3, 3.0d);
+		assertEquals(3, sl.length());
+		sl.remove(sli3.getName());
+		sl.remove(sli2.getName());
+		sl.remove(sli1.getName());
+		assertEquals(0, sl.length());
+	}
+
+	@Test
 	public void testToString() {
 		int testCount = 10;
 		StringBuilder testString = new StringBuilder();
