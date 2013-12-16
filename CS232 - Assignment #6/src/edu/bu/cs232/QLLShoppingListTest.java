@@ -113,6 +113,9 @@ public class QLLShoppingListTest {
 		QShoppingListItem sli1 = new QShoppingListItem("1", 1, 1.0d);
 		QShoppingListItem sli2 = new QShoppingListItem("2", 2, 2.0d);
 		QShoppingListItem sli3 = new QShoppingListItem("3", 3, 3.0d);
+		sl.put(sli3);
+		sl.put(sli2);
+		sl.put(sli1);
 		assertEquals(3, sl.length());
 		sl.remove(sli3.getName());
 		sl.remove(sli2.getName());
