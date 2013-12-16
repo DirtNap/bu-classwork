@@ -1,6 +1,7 @@
 package edu.bu.cs232;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 
 public class CatalogItem implements Serializable, Comparable<CatalogItem> {
 
@@ -68,4 +69,9 @@ public class CatalogItem implements Serializable, Comparable<CatalogItem> {
 		return this.getName().compareToIgnoreCase(o.getName());
 	}
 	
+	public String toString() {
+		NumberFormat money = NumberFormat.getCurrencyInstance();
+		String availability = this.isAvailable()?"Available":"Unavailable";
+		return String.format("%s (%s) [%s]", this.getName(), money.format(this.getPrice()), availability);
+	}
 }
