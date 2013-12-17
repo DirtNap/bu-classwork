@@ -34,7 +34,7 @@ public abstract class ShoppingRunner {
 					shopper.setPriority(itemName, 1);
 					int priority = reader.readInteger("Enter the new priority", 0);
 					shopper.setPriority(itemName, priority);
-				} catch (IllegalArgumentException ex) {
+				} catch (ItemNotFoundException ex) {
 					reader.outputSource.printf("Item %s not found%n", itemName);
 					itemName = "";
 				}

@@ -5,11 +5,11 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 
-public class Assignment06 {
+public class Assignment06 extends ShoppingRunner {
 
-	private InputStream input;
-	private PrintStream output;
-	private InputReader reader;
+	protected InputStream input;
+	protected PrintStream output;
+	protected InputReader reader;
 	
 	protected final static String CATALOG_FILE_NAME = "catalog.dat";
 
@@ -24,88 +24,37 @@ public class Assignment06 {
 		double budget = this.getBudget();
 		Catalog itemCatalog = this.loadCatalog(Assignment06.CATALOG_FILE_NAME);
 		QCShopper shopper = new QCShopper(itemCatalog, budget);
-		this.doShopping(name, shopper);
+		this.doShopping(name, shopper, this.reader);
 		return result;
 	}
 	
-	private void doShopping(String name, QCShopper shopper) {
+	public void doShopping(String name, QCShopper shopper, InputReader reader) {
 		NumberFormat money = NumberFormat.getCurrencyInstance();
 		String greeting = "Hello ";
 		while (true) {
-			this.output.printf("%s%s,  you currently have %s in your bank account.%n", greeting, name, money.format(shopper.getBudget()));
+			reader.outputSource.printf("%s%s,  you currently have %s in your bank account.%n", greeting, name, money.format(shopper.getBudget()));
 			greeting = "";
-			if (!this.reader.readBoolean("Would you like to shop in the store?")) {
+			if (!reader.readBoolean("Would you like to shop in the store?")) {
 				break;
 			}
-			this.buildShoppingList(shopper);
+			this.buildShoppingList(shopper, this.reader);
 			QLLShoppingList purchasedItems = shopper.shop();
 			if (purchasedItems.length() > 0) {
-				this.output.println("You purchased the following items:");
-				this.output.println(purchasedItems);
-				this.output.printf("for a total of %s.", money.format(purchasedItems.getTotal()));
+				reader.outputSource.println("You purchased the following items:");
+				reader.outputSource.println(purchasedItems);
+				reader.outputSource.printf("for a total of %s.", money.format(purchasedItems.getTotal()));
 			} else {
-				this.output.println("No items purchased.");
+				reader.outputSource.println("No items purchased.");
 			}
 			if (shopper.getShoppingList().length() > 0) {
-				this.output.println("You still have the following items:");
-				this.output.println(shopper.getShoppingList());
-				this.output.printf("for a total of %s.", money.format(shopper.getShoppingList().getTotal()));
+				reader.outputSource.println("You still have the following items:");
+				reader.outputSource.println(shopper.getShoppingList());
+				reader.outputSource.printf("for a total of %s.", money.format(shopper.getShoppingList().getTotal()));
 			} else {
-				this.output.println("No items remain in your shopping cart.");
+				reader.outputSource.println("No items remain in your shopping cart.");
 			}
 		}
-	}
-	private void buildShoppingList(QCShopper shopper) {
-		String an = "an";
-		while (true) {
-			if (this.reader.readBoolean(String.format("Add %s item to your shopping list?", an))) {
-				if (this.reader.readBoolean("Would you like to see the product catalog?")) {
-					this.output.println(shopper.getCatalogItemList());
-				}
-				this.addShoppingListItem(shopper);
-				an = "another";
-			} else {
-				break;
-			}
-		}
-		while (shopper.getShoppingList().length() > 0) {
-			if (this.reader.readBoolean("Would you like to see your shopping list?")) {
-				this.output.println(shopper.getShoppingList());
-			}
-			if (this.reader.readBoolean("Would you like to edit the priority of any items?")) {
-				this.editShoppingListPriority(shopper);
-			} else {
-				break;
-			}
-		}
-	}
-	private void editShoppingListPriority(QCShopper shopper) {
-		String itemName = "";
-		while (itemName == "") {
-			itemName = this.reader.readWord("Enter the name of the item to modify?");
-			try {
-				shopper.setPriority(itemName, 1);
-				int priority = this.reader.readInteger("Enter the new priority", 0);
-				shopper.setPriority(itemName, priority);
-			} catch (IllegalArgumentException ex) {
-				this.output.printf("Item %s not found%n", itemName);
-				itemName = "";
-			}
-		}
-	}
-	private void addShoppingListItem(QCShopper shopper) {
-		int catalogIndex = -1;
-		while (0 > catalogIndex) {
-			catalogIndex = this.reader.readInteger("Enter the number of the catalog item you would like to add", 1);
-			int itemQuantity = this.reader.readInteger("How many would you like to purchase?", 1);
-			int itemPriority = this.reader.readInteger("What priority would you like to assign?  (lower numbers are given precedence when shopping)",
-					                                   0);
-			try {
-				shopper.addItemToList(catalogIndex, itemPriority, itemQuantity);
-			} catch (Exception ex) {
-				catalogIndex = -1;
-			}
-		}
+		reader.outputSource.println("Thank you for shopping.");
 	}
 	private Catalog loadCatalog(String catalogFileName) {
 		try {

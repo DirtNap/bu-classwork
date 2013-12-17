@@ -30,7 +30,7 @@ public class QCShopper {
 		try {
 			result = this.shoppingList.get(itemName);
 		} catch (IndexOutOfBoundsException ex) {
-			throw new IllegalArgumentException(String.format("Item %s not found.", itemName));
+			throw new ItemNotFoundException(String.format("Item %s not found.", itemName));
 		}
 		result.setPriority(priority);
 	}
@@ -39,7 +39,7 @@ public class QCShopper {
 		try {
 			result = this.shoppingList.get(itemName);
 		} catch (IndexOutOfBoundsException ex) {
-			throw new IllegalArgumentException(String.format("Item %s not found.", itemName));
+			throw new ItemNotFoundException(String.format("Item %s not found.", itemName));
 		}
 		if (quantity < 1) {
 			this.shoppingList.remove(itemName);
