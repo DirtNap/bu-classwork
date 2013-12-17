@@ -49,7 +49,11 @@ public abstract class ShoppingRunner {
 						                                   0);
 				try {
 					shopper.addItemToList(catalogIndex, itemPriority, itemQuantity);
-				} catch (Exception ex) {
+				} catch (IllegalArgumentException ex) {
+					reader.outputSource.println("Item not available.");
+					catalogIndex = -1;
+				} catch (ItemNotFoundException ex) {
+					reader.outputSource.println(ex.getMessage());
 					catalogIndex = -1;
 				}
 			}

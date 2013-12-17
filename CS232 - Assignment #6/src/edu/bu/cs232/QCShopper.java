@@ -56,6 +56,7 @@ public class QCShopper {
 		QLLShoppingList result = new QLLShoppingList();
 		QShoppingListItem purchasedItem;
 		double currentBudget = this.getBudget();
+		int purchasedItemCount = 0;
 		for (QShoppingListItem sli : this.shoppingList) {
 			if (currentBudget < sli.getPrice()) {
 				break;
@@ -67,7 +68,7 @@ public class QCShopper {
 			} else {
 				continueShopping = false;
 			}
-			purchasedItem = new QShoppingListItem(sli.getName(), sli.getPriority(), sli.getPrice(), targetQty);
+			purchasedItem = new QShoppingListItem(sli.getName(), ++purchasedItemCount, sli.getPrice(), targetQty);
 			currentBudget -= purchasedItem.getQuantity() * purchasedItem.getPrice();
 			result.put(purchasedItem);
 			if (!continueShopping) {

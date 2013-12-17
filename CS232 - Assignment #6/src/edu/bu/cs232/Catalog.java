@@ -31,7 +31,11 @@ public class Catalog {
 	}
 	
 	public CatalogItem getItem(int index) {
-		return this.catalogItems.get(index);
+		try {
+			return this.catalogItems.get(index);
+		} catch (IndexOutOfBoundsException ex) {
+			throw new ItemNotFoundException(String.format("Item #%d not found.", index + 1));
+		}
 	}
 	
 	public static Catalog fromFile(String path) throws IOException, FileNotFoundException {

@@ -1,0 +1,25 @@
+This program reads a catalog of items from a file (creating the file if it does not exist), gets a user's name and shopping budget, and performs
+the following actions:
+
+- Asks if the user would like to shop in the store
+- - Collect a list of items for shopping
+- - - optionally display the catalog
+- - - select an item by catalog number
+- - - select a quantity
+- - - select a priority
+- - Once the shopping list is created, allows editing of the priority
+- - - optionally display the current shopping list
+- - - ask for an item by name
+- - - ask for a new priority (>= 0)
+- - Shops for the items in the shopping list, using the following algorithm
+- - - Order the items by priority, then price, then quantity (then incidentally by name, for consistency.)
+- - - purchase as many of the first item as possible, moving each unit to a new shopping list
+- - - If the item is completely purchased before the budget is exhausted, move on to the next item in the list.
+- - - If the current item can not be completely purchased, return the new shopping list
+- - Display the shopping list of purchased items, with quantity and price (unit and total.)
+- - Display the remaining budget and shopping list with priority, name, quantity and price.
+- - Ask if the user would like to continue shopping.
+- Thank the user, and exit.
+
+The shopping engine is an abstract class.  Catalog Items are Serializable, and Catalog Items and Shopping List Items are comparable.
+When the user operates on an item that doesn't exist, the ItemNotFoundException is thrown.
