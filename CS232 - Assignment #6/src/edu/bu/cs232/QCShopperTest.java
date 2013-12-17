@@ -33,7 +33,6 @@ public class QCShopperTest {
 
 	@Test
 	public void testShopping() {
-		QLLShoppingList purchased = this.shopper.shop();
 		QLLShoppingList remains = this.shopper.getShoppingList();
 		if (remains.length() > 0) {
 			assertTrue(Double.compare(remains.get(0).getPrice(), this.shopper.getBudget()) > 0);
