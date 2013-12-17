@@ -1,0 +1,23 @@
+Mastermind is a game for guessing patterns.  This implementation is played on the console, and allows players to try to
+beat the computer as per the in-game instructions.  The program flow is as follows:
+- Greet the user
+- Display the main menu, with the following options:
+- - Play game - Play a new game of Mastermind
+- - - Computer selects a pattern of colors
+- - - User is asked for difficulty level, which controls the number of turns available.
+- - - User submits a guess at the pattern
+- - - User may exit with the X key, otherwise:
+- - - If the pattern is correct
+- - - - User wins
+- - - - User's score is calculated
+- - - - User is added to the scoreboard
+- - - - The scoreboard is saved to a file.
+- - - Otherwise
+- - - - Feedback is presented to the user indicating the partial correctness of his guess.
+- - - - If there are still remaining turns, the user guesses again.
+- - Display Instructions
+- - - The complete instructions are displayed to the user
+- - Show high scores
+- - - The names and scores of players who have beaten the computer are displayed to the user
+- - Exit
+- If the user has not exited, the main menu is presented again.
