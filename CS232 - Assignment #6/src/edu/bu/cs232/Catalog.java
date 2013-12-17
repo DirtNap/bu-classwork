@@ -121,7 +121,7 @@ public class Catalog {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		int rowNum = 0;
-		String baseFormat = "%% %dd %%s";
+		String baseFormat = "%% %dd %%s%%n";
 		String format = String.format(baseFormat, Integer.toString(this.catalogItems.size()).length());
 		for (CatalogItem ci : this.catalogItems) {
 			result.append(String.format(format, ++rowNum, ci));

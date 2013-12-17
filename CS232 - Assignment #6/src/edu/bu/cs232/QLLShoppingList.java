@@ -45,7 +45,7 @@ public class QLLShoppingList implements Iterable<QShoppingListItem> {
 	public int getIndexByName(String name) {
 		int result = 0;
 		for (QShoppingListItem qi : this.itemList) {
-			if (qi.getName() == name) {
+			if (qi.getName().equalsIgnoreCase(name)) {
 				return result;
 			} else {
 				++result;
@@ -78,12 +78,14 @@ public class QLLShoppingList implements Iterable<QShoppingListItem> {
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
-		NumberFormat money = NumberFormat.getCurrencyInstance();
-		Collections.sort(this.itemList);
-		for (QShoppingListItem sli : this) {
-			if (sli != null) {
-				result.append(String.format("%d\t%s (%d@%s)%n", sli.getPriority(),
-						sli.getName(), sli.getQuantity(), money.format(sli.getPrice())));
+		if (this.length() > 0) {
+			NumberFormat money = NumberFormat.getCurrencyInstance();
+			Collections.sort(this.itemList);
+			for (QShoppingListItem sli : this) {
+				if (sli != null) {
+					result.append(String.format("%d\t%s (%d@%s)%n", sli.getPriority(),
+							sli.getName(), sli.getQuantity(), money.format(sli.getPrice())));
+				}
 			}
 		}
 		return result.toString();

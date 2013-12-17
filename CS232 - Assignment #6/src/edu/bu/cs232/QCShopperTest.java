@@ -27,7 +27,7 @@ public class QCShopperTest {
 			this.testSLItems[i] = new QShoppingListItem(this.testCatalogItems[i].getName(), i + 1, this.testCatalogItems[i].getPrice(), i + 1);
 		}
 		for (int i = 0; i < this.testCatalogItems.length; ++i) {
-			this.shopper.addItemToList(i, this.testSLItems[i].getPriority(), this.testSLItems[i].getQuantity());
+			this.shopper.addItemToList(i + 1, this.testSLItems[i].getPriority(), this.testSLItems[i].getQuantity());
 		}
 	}
 

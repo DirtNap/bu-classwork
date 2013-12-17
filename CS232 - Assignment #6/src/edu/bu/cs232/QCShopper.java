@@ -77,7 +77,7 @@ public class QCShopper {
 		this.setBudget(currentBudget);
 		for (QShoppingListItem sli : result) {
 			purchasedItem = this.shoppingList.get(sli.getName());
-			purchasedItem.setQuantity(purchasedItem.getQuantity() - sli.getQuantity());
+			this.setQuantity(purchasedItem.getName(), purchasedItem.getQuantity() - sli.getQuantity());
 		}
 		return result;
 	}
@@ -86,7 +86,7 @@ public class QCShopper {
 		return this.addItemToList(catalogNum, priority, 1);
 	}
 	public boolean addItemToList(int catalogNum, int priority, int quantity) {
-		CatalogItem ci = this.catalog.getItem(catalogNum);
+		CatalogItem ci = this.catalog.getItem(--catalogNum);
 		if (ci.isAvailable()) {
 			ci.setAvailable(false);
 		} else {
