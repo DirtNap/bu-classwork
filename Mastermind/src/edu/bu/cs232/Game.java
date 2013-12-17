@@ -1,7 +1,6 @@
 package edu.bu.cs232;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 
 public class Game {
 
