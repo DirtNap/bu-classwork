@@ -4,6 +4,16 @@ import java.io.PrintStream;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * A number guessing game. The user selects a number between {@code 1} and some
+ * upper boundary. The class provides feedback on the guess, indicating if it
+ * was too high, too low, or correct. The number of moves required to reach the
+ * correct answer is provided to the user at the end of the game.
+ * 
+ * @author Michael Donnelly
+ * 
+ */
+
 public class NumberGuessingGame {
 
     private int maxValue;
@@ -15,10 +25,7 @@ public class NumberGuessingGame {
     private static Random prng;
 
     /**
-     * A number guessing game. The user selects a number between {@code 1} and
-     * some upper boundary. The class provides feedback on the guess, indicating
-     * if it was too high, too low, or correct. The number of moves required to
-     * reach the correct answer is provided to the user at the end of the game.
+     * Create a game with the default options.
      */
     public NumberGuessingGame() {
         this(1000);
