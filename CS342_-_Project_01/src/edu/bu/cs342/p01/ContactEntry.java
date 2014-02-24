@@ -21,17 +21,21 @@ public class ContactEntry implements Serializable, Comparable<ContactEntry> {
 
     protected String parseName(String name) throws ContactValidationException {
         String[] names = name.split("\\s+");
-        if (names.length <= 1) {
+        switch (names.length) {
+          case 0:
+            throw new ContactValidationException("Invalid Name");
+          case 1:
             return name;
+          default:
+            StringBuilder sb = new StringBuilder();
+            sb.append(names[names.length - 1]);
+            sb.append(",");
+            for (int i = 0; i < names.length - 1; ++i) {
+                sb.append(" ");
+                sb.append(names[i]);
+            }
+            return sb.toString();
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append(names[names.length - 1]);
-        sb.append(",");
-        for (int i = 0; i < names.length - 1; ++i) {
-            sb.append(" ");
-            sb.append(names[i]);
-        }
-        return sb.toString();
     }
 
     public String getName() {
