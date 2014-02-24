@@ -28,13 +28,14 @@ public class ContactEntryTest {
     }
 
     @Test
-    public void testParseName() {
-        ContactEntry singleName = new ContactEntry("name", this.testContactEntry.getEmail(),
-                this.testContactEntry.getPhone());
-        ContactEntry complexName = new ContactEntry("first compound-last",
-                this.testContactEntry.getEmail(), this.testContactEntry.getPhone());
+    public void testParseName() throws ContactValidationException {
+        ContactEntry singleName = new ContactEntry("name", this.testContactEntry.getEmail()
+                .toString(), this.testContactEntry.getPhone().toString());
+        ContactEntry complexName = new ContactEntry("first compound-last", this.testContactEntry
+                .getEmail().toString(), this.testContactEntry.getPhone().toString());
         ContactEntry multiPartName = new ContactEntry("Name with multiple parts",
-                this.testContactEntry.getEmail(), this.testContactEntry.getPhone());
+                this.testContactEntry.getEmail().toString(), this.testContactEntry.getPhone()
+                        .toString());
         assertEquals("name", singleName.getName());
         assertEquals("parts, Name with multiple", multiPartName.getName());
         assertEquals("compound-last, first", complexName.getName());
@@ -47,16 +48,16 @@ public class ContactEntryTest {
 
     @Test
     public void testGetEmail() {
-        assertEquals(this.testEmail, this.testContactEntry.getEmail());
+        assertEquals(this.testEmail, this.testContactEntry.getEmail().toString());
     }
 
     @Test
     public void testGetPhone() {
-        assertEquals(this.testPhone, this.testContactEntry.getPhone());
+        assertEquals(this.testPhone, this.testContactEntry.getPhone().toString());
     }
 
     @Test
-    public void testEqualsObject() {
+    public void testEqualsObject() throws ContactValidationException {
         assertFalse(this.testContactEntry.equals(null));
         assertTrue(this.testContactEntry.equals(this.testContactEntry));
         assertFalse(this.testContactEntry.equals(new Object()));
@@ -75,7 +76,7 @@ public class ContactEntryTest {
     }
 
     @Test
-    public void testCompareTo() {
+    public void testCompareTo() throws ContactValidationException {
         ContactEntry[] sortedContactEntryTest = new ContactEntry[] {
                 new ContactEntry("A A", "zzz@zzz.zzz", "(111) 111-1111"),
                 new ContactEntry("A B", "azz@zzz.zzz", "(111) 111-1111"),
@@ -98,4 +99,5 @@ public class ContactEntryTest {
             assertTrue(sortedContactEntryTest[i].equals(unSortedContactEntryTest[i]));
         }
     }
+
 }

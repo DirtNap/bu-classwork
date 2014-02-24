@@ -1,24 +1,25 @@
 package edu.bu.cs342.p01;
 
+import static edu.bu.cs342.utilities.NullHandling.*;
 import java.io.Serializable;
 
 public class ContactEntry implements Serializable, Comparable<ContactEntry> {
 
     private static final long serialVersionUID = 1L;
     private final String name;
-    private final String email;
-    private final String phone;
+    private final ContactEmail email;
+    private final ContactPhone phone;
 
-    public ContactEntry(String name, String email, String phone) {
+    public ContactEntry(String name, String email, String phone) throws ContactValidationException {
         if (null == name || null == email || null == phone) {
             throw new IllegalArgumentException("ContactEntry requires name, email, and phone.");
         }
         this.name = this.parseName(name);
-        this.email = email;
-        this.phone = phone;
+        this.email = new ContactEmail(email);
+        this.phone = new ContactPhone(phone);
     }
 
-    protected String parseName(String name) {
+    protected String parseName(String name) throws ContactValidationException {
         String[] names = name.split("\\s+");
         if (names.length <= 1) {
             return name;
@@ -37,11 +38,11 @@ public class ContactEntry implements Serializable, Comparable<ContactEntry> {
         return this.name;
     }
 
-    public String getEmail() {
+    public ContactEmail getEmail() {
         return this.email;
     }
 
-    public String getPhone() {
+    public ContactPhone getPhone() {
         return this.phone;
     }
 
@@ -61,8 +62,8 @@ public class ContactEntry implements Serializable, Comparable<ContactEntry> {
         try {
             ContactEntry test = (ContactEntry) o;
             return this.getName().equalsIgnoreCase(test.getName())
-                    && this.getEmail().equalsIgnoreCase(test.getEmail())
-                    && this.getPhone().equalsIgnoreCase(test.getPhone());
+                    && this.getEmail().equals(test.getEmail())
+                    && this.getPhone().equals(test.getPhone());
         } catch (ClassCastException ex) {
             return false;
         }
@@ -75,16 +76,7 @@ public class ContactEntry implements Serializable, Comparable<ContactEntry> {
 
     @Override
     public int compareTo(ContactEntry o) {
-        if (null == o) {
-            return -1;
-        }
-        int result = this.getName().compareToIgnoreCase(o.getName());
-        if (0 == result) {
-            result = this.getEmail().compareToIgnoreCase(o.getEmail());
-            if (0 == result) {
-                result = this.getPhone().compareToIgnoreCase(o.getPhone());
-            }
-        }
-        return result;
+        return compareListWithNulls(this.getName(), o.getName(), this.getEmail(), o.getEmail(),
+                this.getPhone(), o.getPhone());
     }
 }
