@@ -52,6 +52,26 @@ public class ContactPhoneTest {
         assertEquals(this.testExchange, this.testContactPhone.exchange);
         assertEquals(this.testNumber, this.testContactPhone.number);
         assertEquals(this.testExtension, this.testContactPhone.extension);
+        ContactPhone localTestContactPhone;
+        localTestContactPhone = new ContactPhone(String.format("1%s%s%sx%s", 
+            this.testAreaCode, this.testExchange, this.testNumber, 
+            this.testExtension));
+        assertEquals(this.testAreaCode, localTestContactPhone.areaCode);
+        assertEquals(this.testExchange, localTestContactPhone.exchange);
+        assertEquals(this.testNumber, localTestContactPhone.number);
+        assertEquals(this.testExtension, localTestContactPhone.extension);
+        localTestContactPhone = new ContactPhone(String.format("%s%s%s", 
+            this.testAreaCode, this.testExchange, this.testNumber));
+        assertEquals(this.testAreaCode, localTestContactPhone.areaCode);
+        assertEquals(this.testExchange, localTestContactPhone.exchange);
+        assertEquals(this.testNumber, localTestContactPhone.number);
+        assertEquals(null, localTestContactPhone.extension);
+        localTestContactPhone = new ContactPhone(String.format("%s - %s", 
+            this.testExchange, this.testNumber));
+        assertEquals(null, localTestContactPhone.areaCode);
+        assertEquals(this.testExchange, localTestContactPhone.exchange);
+        assertEquals(this.testNumber, localTestContactPhone.number);
+        assertEquals(null, localTestContactPhone.extension);
     }
 
     @Test
@@ -66,7 +86,7 @@ public class ContactPhoneTest {
             try {
                 localTestContactPhones[i] = new ContactPhone(this.unsortedNumbers[i]);
             } catch (ContactValidationException ex) {
-                ;
+                fail(ex.getMessage());
             }
         }
         Arrays.sort(localTestContactPhones);
