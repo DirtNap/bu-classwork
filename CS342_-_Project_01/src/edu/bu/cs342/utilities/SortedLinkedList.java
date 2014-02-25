@@ -17,6 +17,8 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
         SortedLinkedListNode(T payload, SortedLinkedListNode<T> next,
                 SortedLinkedListNode<T> previous) {
             this.payload = payload;
+            this.setNext(next);
+            this.setPrevious(previous);
         }
 
         public SortedLinkedListNode<T> getNext() {
@@ -141,36 +143,32 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
     }
 
     public boolean addItem(E payload) {
-        SortedLinkedListNode<E> node, currentNode, previousNode;
+        SortedLinkedListNode<E> node = null, currentNode = null, previousNode = null;
         if (null == payload) {
           return false;
         }
-        node = new SortedLinkedListNode<>(payload);
-        if (null == this.last) {
-            this.first = this.last = node;
+        currentNode = this.first;
+        while (null != currentNode && currentNode.compareTo(payload) < 0) {
+          currentNode = currentNode.getNext();
+        }
+        if (null == currentNode) {
+          previousNode = this.last;
         } else {
-            currentNode = this.first;
-            while (null != currentNode && currentNode.compareTo(node.getValue()) < 0) {
-                currentNode = currentNode.getNext();
-            }
-            if (null == currentNode) {
-                node.setPrevious(this.last);
-                this.last.setNext(node);
-                this.last = node;
-            } else {
-                if (!this.allowDuplicates && currentNode.getValue().equals(node.getValue())) {
-                    return false;
-                }
-                previousNode = currentNode.getPrevious();
-                if (null == previousNode) {
-                    this.first = node;
-                } else {
-                    previousNode.setNext(node);
-                }
-                node.setPrevious(previousNode);
-                node.setNext(currentNode);
-                currentNode.setPrevious(node);
-            }
+          if (!this.allowDuplicates && currentNode.getValue().equals(payload)) {
+            return false;
+          }
+          previousNode = currentNode.getPrevious();
+        }
+        node = new SortedLinkedListNode<>(payload, currentNode, previousNode);
+        if (null == node.getNext()) {
+          this.last = node;
+        } else {
+          node.getNext().setPrevious(node);
+        }
+        if (null == node.getPrevious()) {
+          this.first = node;
+        } else {
+          node.getPrevious().setNext(node);
         }
         ++this.itemCount;
         return true;
