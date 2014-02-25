@@ -163,7 +163,7 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
         ++this.itemCount;
     }
 
-    private int length() {
+    public int length() {
         return this.itemCount;
     }
 
