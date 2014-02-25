@@ -14,7 +14,8 @@ public class SortedLinkedListTest {
 
     @Before
     public void setUp() throws Exception {
-        this.testArraySorted = this.testArrayUnSorted = new String[] { "B", "A", "E", "D", "F", "C" };
+        this.testArrayUnSorted = new String[] { "B", "A", "E", "D", "F", "C" };
+        this.testArraySorted = Arrays.copyOf(this.testArrayUnSorted, this.testArrayUnSorted.length);
         this.unIncludedValue = "G";
         Arrays.sort(this.testArraySorted);
         this.testSortedLinkedList = new SortedLinkedList<String>();
@@ -45,6 +46,9 @@ public class SortedLinkedListTest {
         for (String s : this.testSortedLinkedList) {
             assertEquals(this.testArraySorted[i++], s);
         }
+        assertEquals(this.testArrayUnSorted.length, this.testSortedLinkedList.length());
+        assertTrue(this.testSortedLinkedList.addItem(this.unIncludedValue));
+        assertEquals(this.testArrayUnSorted.length + 1, this.testSortedLinkedList.length());
     }
 
     @Test
@@ -76,5 +80,23 @@ public class SortedLinkedListTest {
         SortedLinkedList<String> localTestSortedLinkedList = new SortedLinkedList<>();
         assertEquals("[]", localTestSortedLinkedList.toString());
         assertEquals("[A <-> B <-> C <-> D <-> E <-> F]", this.testSortedLinkedList.toString());
+    }
+
+    @Test
+    public void testDuplicates() {
+        assertEquals(this.testArraySorted.length, this.testSortedLinkedList.length());
+        assertTrue(this.testSortedLinkedList.addItem(this.unIncludedValue));
+        assertEquals(this.testArraySorted.length + 1, this.testSortedLinkedList.length());
+        assertTrue(this.testSortedLinkedList.addItem(this.unIncludedValue));
+        assertEquals(this.testArraySorted.length + 2, this.testSortedLinkedList.length());
+        SortedLinkedList<String> localTestSortedLinkedList = new SortedLinkedList<>(false);
+        for (int i = 0; i < this.testArrayUnSorted.length; ++i) {
+            assertTrue(localTestSortedLinkedList.addItem(this.testArrayUnSorted[i]));
+        }
+        assertEquals(this.testArraySorted.length, localTestSortedLinkedList.length());
+        assertTrue(localTestSortedLinkedList.addItem(this.unIncludedValue));
+        assertEquals(this.testArraySorted.length + 1, localTestSortedLinkedList.length());
+        assertFalse(localTestSortedLinkedList.addItem(this.unIncludedValue));
+        assertEquals(this.testArraySorted.length + 1, localTestSortedLinkedList.length());
     }
 }

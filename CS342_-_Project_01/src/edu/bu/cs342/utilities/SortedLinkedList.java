@@ -111,10 +111,16 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
     private SortedLinkedListNode<E> first;
     private SortedLinkedListNode<E> last;
     private int itemCount;
+    private boolean allowDuplicates;
 
     public SortedLinkedList() {
+        this(true);
+    }
+
+    public SortedLinkedList(boolean allowDuplicates) {
         this.first = this.last = null;
         this.itemCount = 0;
+        this.allowDuplicates = allowDuplicates;
     }
 
     public int indexOf(E element) {
@@ -134,7 +140,7 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
         return (this.indexOf(element) != -1);
     }
 
-    public void addItem(E payload) {
+    public boolean addItem(E payload) {
         SortedLinkedListNode<E> node, currentNode, previousNode;
         node = new SortedLinkedListNode<>(payload);
         if (null == this.last) {
@@ -149,6 +155,9 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
                 this.last.setNext(node);
                 this.last = node;
             } else {
+                if (!this.allowDuplicates && currentNode.getValue().equals(node.getValue())) {
+                    return false;
+                }
                 previousNode = currentNode.getPrevious();
                 if (null == previousNode) {
                     this.first = node;
@@ -161,6 +170,7 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
             }
         }
         ++this.itemCount;
+        return true;
     }
 
     public int length() {

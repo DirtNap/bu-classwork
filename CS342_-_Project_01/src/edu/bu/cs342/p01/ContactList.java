@@ -17,7 +17,7 @@ public class ContactList implements Iterable<ContactEntry> {
     private SortedLinkedList<ContactEntry> contactEntryList;
 
     public ContactList() {
-        this.contactEntryList = new SortedLinkedList<ContactEntry>();
+        this.contactEntryList = new SortedLinkedList<ContactEntry>(false);
     }
 
     public int length() {
