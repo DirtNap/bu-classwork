@@ -142,6 +142,9 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
 
     public boolean addItem(E payload) {
         SortedLinkedListNode<E> node, currentNode, previousNode;
+        if (null == payload) {
+          return false;
+        }
         node = new SortedLinkedListNode<>(payload);
         if (null == this.last) {
             this.first = this.last = node;
@@ -177,6 +180,37 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
         return this.itemCount;
     }
 
+    private void remove(SortedLinkedListNode<E> node) {
+      SortedLinkedListNode<E> prev = node.getPrevious(), next = node.getNext();
+      if (null == next) {
+        this.last = prev;
+      } else {
+        next.setPrevious(prev);
+      }
+      if (null == prev) {
+        this.first = next;
+      } else {
+        prev.setNext(next);
+      }
+    }
+
+    public boolean removeItem(E payload) {
+      SortedLinkedListNode<E> currentNode = this.first;
+      boolean found = false;
+      while (null != currentNode) {
+        if (currentNode.getValue().equals(payload)) {
+          found = true;
+          this.remove(currentNode);
+        } else {
+          if (found) {
+            break;
+          }
+        }
+        currentNode = currentNode.getNext();
+      }
+      return found;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (null == o) {

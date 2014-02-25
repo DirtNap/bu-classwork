@@ -39,6 +39,16 @@ public class SortedLinkedListTest {
         }
         assertFalse(this.testSortedLinkedList.contains(this.unIncludedValue));
     }
+    
+    @Test
+    public void testRemoveItem() {
+      assertFalse(this.testSortedLinkedList.contains(this.unIncludedValue));
+      assertTrue(this.testSortedLinkedList.addItem(this.unIncludedValue));
+      assertTrue(this.testSortedLinkedList.contains(this.unIncludedValue));
+      assertTrue(this.testSortedLinkedList.removeItem(this.unIncludedValue));
+      assertFalse(this.testSortedLinkedList.contains(this.unIncludedValue));
+      assertFalse(this.testSortedLinkedList.removeItem(this.unIncludedValue));
+    }
 
     @Test
     public void testAddItem() {
