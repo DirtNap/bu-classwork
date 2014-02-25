@@ -1,9 +1,12 @@
 package edu.bu.cs342.p01;
 
 import static edu.bu.cs342.utilities.NullHandling.*;
+import java.io.Serializable;
 import edu.bu.cs342.utilities.NullHandling.NullSortOrder;
 
-public class ContactPhone implements Comparable<ContactPhone> {
+public class ContactPhone implements Serializable, Comparable<ContactPhone> {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     public boolean equals(Object o) {

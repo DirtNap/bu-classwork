@@ -1,7 +1,10 @@
 package edu.bu.cs342.p01;
 
-public class ContactEmail implements Comparable<ContactEmail> {
+import java.io.Serializable;
 
+public class ContactEmail implements Serializable, Comparable<ContactEmail> {
+
+    private static final long serialVersionUID = 1L;
     public final String userName;
     public final String domain;
     public final String sortKey;
