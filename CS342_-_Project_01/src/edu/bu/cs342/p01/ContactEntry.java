@@ -1,15 +1,32 @@
 package edu.bu.cs342.p01;
 
 import static edu.bu.cs342.utilities.NullHandling.*;
+
+import edu.bu.cs342.utilities.SearchOptionException;
+
+import edu.bu.cs342.utilities.Searchable;
+
 import java.io.Serializable;
 
-public class ContactEntry implements Serializable, Comparable<ContactEntry> {
+public class ContactEntry implements Serializable, Searchable, Comparable<ContactEntry> {
 
     private static final long serialVersionUID = 1L;
+    protected static final String[] searchKeys = { "name", "email" };
     private final String name;
     private final ContactEmail email;
     private final ContactPhone phone;
 
+    private boolean search(String text, String pattern, Searchable.SearchScope scope) {
+      switch (scope) {
+        case PARTIAL:
+          return text.matches(pattern);
+        case FULL:
+          return text.equalsIgnoreCase(pattern);
+        default:
+          throw new SearchOptionException("Invalid search scope.");
+      }
+    }
+    
     public ContactEntry(String name, String email, String phone) throws ContactValidationException {
         if (null == name || null == email || null == phone) {
             throw new IllegalArgumentException("ContactEntry requires name, email, and phone.");
@@ -82,5 +99,22 @@ public class ContactEntry implements Serializable, Comparable<ContactEntry> {
     public int compareTo(ContactEntry o) {
         return compareListWithNulls(this.getName(), o.getName(), this.getEmail(), o.getEmail(),
                 this.getPhone(), o.getPhone());
+    }
+
+    @Override
+    public String[] getSearchKeys() {
+      return ContactEntry.searchKeys;
+    }
+
+    @Override
+    public boolean getSearchResult(String key, String pattern, SearchScope scope) {
+      switch (key) {
+        case "name":
+          return this.search(this.getName(), pattern, scope);
+        case "email":
+          return this.search(this.getEmail().toString(), pattern, scope);
+        default:
+          throw new SearchOptionException("Invalid search key.");
+      }
     }
 }
