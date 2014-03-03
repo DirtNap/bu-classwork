@@ -13,6 +13,7 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
     private static final long serialVersionUID = 1L;
     protected static final String[] searchKeys = { "name", "email" };
     private final String name;
+    private final String display_name;
     private final ContactEmail email;
     private final ContactPhone phone;
 
@@ -31,12 +32,13 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
         if (null == name || null == email || null == phone) {
             throw new IllegalArgumentException("ContactEntry requires name, email, and phone.");
         }
-        this.name = this.parseName(name);
+        this.name = this.formatAndCapitalizeString(name);
+        this.display_name = this.parseName(this.name);
         this.email = new ContactEmail(email);
         this.phone = new ContactPhone(phone);
     }
 
-    protected String parseName(String name) throws ContactValidationException {
+    private String parseName(String name) throws ContactValidationException {
         String[] names = name.split("\\s+");
         switch (names.length) {
           case 0:
@@ -54,9 +56,18 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
             return sb.toString();
         }
     }
-
+    private String formatAndCapitalizeString(String str) {
+      str = str.replace("\\s*", " ").toLowerCase();
+      String[] stringParts = str.split("\\W+");
+      for (int i = 0; i < stringParts.length; ++i) {
+        str = str.replaceFirst(stringParts[i], String.format("%s%s",
+            stringParts[i].substring(0, 1).toUpperCase(),
+            stringParts[i].substring(1)));
+      }
+      return str;
+    }
     public String getName() {
-        return this.name;
+        return this.display_name;
     }
 
     public ContactEmail getEmail() {

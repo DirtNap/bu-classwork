@@ -36,9 +36,14 @@ public class ContactEntryTest {
         ContactEntry multiPartName = new ContactEntry("Name with multiple parts",
                 this.testContactEntry.getEmail().toString(), this.testContactEntry.getPhone()
                         .toString());
-        assertEquals("name", singleName.getName());
-        assertEquals("parts, Name with multiple", multiPartName.getName());
-        assertEquals("compound-last, first", complexName.getName());
+        ContactEntry oneLetterName = new ContactEntry("a",
+            this.testContactEntry.getEmail().toString(), this.testContactEntry.getPhone()
+                    .toString());
+
+        assertEquals("Name", singleName.getName());
+        assertEquals("Parts, Name With Multiple", multiPartName.getName());
+        assertEquals("Compound-Last, First", complexName.getName());
+        assertEquals("A", oneLetterName.getName());
     }
 
     @Test

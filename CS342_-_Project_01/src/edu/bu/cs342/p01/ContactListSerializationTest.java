@@ -41,7 +41,7 @@ public class ContactListSerializationTest {
         assertEquals("Checking initial count", this.testContactEntries.length, ois.readInt());
         for (int i = 0; i < this.testContactEntries.length; ++i) {
             assertEquals("Checking retrieved objects", this.testContactEntries[i],
-                    (ContactEntry) ois.readObject());
+                    ois.readObject());
         }
         assertEquals("Checking final count", this.testContactEntries.length, ois.readInt());
     }
