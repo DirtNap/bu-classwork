@@ -20,9 +20,9 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
     private boolean search(String text, String pattern, Searchable.SearchScope scope) {
       switch (scope) {
         case PARTIAL:
-          return text.matches(pattern);
+          return (text.indexOf(pattern) != -1);
         case FULL:
-          return text.equalsIgnoreCase(pattern);
+          return text.equals(pattern);
         default:
           throw new SearchOptionException("Invalid search scope.");
       }
@@ -121,7 +121,7 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
     public boolean getSearchResult(String key, String pattern, SearchScope scope) {
       switch (key) {
         case "name":
-          return this.search(this.getName(), pattern, scope);
+          return this.search(this.name, this.formatAndCapitalizeString(pattern), scope);
         case "email":
           return this.search(this.getEmail().toString(), pattern, scope);
         default:
