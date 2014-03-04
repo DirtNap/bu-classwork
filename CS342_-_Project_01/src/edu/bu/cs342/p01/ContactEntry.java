@@ -118,7 +118,7 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
     }
 
     @Override
-    public boolean getSearchResult(String key, String pattern, SearchScope scope) {
+    public boolean checkSearchResult(String key, String pattern, SearchScope scope) {
       switch (key) {
         case "name":
           return this.search(this.name, this.formatAndCapitalizeString(pattern), scope);
