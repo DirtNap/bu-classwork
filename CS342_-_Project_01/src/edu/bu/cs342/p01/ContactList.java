@@ -9,15 +9,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
-import edu.bu.cs342.utilities.SortedLinkedList;
+import edu.bu.cs342.utilities.Searchable.SearchScope;
+import edu.bu.cs342.utilities.SearchableSortedLinkedList;
 
 public class ContactList implements Iterable<ContactEntry> {
 
-    private SortedLinkedList<ContactEntry> contactEntryList;
+    private SearchableSortedLinkedList<ContactEntry> contactEntryList;
 
     public ContactList() {
-        this.contactEntryList = new SortedLinkedList<ContactEntry>(false);
+        this.clear();
+    }
+
+    public void clear() {
+        this.contactEntryList = new SearchableSortedLinkedList<ContactEntry>(false);
     }
 
     public int length() {
@@ -31,6 +37,23 @@ public class ContactList implements Iterable<ContactEntry> {
 
     public void addContact(ContactEntry contact) {
         this.contactEntryList.addItem(contact);
+    }
+
+    public boolean removeContact(String name, String email, String phone)
+            throws ContactValidationException {
+        return this.removeContact(new ContactEntry(name, email, phone));
+    }
+
+    public boolean removeContact(ContactEntry contact) {
+        return this.contactEntryList.removeItem(contact);
+    }
+
+    public List<ContactEntry> searchByContactName(String name) {
+        return this.contactEntryList.search("name", name, SearchScope.PARTIAL);
+    }
+
+    public List<ContactEntry> searchByContactEmail(String email) {
+        return this.contactEntryList.search("email", email, SearchScope.PARTIAL);
     }
 
     public int write(String file) throws FileNotFoundException, IOException {
@@ -59,7 +82,7 @@ public class ContactList implements Iterable<ContactEntry> {
     }
 
     public int reload(InputStream file) throws IOException {
-        SortedLinkedList<ContactEntry> replacement = new SortedLinkedList<>();
+        SearchableSortedLinkedList<ContactEntry> replacement = new SearchableSortedLinkedList<>();
         try (ObjectInputStream input = new ObjectInputStream(file)) {
             int finalCount, targetCount;
             targetCount = input.readInt();

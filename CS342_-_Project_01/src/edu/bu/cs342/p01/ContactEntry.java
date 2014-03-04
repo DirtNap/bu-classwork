@@ -1,12 +1,9 @@
 package edu.bu.cs342.p01;
 
 import static edu.bu.cs342.utilities.NullHandling.*;
-
-import edu.bu.cs342.utilities.SearchOptionException;
-
-import edu.bu.cs342.utilities.Searchable;
-
 import java.io.Serializable;
+import edu.bu.cs342.utilities.SearchOptionException;
+import edu.bu.cs342.utilities.Searchable;
 
 public class ContactEntry implements Serializable, Searchable, Comparable<ContactEntry> {
 
@@ -18,16 +15,16 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
     private final ContactPhone phone;
 
     private boolean search(String text, String pattern, Searchable.SearchScope scope) {
-      switch (scope) {
+        switch (scope) {
         case PARTIAL:
-          return (text.indexOf(pattern) != -1);
+            return (text.toLowerCase().indexOf(pattern.toLowerCase()) != -1);
         case FULL:
-          return text.equals(pattern);
+            return text.equalsIgnoreCase(pattern);
         default:
-          throw new SearchOptionException("Invalid search scope.");
-      }
+            throw new SearchOptionException("Invalid search scope.");
+        }
     }
-    
+
     public ContactEntry(String name, String email, String phone) throws ContactValidationException {
         if (null == name || null == email || null == phone) {
             throw new IllegalArgumentException("ContactEntry requires name, email, and phone.");
@@ -41,11 +38,11 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
     private String parseName(String name) throws ContactValidationException {
         String[] names = name.split("\\s+");
         switch (names.length) {
-          case 0:
+        case 0:
             throw new ContactValidationException("Invalid Name");
-          case 1:
+        case 1:
             return name;
-          default:
+        default:
             StringBuilder sb = new StringBuilder();
             sb.append(names[names.length - 1]);
             sb.append(",");
@@ -56,16 +53,17 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
             return sb.toString();
         }
     }
+
     private String formatAndCapitalizeString(String str) {
-      str = str.replace("\\s*", " ").toLowerCase();
-      String[] stringParts = str.split("\\W+");
-      for (int i = 0; i < stringParts.length; ++i) {
-        str = str.replaceFirst(stringParts[i], String.format("%s%s",
-            stringParts[i].substring(0, 1).toUpperCase(),
-            stringParts[i].substring(1)));
-      }
-      return str;
+        str = str.replace("\\s*", " ").toLowerCase();
+        String[] stringParts = str.split("\\W+");
+        for (int i = 0; i < stringParts.length; ++i) {
+            str = str.replaceFirst(stringParts[i], String.format("%s%s",
+                    stringParts[i].substring(0, 1).toUpperCase(), stringParts[i].substring(1)));
+        }
+        return str;
     }
+
     public String getName() {
         return this.display_name;
     }
@@ -114,18 +112,18 @@ public class ContactEntry implements Serializable, Searchable, Comparable<Contac
 
     @Override
     public String[] getSearchKeys() {
-      return ContactEntry.searchKeys;
+        return ContactEntry.searchKeys;
     }
 
     @Override
     public boolean checkSearchResult(String key, String pattern, SearchScope scope) {
-      switch (key) {
+        switch (key) {
         case "name":
-          return this.search(this.name, this.formatAndCapitalizeString(pattern), scope);
+            return this.search(this.name, this.formatAndCapitalizeString(pattern), scope);
         case "email":
-          return this.search(this.getEmail().toString(), pattern, scope);
+            return this.search(this.getEmail().toString(), pattern, scope);
         default:
-          throw new SearchOptionException("Invalid search key.");
-      }
+            throw new SearchOptionException("Invalid search key.");
+        }
     }
 }
