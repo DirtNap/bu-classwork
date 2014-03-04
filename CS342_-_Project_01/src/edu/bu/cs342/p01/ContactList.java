@@ -14,6 +14,12 @@ import java.util.NoSuchElementException;
 import edu.bu.cs342.utilities.Searchable.SearchScope;
 import edu.bu.cs342.utilities.SearchableSortedLinkedList;
 
+/**
+ * A list of {@link ContactEntry} elements representing an address book
+ * 
+ * @author Michael Donnelly
+ * 
+ */
 public class ContactList implements Iterable<ContactEntry> {
 
     private SearchableSortedLinkedList<ContactEntry> contactEntryList;
@@ -22,10 +28,18 @@ public class ContactList implements Iterable<ContactEntry> {
         this.clear();
     }
 
+    /**
+     * Empties out the contact list.
+     */
     public void clear() {
         this.contactEntryList = new SearchableSortedLinkedList<ContactEntry>(false);
     }
 
+    /**
+     * The length of the contact list.
+     * 
+     * @return int the length of the contact list.
+     */
     public int length() {
         return this.contactEntryList.length();
     }
@@ -35,6 +49,12 @@ public class ContactList implements Iterable<ContactEntry> {
         this.addContact(new ContactEntry(name, email, phone));
     }
 
+    /**
+     * Adds a new contact to the list, in ascending order.
+     * 
+     * @param contact
+     *            ContactEntry the contact to add.
+     */
     public void addContact(ContactEntry contact) {
         this.contactEntryList.addItem(contact);
     }
@@ -44,24 +64,67 @@ public class ContactList implements Iterable<ContactEntry> {
         return this.removeContact(new ContactEntry(name, email, phone));
     }
 
+    /**
+     * Removes a contact from the list.
+     * 
+     * @param contact
+     *            ContactEntry the contact to remove.
+     * @return boolean true if the contact was found in the list and removed.
+     */
     public boolean removeContact(ContactEntry contact) {
         return this.contactEntryList.removeItem(contact);
     }
 
+    /**
+     * Returns a list of contacts whose name partially matches the provided
+     * text.
+     * 
+     * @param name
+     *            String the text to match.
+     * @return List<ContactEntry> the matching elements of the contact list.
+     */
     public List<ContactEntry> searchByContactName(String name) {
         return this.contactEntryList.search("name", name, SearchScope.PARTIAL);
     }
 
+    /**
+     * Returns a list of contacts whose email partially matches the provided
+     * text.
+     * 
+     * @param email
+     *            String the text to match.
+     * @return List<ContactEntry> the matching elements of the contact list.
+     */
     public List<ContactEntry> searchByContactEmail(String email) {
         return this.contactEntryList.search("email", email, SearchScope.PARTIAL);
     }
 
+    /**
+     * Store the contact list into a file.
+     * 
+     * @param file
+     *            String the name of the file.
+     * @return int the number of contacts written to the file.
+     * @throws FileNotFoundException
+     *             when the file name is not appropriate.
+     * @throws IOException
+     *             when the underlying file stream can not be written to.
+     */
     public int write(String file) throws FileNotFoundException, IOException {
         try (FileOutputStream stream = new FileOutputStream(file)) {
             return this.write(stream);
         }
     }
 
+    /**
+     * Store the contact list into a file.
+     * 
+     * @param file
+     *            OutputStream the stream to write the file to.
+     * @return int the number of contacts written to the file.
+     * @throws IOException
+     *             When the stream can not be written to.
+     */
     public int write(OutputStream file) throws IOException {
         int ct = 0;
         try (ObjectOutputStream output = new ObjectOutputStream(file)) {
@@ -75,11 +138,39 @@ public class ContactList implements Iterable<ContactEntry> {
         return ct;
     }
 
+    /**
+     * Read the contact list from a file.
+     * 
+     * Replaces the existing list of contacts.
+     * 
+     * @param file
+     *            String the name of the file.
+     * @return int the number of contacts read from the file, or -1 when the
+     *         file could not be loaded.
+     * @throws FileNotFoundException
+     *             when the file name is not appropriate.
+     * @throws IOException
+     *             when the underlying file stream is corrupt.
+     */
+
     public int reload(String file) throws IOException {
         try (FileInputStream stream = new FileInputStream(file)) {
             return this.reload(stream);
         }
     }
+
+    /**
+     * Read the contact list from a file.
+     * 
+     * Replaces the existing list of contacts.
+     * 
+     * @param file
+     *            The stream to read from .
+     * @return int the number of contacts read from the stream, or -1 when the
+     *         file could not be loaded.
+     * @throws IOException
+     *             when the underlying file stream is corrupt.
+     */
 
     public int reload(InputStream file) throws IOException {
         SearchableSortedLinkedList<ContactEntry> replacement = new SearchableSortedLinkedList<>();
