@@ -2,6 +2,12 @@ package edu.bu.cs342.p01;
 
 import java.io.Serializable;
 
+/**
+ * An immutable representation of an email address
+ * 
+ * @author Michael Donnelly
+ * 
+ */
 public class ContactEmail implements Serializable, Comparable<ContactEmail> {
 
     private static final long serialVersionUID = 1L;
@@ -9,6 +15,13 @@ public class ContactEmail implements Serializable, Comparable<ContactEmail> {
     public final String domain;
     public final String sortKey;
 
+    /**
+     * 
+     * @param emailAddress
+     *            String the email address to be stored.
+     * @throws ContactValidationException
+     *             when the email address can't be parsed.
+     */
     public ContactEmail(String emailAddress) throws ContactValidationException {
         String[] parts = emailAddress.toLowerCase().split("@");
         if (2 != parts.length) {
@@ -49,6 +62,12 @@ public class ContactEmail implements Serializable, Comparable<ContactEmail> {
         return this.toString().equals(o.toString());
     }
 
+    /**
+     * Compares first according to domain, starting at the top level, then by
+     * username.
+     * 
+     * @see java.lang.Comparable#compareTo(Object)
+     */
     @Override
     public int compareTo(ContactEmail o) {
         return this.sortKey.compareTo(o.sortKey);

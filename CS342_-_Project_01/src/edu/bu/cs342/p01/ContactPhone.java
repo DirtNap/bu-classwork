@@ -4,6 +4,12 @@ import static edu.bu.cs342.utilities.NullHandling.*;
 import java.io.Serializable;
 import edu.bu.cs342.utilities.NullHandling.NullSortOrder;
 
+/**
+ * An immutable representation of a US phone number.
+ * 
+ * @author Michael Donnelly
+ * 
+ */
 public class ContactPhone implements Serializable, Comparable<ContactPhone> {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +37,13 @@ public class ContactPhone implements Serializable, Comparable<ContactPhone> {
     public final String number;
     public final String extension;
 
+    /**
+     * 
+     * @param phoneNumber
+     *            String the US phone number to be stored.
+     * @throws ContactValidationException
+     *             when the phone number can't be parsed.
+     */
     public ContactPhone(String phoneNumber) throws ContactValidationException {
         String[] parts = phoneNumber.split("\\s*x\\s*");
         for (int i = 0; i < parts.length; ++i) {
