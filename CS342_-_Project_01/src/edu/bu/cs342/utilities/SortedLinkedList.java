@@ -300,6 +300,7 @@ public class SortedLinkedList<E extends Comparable<E>> implements Iterable<E> {
         } else {
             prev.setNext(next);
         }
+        --this.itemCount;
     }
 
     /**
