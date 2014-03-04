@@ -96,7 +96,6 @@ public class ContactListTest {
         ContactEntry localTestContactEntry = new ContactEntry("aaa", "aaa@example.com", "1111111");
         this.testContactList.addContact(this.testContactEntry);
         this.testContactList.addContact(localTestContactEntry);
-        System.out.println(this.testName.substring(0, this.testName.length() - 1).substring(1));
         localTestResults = this.testContactList.searchByContactName(this.testName.substring(0,
                 this.testName.length() - 1).substring(1));
         assertEquals(1, localTestResults.size());
