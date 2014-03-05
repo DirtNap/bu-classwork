@@ -2,10 +2,10 @@ package edu.bu.cs342.l01;
 
 public class Runway {
 
-    private int claimEnd = 0;
+    private int claimEnd;
 
     public Runway() {
-        // TODO Auto-generated constructor stub
+      this.claimEnd = 0;
     }
 
     public boolean claim(int timeAt, int timeFor) {
