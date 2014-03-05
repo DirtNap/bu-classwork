@@ -11,31 +11,53 @@ import java.util.Scanner;
  * @author jbracken@bu.edu
  * @author dthapa@bu.edu
  * 
+ * An airport, suitable for running simulations upon.
  */
 public class Airport {
 
+    /**
+     * The time a plane needs a runway for in order to take off
+     * 
+     * @return int the time required to take off
+     */
     public int getRequiredTakeOffTime() {
         return this.requiredTakeOffTime;
     }
 
+    /**
+     * The time a plane needs a runway for in order to land
+     * 
+     * @return int the time required to land
+     */
     public int getRequiredLandingTime() {
         return this.requiredLandingTime;
     }
 
+    /**
+     * The average number of minutes between planes wishing to depart
+     * 
+     * @return int average time between departures
+     */
     public int getAverageTakeOffTime() {
         return this.averageTakeOffTime;
     }
 
+    /**
+     * The average number of minutes between planes wishing to arrive
+     * 
+     * @return int average time between arrivals
+     */
     public int getAverageLandingTime() {
         return this.averageLandingTime;
     }
 
+    /**
+     * The maiximum number of minutes a plane can wait at the airport before landing
+     * 
+     * @return int the time the plane can wait before crashing
+     */
     public int getLandingCrashTime() {
         return this.landingCrashTime;
-    }
-
-    public int getSimulationTime() {
-        return this.simulationTime;
     }
 
     private int requiredTakeOffTime;
@@ -43,7 +65,6 @@ public class Airport {
     private int averageTakeOffTime;
     private int averageLandingTime;
     private int landingCrashTime;
-    private int simulationTime;
 
     public Airport() {
     }
@@ -55,10 +76,18 @@ public class Airport {
         simulator.run();
     }
 
+    /**
+     * Get a positive integer from an input source
+     * @param prompt String the prompt to issue for the integer
+     * @param in InputStream the source of input
+     * @param out PrintStream the source to communicate with the user
+     * @param err PrintStream the source to report errors
+     * @return int the requested integer
+     */
     private int getInteger(String prompt, InputStream in, PrintStream out, PrintStream err) {
         int result = 0;
         while (0 >= result) {
-            @SuppressWarnings("resource")
+            @SuppressWarnings("resource") // Closing the scanner would close the InputStream
             Scanner scanner = new Scanner(in);
             out.printf("%s:\t", prompt);
             int input = 0;
@@ -75,6 +104,13 @@ public class Airport {
         return result;
     }
 
+    /**
+     * Configure the airport, and determine the simulation time.
+     * @param in InputStream the source of input
+     * @param out PrintStream the source to communicate with the user
+     * @param err PrintStream the source to report errors
+     * @return int the number of minutes of simulation to perform
+     */
     private int getConfiguration(InputStream in, PrintStream out, PrintStream err) {
         this.requiredTakeOffTime = this.getInteger(
                 "Enter the number of minutes needed for one plane to land", in, out, err);
