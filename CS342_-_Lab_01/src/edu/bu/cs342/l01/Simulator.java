@@ -1,5 +1,6 @@
 package edu.bu.cs342.l01;
 
+import java.io.PrintStream;
 import java.util.Random;
 
 /**
@@ -95,7 +96,7 @@ public class Simulator {
      * * * * * * If so, discard it and end the take-off loop
      * See if any of the planes in the landing queue had crashed by the simulation time.
      */
-    public void run() {
+    public void run(PrintStream output) {
         while (++this.currentTime <= this.simulationTime) {
             if (Simulator.checkProbabilityEvent(this.airport.getAverageLandingTime())) {
                 this.landingQueue.enqueue(new Airplane(this.airport.getRequiredLandingTime(),
@@ -139,10 +140,10 @@ public class Simulator {
                 break;
             }
         }
-        System.out.printf("Number of planes that took off:\t%d%n", this.takenOffCount);
-        System.out.printf("Number of planes that landed:\t%d%n", this.landedCount);
-        System.out.printf("Number of planes that crashed:\t%d%n", this.crashedCount);
-        System.out.printf("Average time waiting for take-off:\t%.02f%n", this.averageTakeOffWait);
-        System.out.printf("Average time waiting for landing:\t%.02f%n", this.averageLandingWait);
+        output.printf("Number of planes that took off:\t%d%n", this.takenOffCount);
+        output.printf("Number of planes that landed:\t%d%n", this.landedCount);
+        output.printf("Number of planes that crashed:\t%d%n", this.crashedCount);
+        output.printf("Average time waiting for take-off:\t%.02f%n", this.averageTakeOffWait);
+        output.printf("Average time waiting for landing:\t%.02f%n", this.averageLandingWait);
     }
 }

@@ -73,7 +73,7 @@ public class Airport {
         Airport self = new Airport();
         int simulationTime = self.getConfiguration(System.in, System.out, System.err);
         Simulator simulator = new Simulator(simulationTime, self);
-        simulator.run();
+        simulator.run(System.out);
     }
 
     /**
