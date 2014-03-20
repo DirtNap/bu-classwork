@@ -27,7 +27,7 @@ public class Chessboard {
             this.count = 0;
             this.next = 0;
             for (int i = 0; i < 8; ++i) {
-                Position testPosition = new Position(this.file, i + 1);
+                Position testPosition = new Position(i + 1, this.file);
                 boolean unblocked = true;
                 for (Queen q : this.currentPlacement) {
                     if (q.blocks(testPosition)) {
@@ -78,7 +78,14 @@ public class Chessboard {
     }
 
     private int getNextFile(int currentFile) {
-        return currentFile + 1 % 8;
+        if (currentFile > 8 || currentFile < 1) {
+            throw new IllegalPlacementException();
+        }
+        int result = currentFile + 1;
+        if (result == 9) {
+            result = 1;
+        }
+        return result;
     }
 
     private boolean solve(int file) {
@@ -125,9 +132,21 @@ public class Chessboard {
         return new PositionGenerator(file, this.queenStack);
     }
 
-    public static void main(String[] args) {
-        Chessboard self = new Chessboard(new Queen(new Position(1, 1)));
-        System.out.println(self.isSolved());
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < this.positionMap.length; ++i) {
+            sb.append("|");
+            for (int j = 1; j <= 8; ++j) {
+                if (this.positionMap[i] == j) {
+                    sb.append("Q");
+                } else {
+                    sb.append(" ");
+                }
+                sb.append("|");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
-
 }

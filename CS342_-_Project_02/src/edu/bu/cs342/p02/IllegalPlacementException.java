@@ -5,9 +5,8 @@ package edu.bu.cs342.p02;
  */
 public class IllegalPlacementException extends RuntimeException {
 
-    /**
-     * 
-     */
+    private static final long serialVersionUID = 1L;
+
     public IllegalPlacementException() {
         super();
     }
