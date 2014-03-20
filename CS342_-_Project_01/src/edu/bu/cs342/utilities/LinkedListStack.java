@@ -111,4 +111,30 @@ public class LinkedListStack<E> implements Iterable<E> {
         return new LinkedListStackIterator<E>(this.top);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean equals(Object o) {
+        if (null == o) {
+            return false;
+        }
+        if (this == o) {
+            return true;
+        }
+        try {
+            LinkedListStack<String> test = (LinkedListStack<String>) o;
+            if (this.length() != test.length()) {
+                return false;
+            }
+            Iterator<E> testIterator = (Iterator<E>) test.iterator();
+            for (E element : this) {
+                if (!element.equals(testIterator.next())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (ClassCastException ex) {
+            return false;
+        }
+    }
+
 }

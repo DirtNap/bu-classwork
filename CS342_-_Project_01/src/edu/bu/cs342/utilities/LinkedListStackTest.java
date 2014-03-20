@@ -9,23 +9,6 @@ public class LinkedListStackTest {
     private String[] testData;
     private LinkedListStack<String> testLinkedListStack;
 
-    @Override
-    public boolean equals(Object o) {
-        if (null == o) {
-            return false;
-        }
-        if (this == o) {
-            return true;
-        }
-        try {
-            LinkedListStackTest test = (LinkedListStackTest) o;
-            // TODO Perform LinkedListStackTest specific comparison
-        } catch (ClassCastException ex) {
-            return false;
-        }
-        return false;
-    }
-
     @Before
     public void setUp() throws Exception {
         this.testData = new String[] { "A", "B", "C", "D", "E", "F" };
@@ -75,5 +58,21 @@ public class LinkedListStackTest {
             assertEquals(this.testData[--ct], e);
         }
 
+    }
+
+    public final void testEquals() {
+        LinkedListStack<String> localTestLinkedListStack = new LinkedListStack<String>();
+        for (int i = 0; i < this.testData.length; ++i) {
+            this.testLinkedListStack.push(this.testData[i]);
+            localTestLinkedListStack.push(this.testData[i]);
+        }
+        assertFalse(this.testLinkedListStack.equals(null));
+        assertTrue(this.testLinkedListStack.equals(this.testLinkedListStack));
+        assertFalse(this.testLinkedListStack.equals(new Object()));
+        assertTrue(this.testLinkedListStack.equals(localTestLinkedListStack));
+        localTestLinkedListStack.pop();
+        assertFalse(this.testLinkedListStack.equals(localTestLinkedListStack));
+        localTestLinkedListStack.push("test");
+        assertFalse(this.testLinkedListStack.equals(localTestLinkedListStack));
     }
 }
