@@ -2,7 +2,6 @@ package edu.bu.cs342.p02;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
 import edu.bu.cs342.utilities.LinkedListStack;
 
 /**
@@ -10,116 +9,125 @@ import edu.bu.cs342.utilities.LinkedListStack;
  */
 public class Chessboard {
 
-  private LinkedListStack<Queen> queenStack;
-  private int startingFile;
-  private int[] positionMap;
-  
-  class PositionGenerator implements Iterator<Position>, Iterable<Position> {
-    private LinkedListStack<Queen> currentPlacement;
-    private int file;
-    private Position[] available;
-    private int count;
-    private int next;
+    private LinkedListStack<Queen> queenStack;
+    private int startingFile;
+    private int[] positionMap;
 
-    public PositionGenerator(int file, LinkedListStack<Queen> currentPlacement) {
-      this.file = file;
-      this.currentPlacement = currentPlacement;
-      this.available = new Position[8];
-      this.count = 0;
-      this.next = 0;
-      for (int i = 0; i < 8; ++i) {
-        Position testPosition = new Position(this.file, i + 1);
-        boolean unblocked = true;
-        for (Queen q : this.currentPlacement) {
-          if (q.blocks(testPosition)) {
-            unblocked = false;
-            break;
-          }
-        }
-        if (unblocked) {
-          this.available[this.count++] = testPosition;
-        }
-      }
-    }
-    @Override
-    public Iterator<Position> iterator() {
-      return this;
-    }
-    @Override
-    public boolean hasNext() {
-      return (this.count > this.next);
-    }
-    @Override
-    public Position next() {
-      if (this.hasNext()) {
-        return this.available[this.next++];
-      }
-      throw new NoSuchElementException();
-    }
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException();
-    }
-    
-  }
+    class PositionGenerator implements Iterator<Position>, Iterable<Position> {
+        private LinkedListStack<Queen> currentPlacement;
+        private int file;
+        private Position[] available;
+        private int count;
+        private int next;
 
-  /**
-   * 
-   */
-  public Chessboard(Queen initial) {
-    this.positionMap = new int[8];
-    this.queenStack = new LinkedListStack<Queen>();
-    this.addQueen(initial);
-    this.startingFile = initial.position.file;
-    this.solve(this.getNextFile(this.startingFile));
-  }
-  private int getNextFile(int currentFile) {
-    return currentFile + 1 % 8;
-  }
-  private boolean solve(int file) {
-    if (file != this.startingFile) {
-      for (Position p : this.getAvailablePositions(file)) {
-        this.addQueen(new Queen(p));
-        if (this.solve(this.getNextFile(file))) {
-          break;
+        public PositionGenerator(int file, LinkedListStack<Queen> currentPlacement) {
+            this.file = file;
+            this.currentPlacement = currentPlacement;
+            this.available = new Position[8];
+            this.count = 0;
+            this.next = 0;
+            for (int i = 0; i < 8; ++i) {
+                Position testPosition = new Position(this.file, i + 1);
+                boolean unblocked = true;
+                for (Queen q : this.currentPlacement) {
+                    if (q.blocks(testPosition)) {
+                        unblocked = false;
+                        break;
+                    }
+                }
+                if (unblocked) {
+                    this.available[this.count++] = testPosition;
+                }
+            }
+        }
+
+        @Override
+        public Iterator<Position> iterator() {
+            return this;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return (this.count > this.next);
+        }
+
+        @Override
+        public Position next() {
+            if (this.hasNext()) {
+                return this.available[this.next++];
+            }
+            throw new NoSuchElementException();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+    /**
+     * 
+     */
+    public Chessboard(Queen initial) {
+        this.positionMap = new int[8];
+        this.queenStack = new LinkedListStack<Queen>();
+        this.addQueen(initial);
+        this.startingFile = initial.position.file;
+        this.solve(this.getNextFile(this.startingFile));
+    }
+
+    private int getNextFile(int currentFile) {
+        return currentFile + 1 % 8;
+    }
+
+    private boolean solve(int file) {
+        if (file != this.startingFile) {
+            for (Position p : this.getAvailablePositions(file)) {
+                this.addQueen(new Queen(p));
+                if (this.solve(this.getNextFile(file))) {
+                    break;
+                } else {
+                    this.removeQueen();
+                }
+            }
+        }
+        return this.isSolved();
+    }
+
+    public void addQueen(Queen q) {
+        if (this.positionMap[q.position.file - 1] == 0) {
+            this.positionMap[q.position.file - 1] = q.position.rank;
+            this.queenStack.push(q);
         } else {
-          this.removeQueen();
+            throw new IllegalPlacementException();
         }
-      }
     }
-    return this.isSolved();
-  }
-  
-  public void addQueen(Queen q) {
-    if (this.positionMap[q.position.file - 1] == 0) {
-      this.positionMap[q.position.file - 1] = q.position.rank;
-      this.queenStack.push(q);
-    } else {
-      throw new IllegalPlacementException();
+
+    public Queen removeQueen() {
+        Queen result = this.queenStack.pop();
+        if (null != result) {
+            this.positionMap[result.position.file - 1] = 0;
+        }
+        return result;
     }
-  }
-  public Queen removeQueen() {
-    Queen result = this.queenStack.pop();
-    if (null != result) {
-      this.positionMap[result.position.file - 1] = 0;
+
+    public boolean isSolved() {
+        for (int i = 0; i < this.positionMap.length; ++i) {
+            if (0 == this.positionMap[i]) {
+                return false;
+            }
+        }
+        return true;
     }
-    return result;
-  }
-  public boolean isSolved() {
-    for (int i = 0; i < this.positionMap.length; ++i) {
-      if (0 == this.positionMap[i]) {
-        return false;
-      }
+
+    public PositionGenerator getAvailablePositions(int file) {
+        return new PositionGenerator(file, this.queenStack);
     }
-    return true;
-  }
-  public PositionGenerator getAvailablePositions(int file) {
-    return new PositionGenerator(file, this.queenStack);
-  }
-  
-  public static void main(String[] args) {
-    Chessboard self = new Chessboard(new Queen(new Position(1, 1)));
-    System.out.println(self.isSolved());
-  }
+
+    public static void main(String[] args) {
+        Chessboard self = new Chessboard(new Queen(new Position(1, 1)));
+        System.out.println(self.isSolved());
+    }
 
 }

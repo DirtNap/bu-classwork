@@ -5,10 +5,10 @@ package edu.bu.cs342.p02;
  */
 public class IllegalPlacementException extends RuntimeException {
 
-  /**
-   * 
-   */
-  public IllegalPlacementException() {
-    super();
-  }
+    /**
+     * 
+     */
+    public IllegalPlacementException() {
+        super();
+    }
 }
