@@ -149,4 +149,17 @@ public class Chessboard {
         }
         return sb.toString();
     }
+    public static void main(String[] args) {
+      int count = 0;
+      for (int i = 1; i < 9; ++i) {
+        for (int j = 1; j < 9; ++j) {
+          Chessboard board = new Chessboard(new Queen(new Position(i, j)));
+          if (board.isSolved()) {
+            ++count;
+          }
+        }
+      }
+      System.out.println(count);
+    }
+    
 }

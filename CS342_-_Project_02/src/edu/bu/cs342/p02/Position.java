@@ -25,8 +25,8 @@ public class Position {
         if (1 > rank || 1 > file || 8 < rank || 8 < file) {
             throw new IllegalArgumentException("Chessboard is 8x8");
         }
-        this.file = rank;
-        this.rank = file;
+        this.file = file;
+        this.rank = rank;
     }
 
     public Position absoluteDistanceFrom(Position test) {
