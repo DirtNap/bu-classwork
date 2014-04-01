@@ -71,6 +71,15 @@ public class UserInput {
     }
 
     public boolean readBoolean(String prompt, String truePrompt, String falsePrompt, Boolean defaultResult) {
+        truePrompt = truePrompt.toLowerCase();
+        falsePrompt = falsePrompt.toLowerCase();
+        if (null != defaultResult) {
+            if (defaultResult.booleanValue()) {
+                truePrompt = truePrompt.toUpperCase();
+            } else {
+                falsePrompt = falsePrompt.toUpperCase();
+            }
+        }
         String promptOutput = String.format("%s (%s/%s)", prompt, truePrompt,  falsePrompt);
         this.prompt(promptOutput, '?');
         String input = "";
