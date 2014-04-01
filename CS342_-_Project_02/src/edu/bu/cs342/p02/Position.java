@@ -1,8 +1,14 @@
 package edu.bu.cs342.p02;
 
+/**
+ * Representation of a position on a chess board.
+ * 
+ * @author Michael Donnelly
+ * 
+ */
 public class Position {
 
-    private static final byte ASCII_FILE_BASE = (byte)'`';
+    private static final byte ASCII_FILE_BASE = (byte) '`';
 
     @Override
     public boolean equals(Object o) {
@@ -25,6 +31,14 @@ public class Position {
     public final int fileIndex;
     public final int rankIndex;
 
+    /**
+     * Create a Position at the given rank and file.
+     * 
+     * @param rank
+     *            int the horizontal component of the Position.
+     * @param file
+     *            char the vertical component of the Position.
+     */
     public Position(int rank, char file) {
         file = Position.indexToFile(Position.fileToIndex(file));
         rank = Position.rankToIndex(Position.rankToIndex(rank));
@@ -34,49 +48,63 @@ public class Position {
         this.rankIndex = Position.rankToIndex(rank);
     }
 
+    /**
+     * Returns a position whose rank and file are the distance in rank and file
+     * between two positions.
+     * 
+     * @param test
+     *            Position a Position to compare to this Position.
+     * @return Position a position whose rank and file are the distance in rank
+     *         and file between this Position and {@code test}
+     */
     public Position absoluteDistanceFrom(Position test) {
-        return new Position(Math.abs(this.rankIndex - test.rankIndex),
-              Position.indexToFile(Math.abs(this.fileIndex - test.fileIndex)));
+        return new Position(Math.abs(this.rankIndex - test.rankIndex), Position.indexToFile(Math
+                .abs(this.fileIndex - test.fileIndex)));
     }
 
     /**
      * Convert a rank (anchored bottom-left on the chessboard) to an index
      * (anchored top-left).
      * 
-     * @param rank int the rank of the position.
+     * @param rank
+     *            int the rank of the position.
      * @return int the index of the position.
      */
     public static int rankToIndex(int rank) {
-      if (rank < 1 || rank > 8) {
-        throw new IllegalArgumentException("Rank must be between 1 and 8");
-      }
-      return 9 - rank;
+        if (rank < 1 || rank > 8) {
+            throw new IllegalArgumentException("Rank must be between 1 and 8");
+        }
+        return 9 - rank;
     }
 
     /**
      * Convert a file (A-H) to an index (1-8)
-     * @param file char the file of the position.
+     * 
+     * @param file
+     *            char the file of the position.
      * @return int the index of the position.
      */
     public static int fileToIndex(char file) {
-      char input = Character.toLowerCase(file);
-      int value = input - Position.ASCII_FILE_BASE;
-      if (value < 1 || value > 8) {
-        throw new IllegalArgumentException("File must be between A and H");
-      }
-      return value;
+        char input = Character.toLowerCase(file);
+        int value = input - Position.ASCII_FILE_BASE;
+        if (value < 1 || value > 8) {
+            throw new IllegalArgumentException("File must be between A and H");
+        }
+        return value;
     }
-    
+
     /**
      * Convert an index (1-8) to a file (A-H)
-     * @param fileIndex in the index of the position.
+     * 
+     * @param fileIndex
+     *            in the index of the position.
      * @return char the file of the position.
      */
     public static char indexToFile(int fileIndex) {
-      if (fileIndex < 1 || fileIndex > 8) {
-        throw new IllegalArgumentException("File must be between a and h");
-      }
-      return (char)(fileIndex + Position.ASCII_FILE_BASE);
+        if (fileIndex < 1 || fileIndex > 8) {
+            throw new IllegalArgumentException("File must be between a and h");
+        }
+        return (char) (fileIndex + Position.ASCII_FILE_BASE);
     }
 
     @Override

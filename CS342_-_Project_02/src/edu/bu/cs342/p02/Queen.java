@@ -1,5 +1,11 @@
 package edu.bu.cs342.p02;
 
+/**
+ * Representation of a Queen on a chess board.
+ * 
+ * @author Michael Donnelly
+ * 
+ */
 public class Queen {
 
     @Override
@@ -20,12 +26,28 @@ public class Queen {
 
     public final Position position;
 
+    /**
+     * Create a queen at the given position.
+     * 
+     * @param position
+     *            Position a valid board placement.
+     */
     public Queen(Position position) {
         this.position = position;
     }
 
+    /**
+     * Checks whether this queen blocks (has an attack vector to) a piece at
+     * another position.
+     * 
+     * @param position
+     *            Position the position to test.
+     * @return boolean whether or not {@code position} is vulnerable to this
+     *         Queen.
+     */
     public boolean blocks(Position position) {
-        if (this.position.rankIndex == position.rankIndex || this.position.fileIndex == position.fileIndex) {
+        if (this.position.rankIndex == position.rankIndex
+                || this.position.fileIndex == position.fileIndex) {
             return true;
         }
         Position distance = this.position.absoluteDistanceFrom(position);

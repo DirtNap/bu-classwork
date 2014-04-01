@@ -12,7 +12,6 @@ public class Chessboard {
     private LinkedListStack<Queen> queenStack;
     private char startingFile;
     private int[] positionMap;
-    
 
     /**
      * Generates the list of acceptable moves for a chessboard.
@@ -25,17 +24,23 @@ public class Chessboard {
         private int next;
 
         /**
-         * Determines the available placements in file, based on currentPlacement
-         * @param file char the file in which to place the queen.
-         * @param currentPlacement LinkedListStack<Queen> the currently placed queens.
+         * Determines the available placements in file, based on
+         * currentPlacement
+         * 
+         * @param file
+         *            char the file in which to place the queen.
+         * @param currentPlacement
+         *            LinkedListStack<Queen> the currently placed queens.
          */
         public PositionGenerator(char file, LinkedListStack<Queen> currentPlacement) {
             this.file = file;
             this.currentPlacement = currentPlacement;
-            this.available = new Position[8]; // cache the available positions for the iterator.
+            this.available = new Position[8]; // cache the available positions
+                                              // for the iterator.
             this.count = 0;
             this.next = 0;
-            for (int i = 0; i < 8; ++i) { // Check each position in the file to see if any queen blocks it.
+            for (int i = 0; i < 8; ++i) { // Check each position in the file to
+                                          // see if any queen blocks it.
                 Position testPosition = new Position(i + 1, this.file);
                 boolean unblocked = true;
                 for (Queen q : this.currentPlacement) {
@@ -44,12 +49,13 @@ public class Chessboard {
                         break;
                     }
                 }
-                if (unblocked) { // No queen is blocking this position, so add it to the cache.
+                if (unblocked) { // No queen is blocking this position, so add
+                                 // it to the cache.
                     this.available[this.count++] = testPosition;
                 }
             }
         }
-        
+
         @Override
         public Iterator<Position> iterator() {
             return this;
@@ -78,7 +84,9 @@ public class Chessboard {
     /**
      * Create a chessboard with a queen at the initial position.
      * 
-     * @param initial Queen the initial Queen around which to place the remaining queens.
+     * @param initial
+     *            Queen the initial Queen around which to place the remaining
+     *            queens.
      */
     public Chessboard(Queen initial) {
         this.positionMap = new int[8];
@@ -89,7 +97,9 @@ public class Chessboard {
 
     /**
      * Find the next file, rotating around the files on a chessboard.
-     * @param currentFile int the index of the current file.
+     * 
+     * @param currentFile
+     *            int the index of the current file.
      * @return char the next file.
      */
     private char getNextFile(char currentFile) {
@@ -105,12 +115,14 @@ public class Chessboard {
     }
 
     public boolean solve() {
-      return this.solve(this.getNextFile(this.startingFile));
+        return this.solve(this.getNextFile(this.startingFile));
     }
-    
+
     /**
      * Solve the board beginning at the provided file.
-     * @param file int the index of the current file
+     * 
+     * @param file
+     *            int the index of the current file
      * @return boolean whether or not the board was solved.
      */
     private boolean solve(char file) {
@@ -129,7 +141,9 @@ public class Chessboard {
 
     /**
      * Place a queen on the board.
-     * @param q Queen the queen to place.
+     * 
+     * @param q
+     *            Queen the queen to place.
      */
     public void addQueen(Queen q) {
         if (this.positionMap[q.position.fileIndex - 1] == 0) {
@@ -142,6 +156,7 @@ public class Chessboard {
 
     /**
      * Remove a queen from the board.
+     * 
      * @return Queen the removed queen.
      */
     public Queen removeQueen() {
@@ -154,6 +169,7 @@ public class Chessboard {
 
     /**
      * Indicates whether or not the board is in a solved state.
+     * 
      * @return boolean true if the board is in a solved state.
      */
     public boolean isSolved() {
@@ -169,8 +185,10 @@ public class Chessboard {
      * Returns an Iterable Iterator of Position representing all valid
      * placements in {@code file} at call time.
      * 
-     * @param file int the file in which to calculate postitions.
-     * @return PositionGenerator a pre-calculated iterable iterator of valid positions.
+     * @param file
+     *            int the file in which to calculate positions.
+     * @return PositionGenerator a pre-calculated iterable iterator of valid
+     *         positions.
      */
     public PositionGenerator getAvailablePositions(char file) {
         return new PositionGenerator(file, this.queenStack);
@@ -179,7 +197,7 @@ public class Chessboard {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        final String header = "  a b c d e f g h\n"; 
+        final String header = "  a b c d e f g h\n";
         sb.append(header);
         for (int i = this.positionMap.length; 0 < i; --i) {
             sb.append(i);
