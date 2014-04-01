@@ -25,15 +25,15 @@ public class Queen {
     }
 
     public boolean blocks(Position position) {
-        if (this.position.rank == position.rank || this.position.file == position.file) {
+        if (this.position.rankIndex == position.rankIndex || this.position.fileIndex == position.fileIndex) {
             return true;
         }
         Position distance = this.position.absoluteDistanceFrom(position);
-        return (distance.rank == distance.file);
+        return (distance.rank == distance.fileIndex);
     }
 
     @Override
     public String toString() {
-        return this.position.toString();
+        return String.format("Q%s", this.position.toString());
     }
 }

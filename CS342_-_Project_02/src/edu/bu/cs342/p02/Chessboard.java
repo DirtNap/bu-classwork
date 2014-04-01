@@ -10,25 +10,32 @@ import edu.bu.cs342.utilities.LinkedListStack;
 public class Chessboard {
 
     private LinkedListStack<Queen> queenStack;
-    private int startingFile;
+    private char startingFile;
     private int[] positionMap;
     
-    private static final byte ASCII_FILE_BASE = (byte)'@';
 
+    /**
+     * Generates the list of acceptable moves for a chessboard.
+     */
     class PositionGenerator implements Iterator<Position>, Iterable<Position> {
         private LinkedListStack<Queen> currentPlacement;
-        private int file;
+        private char file;
         private Position[] available;
         private int count;
         private int next;
 
-        public PositionGenerator(int file, LinkedListStack<Queen> currentPlacement) {
+        /**
+         * Determines the available placements in file, based on currentPlacement
+         * @param file char the file in which to place the queen.
+         * @param currentPlacement LinkedListStack<Queen> the currently placed queens.
+         */
+        public PositionGenerator(char file, LinkedListStack<Queen> currentPlacement) {
             this.file = file;
             this.currentPlacement = currentPlacement;
-            this.available = new Position[8];
+            this.available = new Position[8]; // cache the available positions for the iterator.
             this.count = 0;
             this.next = 0;
-            for (int i = 0; i < 8; ++i) {
+            for (int i = 0; i < 8; ++i) { // Check each position in the file to see if any queen blocks it.
                 Position testPosition = new Position(i + 1, this.file);
                 boolean unblocked = true;
                 for (Queen q : this.currentPlacement) {
@@ -37,7 +44,7 @@ public class Chessboard {
                         break;
                     }
                 }
-                if (unblocked) {
+                if (unblocked) { // No queen is blocking this position, so add it to the cache.
                     this.available[this.count++] = testPosition;
                 }
             }
@@ -68,44 +75,45 @@ public class Chessboard {
 
     }
 
-    public static int rankToIndex(int rank) {
-      if (rank < 1 || rank > 8) {
-        throw new IllegalArgumentException("Rank must be between 1 and 8");
-      }
-      return 9 - rank;
-    }
-
-    public static int fileToIndex(char file) {
-      char input = Character.toUpperCase(file);
-      int value = input - Chessboard.ASCII_FILE_BASE;
-      if (value < 1 || value > 8) {
-        throw new IllegalArgumentException("File must be between A and F");
-      }
-      return value;
-    }
     /**
+     * Create a chessboard with a queen at the initial position.
      * 
+     * @param initial Queen the initial Queen around which to place the remaining queens.
      */
     public Chessboard(Queen initial) {
         this.positionMap = new int[8];
         this.queenStack = new LinkedListStack<Queen>();
         this.addQueen(initial);
         this.startingFile = initial.position.file;
-        this.solve(this.getNextFile(this.startingFile));
     }
 
-    private int getNextFile(int currentFile) {
-        if (currentFile > 8 || currentFile < 1) {
+    /**
+     * Find the next file, rotating around the files on a chessboard.
+     * @param currentFile int the index of the current file.
+     * @return char the next file.
+     */
+    private char getNextFile(char currentFile) {
+        int checkFile = Position.fileToIndex(currentFile);
+        if (checkFile > 8 || checkFile < 1) {
             throw new IllegalPlacementException();
         }
-        int result = currentFile + 1;
+        int result = checkFile + 1;
         if (result == 9) {
             result = 1;
         }
-        return result;
+        return Position.indexToFile(result);
     }
 
-    private boolean solve(int file) {
+    public boolean solve() {
+      return this.solve(this.getNextFile(this.startingFile));
+    }
+    
+    /**
+     * Solve the board beginning at the provided file.
+     * @param file int the index of the current file
+     * @return boolean whether or not the board was solved.
+     */
+    private boolean solve(char file) {
         if (file != this.startingFile) {
             for (Position p : this.getAvailablePositions(file)) {
                 this.addQueen(new Queen(p));
@@ -119,23 +127,35 @@ public class Chessboard {
         return this.isSolved();
     }
 
+    /**
+     * Place a queen on the board.
+     * @param q Queen the queen to place.
+     */
     public void addQueen(Queen q) {
-        if (this.positionMap[q.position.file - 1] == 0) {
-            this.positionMap[q.position.file - 1] = q.position.rank;
+        if (this.positionMap[q.position.fileIndex - 1] == 0) {
+            this.positionMap[q.position.fileIndex - 1] = q.position.rank;
             this.queenStack.push(q);
         } else {
             throw new IllegalPlacementException();
         }
     }
 
+    /**
+     * Remove a queen from the board.
+     * @return Queen the removed queen.
+     */
     public Queen removeQueen() {
         Queen result = this.queenStack.pop();
         if (null != result) {
-            this.positionMap[result.position.file - 1] = 0;
+            this.positionMap[result.position.fileIndex - 1] = 0;
         }
         return result;
     }
 
+    /**
+     * Indicates whether or not the board is in a solved state.
+     * @return boolean true if the board is in a solved state.
+     */
     public boolean isSolved() {
         for (int i = 0; i < this.positionMap.length; ++i) {
             if (0 == this.positionMap[i]) {
@@ -145,38 +165,37 @@ public class Chessboard {
         return true;
     }
 
-    public PositionGenerator getAvailablePositions(int file) {
+    /**
+     * Returns an Iterable Iterator of Position representing all valid
+     * placements in {@code file} at call time.
+     * 
+     * @param file int the file in which to calculate postitions.
+     * @return PositionGenerator a pre-calculated iterable iterator of valid positions.
+     */
+    public PositionGenerator getAvailablePositions(char file) {
         return new PositionGenerator(file, this.queenStack);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < this.positionMap.length; ++i) {
+        final String header = "  a b c d e f g h\n"; 
+        sb.append(header);
+        for (int i = this.positionMap.length; 0 < i; --i) {
+            sb.append(i);
             sb.append("|");
             for (int j = 1; j <= 8; ++j) {
-                if (this.positionMap[i] == j) {
+                if (this.positionMap[i - 1] == j) {
                     sb.append("Q");
                 } else {
                     sb.append(" ");
                 }
                 sb.append("|");
             }
+            sb.append(i);
             sb.append("\n");
         }
+        sb.append(header);
         return sb.toString();
     }
-    public static void main(String[] args) {
-      int count = 0;
-      for (int i = 1; i < 9; ++i) {
-        for (int j = 1; j < 9; ++j) {
-          Chessboard board = new Chessboard(new Queen(new Position(i, j)));
-          if (board.isSolved()) {
-            ++count;
-          }
-        }
-      }
-      System.out.println(count);
-    }
-    
 }
