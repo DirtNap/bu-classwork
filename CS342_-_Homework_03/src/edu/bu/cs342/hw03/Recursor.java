@@ -79,7 +79,6 @@ public class Recursor {
 
     public static void main(String[] args) {
         System.out.println(Recursor.getAsterisks(20));
-        ;
         System.out.println(Recursor.stringToNumber("123456789012"));
     }
 }
