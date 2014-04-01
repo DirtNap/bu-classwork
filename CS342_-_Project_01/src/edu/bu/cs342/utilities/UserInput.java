@@ -85,7 +85,7 @@ public class UserInput {
         String input = "";
         this.refreshInput();
         while (input.equals("")) {
-            input = this.inputSource.next();
+            input = this.inputSource.nextLine();
             if (input.toLowerCase().equals(truePrompt.toLowerCase())) { 
                 return true;
             } else if (input.toLowerCase().equals(falsePrompt.toLowerCase())) {
