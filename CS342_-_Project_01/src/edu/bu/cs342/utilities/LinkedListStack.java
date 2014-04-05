@@ -3,17 +3,49 @@ package edu.bu.cs342.utilities;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * A linked list backed stack.
+ * 
+ * @author Michael Donnelly
+ * 
+ * @param <E>
+ *            Type type of elements in the stack.
+ */
 public class LinkedListStack<E> implements Iterable<E> {
 
+    /**
+     * A reverse-only linked list node.
+     * 
+     * @author Michael Donnelly
+     * 
+     * @param <T>
+     *            Type type of the node payload.
+     */
     class LinkedListStackNode<T> {
+        /**
+         * Get the previous item in the stack.
+         * 
+         * @return LinkedListStackNode<T> the previous node.
+         */
         public LinkedListStackNode<T> getPrevious() {
             return this.previous;
         }
 
+        /**
+         * Set the previous item in the stack.
+         * 
+         * @param previous
+         *            LinkedListStackNode<T> the previous node.
+         */
         public void setPrevious(LinkedListStackNode<T> previous) {
             this.previous = previous;
         }
 
+        /**
+         * Get the payload for the node.
+         * 
+         * @return T the payload of the node.
+         */
         public T getPayload() {
             return this.payload;
         }
@@ -26,6 +58,14 @@ public class LinkedListStack<E> implements Iterable<E> {
         }
     }
 
+    /**
+     * An iterator for a stack.
+     * 
+     * @author Michael Donnelly
+     * 
+     * @param <T>
+     *            Type the type of elements on the stack.
+     */
     class LinkedListStackIterator<T> implements Iterator<T> {
 
         private LinkedListStackNode<T> next;
@@ -60,10 +100,19 @@ public class LinkedListStack<E> implements Iterable<E> {
     LinkedListStackNode<E> top;
     int size;
 
+    /**
+     * Create a stack for storing ordered items of type E.
+     */
     public LinkedListStack() {
         this.size = 0;
     }
 
+    /**
+     * Push an item on to the stack.
+     * 
+     * @param payload
+     *            E the value to be placed on the stack.
+     */
     public void push(E payload) {
         LinkedListStackNode<E> newNode = new LinkedListStackNode<>(payload);
         newNode.setPrevious(this.top);
@@ -71,6 +120,11 @@ public class LinkedListStack<E> implements Iterable<E> {
         ++this.size;
     }
 
+    /**
+     * Remove the top item from the stack.
+     * 
+     * @return E the top item on the stack.
+     */
     public E pop() {
         if (null == this.top) {
             return null;
@@ -81,10 +135,22 @@ public class LinkedListStack<E> implements Iterable<E> {
         return result;
     }
 
+    /**
+     * The number of items on the stack.
+     * 
+     * @return int the number of items on the stack.
+     */
     public int length() {
         return this.size;
     }
 
+    /**
+     * Checks for the presence of an item on the stack.
+     * 
+     * @param item
+     *            E the item to check for.
+     * @return boolean whether or not the item was found on the stack.
+     */
     public boolean contains(E item) {
         for (E element : this) {
             if (element.equals(item)) {
