@@ -199,11 +199,11 @@ public class Chessboard {
         StringBuilder sb = new StringBuilder();
         final String header = "  a b c d e f g h\n";
         sb.append(header);
-        for (int i = this.positionMap.length; 0 < i; --i) {
+        for (int i = 8; 0 < i; --i) {
             sb.append(i);
             sb.append("|");
             for (int j = 1; j <= 8; ++j) {
-                if (this.positionMap[i - 1] == j) {
+                if (this.positionMap[j - 1] == i) {
                     sb.append("Q");
                 } else {
                     sb.append(" ");

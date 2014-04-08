@@ -1,0 +1,12 @@
+Eight Queens Algorithm:
+* Place an initial queen at an arbitrary position on the board
+* * Move to the next file:
+* * * If this is the file of the initial queen, stop
+* * * Otherwise
+* * * * Generate a list of valid moves for this file given the current board placement
+* * * * Iterate over the list
+* * * * * Place the queen at the iterated position
+* * * * * Move to the next file and try to solve
+* * * * * If it fails, remove the queen and iterate to the next position
+* * * Return true if 8 queens are in position, and print the board.
+
