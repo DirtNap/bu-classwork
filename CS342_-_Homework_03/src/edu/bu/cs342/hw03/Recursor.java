@@ -10,7 +10,7 @@ package edu.bu.cs342.hw03;
 public class Recursor {
 
     // Find numeric value by ASCII value
-    public static final short ASCII_BASE_NUM = (short) '0';
+    public static final byte ASCII_BASE_NUM = (byte) '0';
 
     /**
      * Repeat a character.
