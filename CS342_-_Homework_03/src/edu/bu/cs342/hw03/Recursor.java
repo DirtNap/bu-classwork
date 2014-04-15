@@ -50,11 +50,15 @@ public class Recursor {
         if (null == source || source.length() == 0) {
             return start;
         }
+        byte multiplier = 1;
+        if (source.charAt(0) == '-') {
+            multiplier = -1;
+            source = source.substring(1);
+        }
         start *= 10;
         short digit = (short) (((short) source.charAt(0)) - Recursor.ASCII_BASE_NUM);
         start += digit;
-        return Recursor.stringToNumber(source.substring(1, source.length()), start);
-
+        return multiplier * Recursor.stringToNumber(source.substring(1), start);
     }
 
     /**
@@ -77,8 +81,49 @@ public class Recursor {
         return sb.toString();
     }
 
+    /**
+     * Returns a number equivalent to the inputed String.
+     * 
+     * Unlike {@link #stringToNumber(String, long)}, this method uses only one
+     * parameter, and reaches its end condition by mutating that parameter.
+     * 
+     * @param source
+     *            String a string to convert to a number.
+     * @return long a number representation of the string. Value will be correct
+     *         but unexpected when non-digit characters are in {@code source}.
+     */
+
+    public static long stringToNumberOneParameter(String source) {
+        if (source == "") {
+            return 0;
+        }
+        byte multiplier = 1;
+        long total = 0;
+        if (source.charAt(0) == '-') {
+            multiplier = -1;
+            source = source.substring(1);
+        }
+        long num = source.charAt(0) - Recursor.ASCII_BASE_NUM;
+        if (source.length() == 1) {
+            source = "";
+        } else {
+            source = source.substring(1);
+        }
+        total = (long) (num * ((long) (Math.pow(10, source.length()))) + Recursor
+                .stringToNumberOneParameter(source));
+        return multiplier * total;
+    }
+
     public static void main(String[] args) {
+        System.out.println("Printing a pyramid of asterisks:");
         System.out.println(Recursor.getAsterisks(20));
+        System.out.println();
+        System.out.println("Printing positive and negative numbers from strings:");
         System.out.println(Recursor.stringToNumber("123456789012"));
+        System.out.println(Recursor.stringToNumber("-123456789012"));
+        System.out.println();
+        System.out.println("Printing positive and negative numbers from strings (one parameter):");
+        System.out.println(Recursor.stringToNumberOneParameter("210987654321"));
+        System.out.println(Recursor.stringToNumberOneParameter("-210987654321"));
     }
 }
