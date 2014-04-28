@@ -18,13 +18,13 @@ public abstract class CollectionHash<E> {
 
     public abstract void showHash(PrintStream output);
 
-    public abstract E traceSearch(E item, PrintStream output);
+    public abstract int traceSearch(E item, PrintStream output);
 
     public boolean contains(E item) {
-        return (null != this.search(item));
+        return (-1 != this.search(item));
     }
 
-    public E search(E item) {
+    public int search(E item) {
         return this.traceSearch(item, new PrintStream(new dummyOutputStream()));
     }
 
