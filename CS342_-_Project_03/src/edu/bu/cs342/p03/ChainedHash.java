@@ -61,6 +61,7 @@ public class ChainedHash<E> extends CollectionHash<E> {
     }
 
     private Object[] buckets;
+    private int count;
 
     @SuppressWarnings("unchecked")
     private ChainedHashListNode<E> getBucket(int index) {
@@ -93,8 +94,14 @@ public class ChainedHash<E> extends CollectionHash<E> {
         for (int i = 0; i < this.buckets.length; ++i) {
             this.buckets[i] = new ChainedHashListNode<E>();
         }
+        this.count = 0;
     }
 
+    
+    @Override
+    public int size() {
+        return this.count;
+    }
     @Override
     public boolean add(E item) {
         return this.getBucket(this.getBucketIndex(item)).add(item);

@@ -19,6 +19,8 @@ public abstract class CollectionHash<E> {
     public abstract void showHash(PrintStream output);
 
     public abstract int traceSearch(E item, PrintStream output);
+    
+    public abstract int size();
 
     public boolean contains(E item) {
         return (-1 != this.search(item));

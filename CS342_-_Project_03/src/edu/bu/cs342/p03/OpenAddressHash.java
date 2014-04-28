@@ -5,13 +5,13 @@ import java.util.Iterator;
 
 public class OpenAddressHash<E> extends CollectionHash<E> {
 
-    class probe implements Iterator<Integer>, Iterable<Integer> {
+    class Probe implements Iterator<Integer>, Iterable<Integer> {
 
         private int startValue;
         private int currentBase;
         private int bucketCount;
 
-        public probe(Object item, int buckets) {
+        public Probe(Object item, int buckets) {
             this.bucketCount = buckets;
             this.startValue = item.hashCode() % buckets;
             this.currentBase = 0;
@@ -24,7 +24,7 @@ public class OpenAddressHash<E> extends CollectionHash<E> {
 
         @Override
         public boolean hasNext() {
-            return (this.currentBase <= this.bucketCount);
+            return (this.currentBase <= Math.ceil(this.bucketCount/2.0d));
         }
 
         @Override
@@ -39,47 +39,9 @@ public class OpenAddressHash<E> extends CollectionHash<E> {
 
     }
 
-    private class OpenAddressContainer<T> {
-        private T payload;
-        private boolean available;
-        private boolean used;
-
-        public OpenAddressContainer() {
-            this(null);
-        }
-
-        public OpenAddressContainer(T item) {
-            this.setPayload(item);
-            this.setAvailable((null == this.getPayload()));
-            this.setUsed(!this.isAvailable());
-        }
-
-        public T getPayload() {
-            return this.payload;
-        }
-
-        public void setPayload(T payload) {
-            this.payload = payload;
-
-        }
-
-        public boolean isAvailable() {
-            return this.available;
-        }
-
-        public void setAvailable(boolean available) {
-            this.available = available;
-        }
-
-        public boolean isUsed() {
-            return this.used;
-        }
-
-        public void setUsed(boolean used) {
-            this.used = used;
-        }
-    }
-
+    
+    
+    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object o) {
         if (null == o) {
@@ -89,15 +51,27 @@ public class OpenAddressHash<E> extends CollectionHash<E> {
             return true;
         }
         try {
-            OpenAddressHash test = (OpenAddressHash) o;
-            // TODO Perform OpenAddressHash specific comparison
+            CollectionHash<E> test = (CollectionHash<E>) o;
+            if (this.size() != test.size()) {
+                return false;
+            }
+            for (int i = 0; i < this.buckets.length; ++i) {
+                if (null != this.buckets[i]) {
+                    if (test.search((E)this.buckets[i]) == -1) {
+                        return false;
+                    }
+                }
+            }
         } catch (ClassCastException ex) {
             return false;
         }
-        return false;
+        return true;
     }
 
     public int initialSize;
+    private Object[] buckets;
+    private boolean[] usedBuckets;
+    private int count;
 
     public OpenAddressHash() {
         this(31);
@@ -105,29 +79,78 @@ public class OpenAddressHash<E> extends CollectionHash<E> {
 
     public OpenAddressHash(int size) {
         this.initialSize = size;
+        this.buckets = new Object[this.initialSize];
+        this.usedBuckets = new boolean[this.initialSize];
+        this.count = 0;
     }
 
+    protected Probe getProbe(E item) {
+        return new Probe(item, this.initialSize);
+    }
+    
+    @Override
+    public int size() {
+        return this.count;
+    }
+    
     @Override
     public boolean add(E item) {
-        // TODO Auto-generated method stub
+        for (int i : this.getProbe(item)) {
+            if (null == this.buckets[i]) {
+                this.buckets[i] = item;
+                this.usedBuckets[i] = true;
+                ++this.count;
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public E delete(E item) {
-        // TODO Auto-generated method stub
-        return null;
+        E result = null;
+        Probe cleanUpProbe = this.getProbe(item);
+        for (int i : this.getProbe(item)) {
+            cleanUpProbe.next();
+            if (item.equals(this.buckets[i])) {
+                result = item;
+                this.buckets[i] = null;
+                --this.count;
+                // If we are the end of the chain, we can free this element.
+                if (cleanUpProbe.hasNext()) {
+                    int next = cleanUpProbe.next();
+                    if (!this.usedBuckets[next]) {
+                        this.usedBuckets[i] = false;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     @Override
     public void showHash(PrintStream output) {
-        // TODO Auto-generated method stub
-
+        for (int i = 0; i < this.buckets.length; ++i) {
+            output.printf("% 3d\t%s%n", i + 1, this.buckets[i]);
+        }
     }
 
     @Override
     public int traceSearch(E item, PrintStream output) {
-        // TODO Auto-generated method stub
+        for (int i : this.getProbe(item)) {
+            if (item.equals(this.buckets[i])) {
+                output.printf("Found %s at bucket %d%n", item, i);
+                return i;
+            } else {
+                if (this.usedBuckets[i]) {
+                    output.printf("Bucket %d does not contain %s%n", i, item);
+                } else {
+                    output.printf("Chain exhausted at bucket %d%n", i);
+                    break;
+                }
+            }
+        }
+        output.println("Item not found.");
         return -1;
     }
 }
