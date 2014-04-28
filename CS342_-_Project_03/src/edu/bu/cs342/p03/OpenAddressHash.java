@@ -1,8 +1,84 @@
 package edu.bu.cs342.p03;
 
 import java.io.PrintStream;
+import java.util.Iterator;
 
 public class OpenAddressHash<E> extends CollectionHash<E> {
+
+    class probe implements Iterator<Integer>, Iterable<Integer> {
+
+        private int startValue;
+        private int currentBase;
+        private int bucketCount;
+
+        public probe(Object item, int buckets) {
+            this.bucketCount = buckets;
+            this.startValue = item.hashCode() % buckets;
+            this.currentBase = 0;
+        }
+
+        @Override
+        public Iterator<Integer> iterator() {
+            return this;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return (this.currentBase <= this.bucketCount);
+        }
+
+        @Override
+        public Integer next() {
+            return (this.startValue + (this.currentBase * this.currentBase++)) % this.bucketCount;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+    private class OpenAddressContainer<T> {
+        private T payload;
+        private boolean available;
+        private boolean used;
+
+        public OpenAddressContainer() {
+            this(null);
+        }
+
+        public OpenAddressContainer(T item) {
+            this.setPayload(item);
+            this.setAvailable((null == this.getPayload()));
+            this.setUsed(!this.isAvailable());
+        }
+
+        public T getPayload() {
+            return this.payload;
+        }
+
+        public void setPayload(T payload) {
+            this.payload = payload;
+
+        }
+
+        public boolean isAvailable() {
+            return this.available;
+        }
+
+        public void setAvailable(boolean available) {
+            this.available = available;
+        }
+
+        public boolean isUsed() {
+            return this.used;
+        }
+
+        public void setUsed(boolean used) {
+            this.used = used;
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
