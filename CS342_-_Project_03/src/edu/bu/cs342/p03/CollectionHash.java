@@ -5,10 +5,10 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 public abstract class CollectionHash<E> {
-    protected static class dummyOutputStream extends OutputStream {
+    protected static class DummyOutputStream extends OutputStream {
         @Override
         public void write(int b) throws IOException {
-            ;
+            return;
         }
     }
 
@@ -27,7 +27,7 @@ public abstract class CollectionHash<E> {
     }
 
     public int search(E item) {
-        return this.traceSearch(item, new PrintStream(new dummyOutputStream()));
+        return this.traceSearch(item, new PrintStream(new DummyOutputStream()));
     }
 
 }
