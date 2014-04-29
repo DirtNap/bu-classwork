@@ -45,7 +45,7 @@ public class OpenAddressHash<E> extends CollectionHash<E> {
          */
         public Probe(Object item, int buckets) {
             this.bucketCount = buckets;
-            this.startValue = item.hashCode() % buckets;
+            this.startValue = Math.abs(item.hashCode()) % buckets;
             this.currentBase = 0;
             this.lastIndex = -1;
             this.visited = new boolean[this.bucketCount];
@@ -198,9 +198,13 @@ public class OpenAddressHash<E> extends CollectionHash<E> {
                 this.usedBuckets[i] = true;
                 ++this.count;
                 return true;
+            } else {
+                System.err.printf("Bucket %d in use%n", i); // Print a warning
+                                                            // as per the
+                                                            // instructions
             }
         }
-        return false;
+        return (this.search(item) != -1);
     }
 
     /**
@@ -209,25 +213,11 @@ public class OpenAddressHash<E> extends CollectionHash<E> {
     @Override
     public E delete(E item) {
         E result = null;
-        for (int i : this.getProbe(item)) {
-            if (item.equals(this.buckets[i])) {
-                result = item;
-                this.buckets[i] = null;
-                --this.count;
-                // If we are the end of the chain, we can free this element.
-                Probe cleanUpProbe = this.getProbe(item);
-                int next = -1;
-                while (next != i && cleanUpProbe.hasNext()) {
-                    next = cleanUpProbe.next();
-                }
-                if (cleanUpProbe.hasNext()) {
-                    next = cleanUpProbe.next();
-                    if (!this.usedBuckets[next]) {
-                        this.usedBuckets[i] = false;
-                        break; // End of chain
-                    }
-                }
-            }
+        int i;
+        while ((i = this.search(item)) != -1) {
+            result = item;
+            this.buckets[i] = null;
+            --this.count;
         }
         return result;
     }

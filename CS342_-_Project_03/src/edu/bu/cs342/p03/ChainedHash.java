@@ -2,8 +2,22 @@ package edu.bu.cs342.p03;
 
 import java.io.PrintStream;
 
+/**
+ * Chained hash implementation of CollectionHash.
+ * 
+ * @author Michael Donnelly
+ * 
+ * @param <E>
+ *            Type Type of the elements in the collection.
+ */
 public class ChainedHash<E> extends CollectionHash<E> {
 
+    /**
+     * Node to represent a chain of hash entries.
+     * 
+     * @param <T>
+     *            Type Type of the payload
+     */
     class ChainedHashListNode<T> {
         private T payload;
         private ChainedHashListNode<T> next;
@@ -16,6 +30,14 @@ public class ChainedHash<E> extends CollectionHash<E> {
             this.next = next;
         }
 
+        public T getPayload() {
+            return this.payload;
+        }
+
+        public void setPayload(T payload) {
+            this.payload = payload;
+        }
+
         public ChainedHashListNode() {
             this(null);
         }
@@ -24,38 +46,14 @@ public class ChainedHash<E> extends CollectionHash<E> {
             this.payload = item;
         }
 
-        public boolean add(T item) {
-            if (null == this.payload) {
-                this.payload = item;
-                return true;
-            } else {
-                if (null == this.getNext()) {
-                    this.setNext(new ChainedHashListNode<T>(item));
-                    return true;
-                } else {
-                    return this.getNext().add(item);
-                }
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(this.getPayload());
+            if (null != this.getNext()) {
+                sb.append(String.format(" -> %s", this.getNext()));
             }
-        }
-
-        public T remove(T item) {
-            T result = null;
-            if (null != this.payload) {
-                if (this.payload.equals(item)) {
-                    result = this.payload;
-                    if (null == this.getNext()) {
-                        this.payload = null;
-                    } else {
-                        this.payload = this.getNext().payload;
-                        this.setNext(this.getNext());
-                    }
-                } else {
-                    if (null != this.getNext()) {
-                        return this.getNext().remove(item);
-                    }
-                }
-            }
-            return result;
+            return sb.toString();
         }
 
     }
@@ -63,30 +61,31 @@ public class ChainedHash<E> extends CollectionHash<E> {
     private Object[] buckets;
     private int count;
 
+    /**
+     * Get the initial node at the designated index.
+     * 
+     * @param index
+     *            int the index of the bucket.
+     * @return ChainedHashListNode<E> The first node in the bucket.
+     */
     @SuppressWarnings("unchecked")
     private ChainedHashListNode<E> getBucket(int index) {
         return (ChainedHashListNode<E>) this.buckets[index];
     }
 
+    /**
+     * Get the appropriate bucket for an item.
+     * 
+     * @param item
+     *            Object the item to store.
+     * @return int the index of the bucket.
+     */
     private int getBucketIndex(Object item) {
-        return item.hashCode() % this.buckets.length;
+        return Math.abs(item.hashCode()) % this.buckets.length;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (null == o) {
-            return false;
-        }
-        if (this == o) {
-            return true;
-        }
-        try {
-            ChainedHash test = (ChainedHash) o;
-            // TODO Perform ChainedHash specific comparison
-        } catch (ClassCastException ex) {
-            return false;
-        }
-        return false;
+    public ChainedHash() {
+        this(31);
     }
 
     public ChainedHash(int bucketCount) {
@@ -97,30 +96,69 @@ public class ChainedHash<E> extends CollectionHash<E> {
         this.count = 0;
     }
 
-    
     @Override
     public int size() {
         return this.count;
     }
+
     @Override
     public boolean add(E item) {
-        return this.getBucket(this.getBucketIndex(item)).add(item);
+        ChainedHashListNode<E> node = this.getBucket(this.getBucketIndex(item));
+        while (null != node.getPayload()) {
+            System.err.println("Slot full, moving to next slot.");
+            if (null == node.getNext()) {
+                node.setNext(new ChainedHashListNode<E>());
+            }
+            node = node.getNext();
+        }
+        node.setPayload(item);
+        return (this.search(item) != -1);
     }
 
     @Override
     public E delete(E item) {
-        return this.getBucket(this.getBucketIndex(item)).remove(item);
+        int index;
+        E result = null;
+        if ((index = this.search(item)) != -1) {
+            ChainedHashListNode<E> node = this.getBucket(index);
+            while (null != node) {
+                if (item.equals(node.getPayload())) {
+                    result = item;
+                    if (null == node.getNext()) {
+                        node.setPayload(null);
+                    } else {
+                        node.setPayload(node.getNext().getPayload());
+                        node.setNext(node.getNext());
+                    }
+                }
+                node = node.getNext();
+            }
+        }
+        return result;
     }
 
     @Override
     public void showHash(PrintStream output) {
-        // TODO Auto-generated method stub
-
+        for (int i = 0; i < this.buckets.length; ++i) {
+            System.out.printf("%d\t%s%n", i + 1, this.buckets[i]);
+        }
     }
 
     @Override
     public int traceSearch(E item, PrintStream output) {
-        // TODO Auto-generated method stub
-        return 0;
+        int index = this.getBucketIndex(item);
+        output.printf("Searching bucket %d for %s%n", index, item);
+        ChainedHashListNode<E> node = this.getBucket(index);
+        int count = 1;
+        while (null != node) {
+            if (item.equals(node.getPayload())) {
+                output.printf("Item found in slot %d%n", count);
+                return index;
+            } else {
+                output.printf("Item not found in slot %d%n", count++);
+                node = node.getNext();
+            }
+        }
+        return -1;
     }
 }
