@@ -1,0 +1,21 @@
+body {
+    color: black;
+    font-family: monospace;
+}
+th {
+    background-image:url('/images/table_header_background_5x32.png');
+    background-repeat:repeat-x;
+    padding: 4px;
+    height: 32px;
+    vertical-align: bottom;
+}
+td {
+    font-size: small;
+}
+td.left {
+    text-align: right;
+    padding-right: 10px;
+}
+.left {
+    width: 160px;
+}
