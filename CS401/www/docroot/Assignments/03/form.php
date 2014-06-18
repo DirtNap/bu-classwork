@@ -16,7 +16,7 @@ foreach ($styles as $key => $value) {
   <head>
     <title>:: BU MET CS401 EX : Assignment 03 : Form ::</title>
     <meta name="author" content="Michael Donnelly" />
-    <meta name="description" content="Table page of Assignment 03." />
+    <meta name="description" content="Form page of Assignment 03." />
     <style>
       h3 {
       text-align: <?= $styles["halign"] ?>;
