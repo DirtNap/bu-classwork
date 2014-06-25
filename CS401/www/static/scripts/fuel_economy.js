@@ -1,68 +1,56 @@
-function Menu(controlButtonId, titlePanel, totalPanel, inputPanel, alternateButtonText) {
-    this.controlButton = document.getElementById(controlButtonId);
-    this.controlPanels = [];
-    this.controlPanels['title'] = document.getElementById(titlePanel);
-    this.controlPanels['total'] = document.getElementById(totalPanel);
-    this.controlPanels['input'] = document.getElementById(inputPanel);
-    this.primaryButtonText = this.controlButton.value;
-    this.alternateButtonText = alternateButtonText;
+function getInteger(s) {
+    var i = parseInt(s);
+    if (isNaN(i)) {
+	i = 0;
+    }
+    return i;
 }
-Menu.prototype.isActive = function() {
-    return (this.controlButton.value != this.primaryButtonText);
+function getFloat(s) {
+    var f = parseFloat(s);
+    if (isNaN(f)) {
+	f = 0.0;
+    }
+    return f
+}
+function getFloatByPrompt(prompt) {
+    var result = 0.0;
+    do {
+	var s = window.prompt(prompt);
+	result = getFloat(s);
+    } while (result <= 0);
+    return result;
 }
     
-Menu.prototype.toggle = function() {
-    var targetPanel;
-    if (this.isActive()) {
-	this.controlButton.value = this.primaryButtonText;
-	targetPanel = 'total';
-    } else {
-	    this.controlButton.value = this.alternateButtonText;
-	    targetPanel = 'input';
-	   }
-    for (panel in this.controlPanels) {
-	this.controlPanels[panel].style.display = 
-	    (panel == targetPanel)?'block':'none';
-    }
+function FuelCalculator(entryCountSpanId, avgFuelEconomySpanId, avgFuelCostSpanId, lineItemContainerId) {
+    this.entryCountSpan = document.getElementById(entryCountSpanId);
+    this.avgFuelEconomySpan = document.getElementById(avgFuelEconomySpanId);
+    this.avgFuelCostSpan = document.getElementById(avgFuelCostSpanId);
+    this.lineItemContainer = document.getElementById(lineItemContainerId);
+    this.entryCount = getInteger(this.entryCountSpan.innerHTML);
+    this.avgFuel = Math.floor(getFloat(this.avgFuelEconomySpan.innerHTML) * 100);
+    this.avgCostCents = Math.floor(getFloat(this.avgFuelCostSpan.innerHTML) * 100);
+    this.totalFuel = this.avgFuel * this.entryCount;
+    this.totalCostCents = this.avgCostCents * this.entryCount;
 }
-function calculatePrices(totalEntries, avgPrice, avgFuel, newPrice, newFuel, newMiles, lineItems, menu) {
-    if (menu.isActive()) {
-	txtFuel = document.getElementById(newFuel);
-	txtCost = document.getElementById(newPrice);
-	txtMile = document.getElementById(newMiles);
-	var fuel = parseFloat(txtFuel.value);
-	var cost = parseFloat(txtCost.value);
-	var mile = parseFloat(txtMile.value);
-	txtFuel.value = txtCost.value = txtMile.value = '';
-	if (isNaN(fuel) || isNaN(cost) || isNaN(mile) ||
-	   fuel < 0 || cost < 0 || mile < 0) {
-	    window.alert('Invalid Entry!');
-	    return false;
-	}
-	var now = new Date();
-	var sEntryCount = document.getElementById(totalEntries);
-	var sAvgPrice = document.getElementById(avgPrice);
-	var sAvgFuel = document.getElementById(avgFuel);
-	var tLineItems = document.getElementById(lineItems);
-	var iCount = parseInt(sEntryCount.innerHTML);
-	var fAvgPrice = parseFloat(sAvgPrice.innerHTML);
-	var fAvgFuel = parseFloat(sAvgFuel.innerHTML);
-	var iFuel = Math.floor((mile * 100) / fuel);
-	var iTotalPrice = Math.floor(fAvgPrice * 100 * iCount);
-	var iTotalFuel = Math.floor(fAvgFuel * 100 * iCount);
-	++iCount;
-	iTotalPrice += Math.floor(cost * 100);
-	iTotalFuel += iFuel;
-	fAvgPrice = Math.floor(iTotalPrice / iCount) / 100;
-	fAvgFuel = Math.floor(iTotalFuel / iCount) / 100;
-	sEntryCount.innerHTML = iCount;
-	sAvgPrice.innerHTML = fAvgPrice;
-	sAvgFuel.innerHTML = fAvgFuel;
-	tLineItems.innerHTML += '<tr><td>' + now.toString() + '</td><td>' + mile + '</td><td>' +
-	    fuel + '</td><td>' + (iFuel / 100) + '</td></tr>';
-	if (window.confirm('Enter more fuelings?')) {
-	    menu.toggle();
-	}
-    }
-    menu.toggle();
+FuelCalculator.prototype.getEntries = function() {
+    do {
+	this.getEntry();
+    } while (window.confirm('Add another entry?'));
+}
+FuelCalculator.prototype.getEntry = function() {
+    var totalFuel = Math.floor(getFloatByPrompt('Enter total fuel (gallons)') * 100);
+    var totalCost = Math.floor(getFloatByPrompt('Enter total cost (dollars)') * 100);
+    var totalDist = Math.floor(getFloatByPrompt('Enter total distance (miles)') * 100);
+    var now = new Date();
+    this.totalCostCents += totalCost;
+    var fuelEconomy = Math.floor(totalDist / totalFuel) * 100;
+    this.totalFuel += fuelEconomy;
+    this.lineItemContainer.innerHTML += '<tr><td>' + now.toString() + '</td><td>' + totalDist / 100 + '</td><td>' +
+	totalFuel / 100 + '</td><td>' + fuelEconomy / 100 + '</td></tr>';
+    this.entryCount++;
+    this.avgCostCents = Math.floor(this.totalCostCents / this.entryCount);
+    this.avgFuel = Math.floor(this.totalFuel / this.entryCount);
+    this.entryCountSpan.innerHTML = this.entryCount;
+    this.avgFuelEconomySpan.innerHTML = this.avgFuel / 100;
+    this.avgFuelCostSpan.innerHTML = this.avgCostCents / 100;
 }

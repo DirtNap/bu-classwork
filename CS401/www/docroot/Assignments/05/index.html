@@ -6,27 +6,7 @@
     </script>
   </head>
   <body>
-    <script langauge="JavaScript1.1" type="text/javascript">
-      var displayMenu;
-    </script>
     <div id="header">
-      <div id="title" class="headerContent">
-	<h1>Fuel Economy Calculator</h1>
-	Click the button to begin tracking fuel economy.
-      </div>
-      <div id="inputForm" class="headerContent">
-	<form>
-	  <table id="inputTable">
-	    <tr>
-	      <td>Gallons of Fuel:</td>
-	      <td><input id="txtNewFuel" type="text" size="10" maxsize="8" /></td>
-	      <td>Total Price:</td>
-	      <td><input id="txtNewPrice" type="text" size="10" maxsize="8" /></td>
-	      <td>Miles Driven:</td>
-	      <td><input id="txtNewMiles" type="text" size="10" maxsize="8" /></td>
-	    </tr>
-	  </table>
-      </div>
       <div id="aggregate" class="headerContent">
 	<table>
 	  <tr>
@@ -46,7 +26,7 @@
       <div id="headerControl">
 	<form>
 	  <input type="button" value="New Entry" id="btnControl"
-		 onclick="calculatePrices('totalNumOfEntries', 'totalAveragePrice', 'totalAverageFuel', 'txtNewPrice', 'txtNewFuel', 'txtNewMiles', 'lineItems', displayMenu);" />
+		 onclick="new FuelCalculator('totalNumOfEntries', 'totalAverageFuel', 'totalAveragePrice', 'lineItems').getEntries();" />
 	</form>
       </div>
     </div>
@@ -62,8 +42,5 @@
       <tbody id="lineItems">
       </tbody>
     </table>
-    <script langauge="JavaScript1.1" type="text/javascript">
-      displayMenu = new Menu('btnControl', 'title', 'aggregate', 'inputForm', 'Save Entry');
-    </script>
   </body>
 </html>

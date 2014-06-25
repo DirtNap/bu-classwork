@@ -14,12 +14,8 @@
 .headerContent {
     position: absolute;
     width: 640px;
-    display: none;
     left: 0px;
     top: 0px;
-}
-#title {
-    display: block;
 }
 th, td, table {
     border: 2px solid black;
