@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>:: BU MET CS401 EX : Assignment 05 ::</title>
+    <link rel="stylesheet" type="text/css" href="/static/style/assignment_05.css" />
+    <script language="JavaScript1.1" type="text/javascript" src="/static/scripts/fuel_economy.js">
+    </script>
+  </head>
+  <body>
+    <script langauge="JavaScript1.1" type="text/javascript">
+      var displayMenu;
+    </script>
+    <div id="header">
+      <div id="title" class="headerContent">
+	<h1>Fuel Economy Calculator</h1>
+	Click the button to begin tracking fuel economy.
+      </div>
+      <div id="inputForm" class="headerContent">
+	<form>
+	  <table id="inputTable">
+	    <tr>
+	      <td>Gallons of Fuel:</td>
+	      <td><input id="txtNewFuel" type="text" size="10" maxsize="8" /></td>
+	      <td>Total Price:</td>
+	      <td><input id="txtNewPrice" type="text" size="10" maxsize="8" /></td>
+	      <td>Miles Driven:</td>
+	      <td><input id="txtNewMiles" type="text" size="10" maxsize="8" /></td>
+	    </tr>
+	  </table>
+      </div>
+      <div id="aggregate" class="headerContent">
+	<table>
+	  <tr>
+	    <td>Number of Entries</td>
+	    <td id="totalNumOfEntries">0</td>
+	  </tr>
+	  <tr>
+	    <td>Average Price</td>
+	    <td id="totalAveragePrice">0</td>
+	  </tr>
+	  <tr>
+	    <td>Average Fuel Economy</td>
+	    <td id="totalAverageFuel">0</td>
+	  </tr>
+	</table>
+      </div>
+      <div id="headerControl">
+	<form>
+	  <input type="button" value="New Entry" id="btnControl"
+		 onclick="calculatePrices('totalNumOfEntries', 'totalAveragePrice', 'totalAverageFuel', 'txtNewPrice', 'txtNewFuel', 'txtNewMiles', 'lineItems', displayMenu);" />
+	</form>
+      </div>
+    </div>
+    <table>
+      <thead>
+	<tr>
+	  <th>Entry Date</th>
+	  <th>Miles Driven</th>
+	  <th>Fuel Used</th>
+	  <th>Fuel Economy</th>
+	</tr>
+      </thead>
+      <tbody id="lineItems">
+      </tbody>
+    </table>
+    <script langauge="JavaScript1.1" type="text/javascript">
+      displayMenu = new Menu('btnControl', 'title', 'aggregate', 'inputForm', 'Save Entry');
+    </script>
+  </body>
+</html>
