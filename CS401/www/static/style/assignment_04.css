@@ -1,0 +1,101 @@
+BODY {
+    background-color: #e0e0e0;
+    background-image: url("/images/fr_transparent_240x240.png");
+    background-repeat: no-repeat;
+    background-position: 360px;
+    background-attachment: fixed;
+    background-size: 240px 240px;
+    font-size: small;
+}
+#header,#content,#footer {
+    margin-left: 200px;
+    width: 600px;
+    text-align: center;
+}
+
+img[alt="Faker.  Radio."] {
+    border: 1px solid #ffffff;
+}
+
+img {
+    -webkit-transition: box-shadow 2s;
+    transition: box-shadow 2s;
+}
+
+#css3demo {
+    margin: 0px 20% 0px 20%;
+    border: 1px solid #222222;
+    -moz-border-top-right-radius: 5px;
+    -moz-border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    box-shadow: 10px 10px 5px;
+    width: 480;
+    background-image: url("/images/white_1x1.png"), url("/images/black_1x1.png");
+    background-repeat: repeat-y, repeat-y;
+    background-position: center, center;
+    background-size: 450px, 470px;
+}
+
+#css3demo h1 {
+    width: 200px;
+    color: #777777;
+    box-shadow: 0px 5px 0px;
+    text-align: center;
+    margin-left: 20px;
+} 
+
+#css3demo img {
+    width: 200px;
+    height: 100px;
+}
+
+#css3demo img:hover {
+    box-shadow: 3px 3px 0px red;
+}
+
+#css3demo p#grad {
+    width: 50%;
+    margin-left: 30px;
+    text-align: left;
+    background: -webkit-linear-gradient(left top, #e0e0e0, #777777);
+    background: -o-linear-gradient(bottom right, #e0e0e0, #777777);
+    background: -moz-linear-gradient(bottom right, #e0e0e0, #777777);
+    background: linear-gradient(to bottom right, #e0e0e0 , #777777);
+}
+
+#css3demo div#cols {
+    margin-left: 30px;
+    width: 400px;
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-rule: 1px solid #000;
+    -moz-column-rule: 1px solid #000;
+    column-rule: 1px solid #000;
+
+}
+
+#footer {
+    background: #777777;
+    height: 20px;
+    margin-top: 20px;
+    color: white;
+    -webkit-animation: runner 20s infinite;
+    animation: runner 20s infinite;
+    -ms-transform: skewX(175deg);
+    -webkit-transform: skewX(175deg);
+    transform:skewX(175deg);
+}
+
+@-webkit-keyframes runner {
+    0% {background: #777777; color: #e0e0e0;}
+    50% {background: #e0e0e0; color: #777777;}
+    100% {background: #777777; color: #e0e0e0;}
+}
+
+@keyframes runner {
+    0% {background: #777777; color: #e0e0e0;}
+    50% {background: #e0e0e0; color: #777777;}
+    100% {background: #777777; color: #e0e0e0;}
+}

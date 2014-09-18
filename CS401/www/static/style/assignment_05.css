@@ -1,0 +1,27 @@
+#header {
+    position: relative;
+    width: 800px;
+    height: 120px;
+}
+#headerControl {
+    position: absolute;
+    width: 100px;
+    text-align: center;
+    vertical-align: middle;
+    right: 0px;
+    top: 0px;
+}
+.headerContent {
+    position: absolute;
+    width: 640px;
+    left: 0px;
+    top: 0px;
+}
+th, td, table {
+    border: 2px solid black;
+    border-collapse: collapse;
+    padding: 2px;
+}
+#lineItems td {
+    text-align: center;
+}

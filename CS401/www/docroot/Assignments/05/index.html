@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>:: BU MET CS401 EX : Assignment 05 ::</title>
+    <link rel="stylesheet" type="text/css" href="/static/style/assignment_05.css" />
+    <script language="JavaScript1.1" type="text/javascript" src="/static/scripts/fuel_economy.js">
+    </script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="aggregate" class="headerContent">
+	<table>
+	  <tr>
+	    <td>Number of Entries</td>
+	    <td id="totalNumOfEntries">0</td>
+	  </tr>
+	  <tr>
+	    <td>Average Price</td>
+	    <td id="totalAveragePrice">0</td>
+	  </tr>
+	  <tr>
+	    <td>Average Fuel Economy</td>
+	    <td id="totalAverageFuel">0</td>
+	  </tr>
+	</table>
+      </div>
+      <div id="headerControl">
+	<form>
+	  <input type="button" value="New Entry" id="btnControl"
+		 onclick="new FuelCalculator('totalNumOfEntries', 'totalAverageFuel', 'totalAveragePrice', 'lineItems').getEntries();" />
+	</form>
+      </div>
+    </div>
+    <table>
+      <thead>
+	<tr>
+	  <th>Entry Date</th>
+	  <th>Miles Driven</th>
+	  <th>Fuel Used</th>
+	  <th>Fuel Economy</th>
+	</tr>
+      </thead>
+      <tbody id="lineItems">
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+div#gallery {
+    display: none;
+    margin-left: 0px;
+    overflow-x: auto;
+}
+div#gallery div.galleryItem {
+    float: left;
+    width: auto;
+    height: auto;
+    border: 3px ridge #000;
+    text-align: center;
+    margin-right: 3px;
+    padding: 7px;
+}
+div#gallery div.galleryItem img {
+    display: inline;
+    height: 100px;
+    width: 100px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #e0e0e0;
+}
+div#gallery div.galleryItem img:hover {
+    border-color: yellow;
+}
