@@ -29,18 +29,8 @@ func getInstructions() (instructions []uint32) {
 func main() {
 	instructions := getInstructions()
 	for i := 0; i < len(instructions); i++ {
-		fmt.Printf("0x%08X %032b", instructions[i], instructions[i])
-		if ranges, err := disassembler.GetBitSplit(instructions[i], 6, 5, 5, 5, 5, 6); err == nil {
-			var num uint32
-			var t string
-			if ranges[5] == 0 {
-				num = ranges[0]
-				t = "R"
-			} else {
-				num = ranges[5]
-				t = "I"
-			}
-			fmt.Printf(" %s %02X %02d\n", t, num, num)
-		}
+		fmt.Printf("0x%08X %032b ", instructions[i], instructions[i])
+		instruction, _ := disassembler.GetInstruction(instructions[i])
+		fmt.Println(instruction.ToString())
 	}
 }
