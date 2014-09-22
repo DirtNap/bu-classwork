@@ -1,6 +1,8 @@
 package disassembler
 
-type Instruction struct {
+import "fmt"
+
+type InstructionFields struct {
 	opcode uint8
 	rs uint8
 	rt uint8
@@ -10,46 +12,48 @@ type Instruction struct {
 	immediate int16
 	address uint32 // Unused for now.
 	format string
-	mnemonic string
+	detail instructionDetail
 }
 
-var IFormatMnemonics = map[uint8]string {
-	0x04: "beq",
-	0x05: "bne",
-	0x23: "lw",
-	0x2B: "sw",
+type instructionDetail struct {
+	mnemonic string
+	outputFormat string
 }
-var RFormatMnemonics = map[uint8]string {
-	0x20: "add",
-	0x22: "sub",
-	0x24: "and",
-	0x25: "or",
+
+var iFormatDetails = map[uint8]instructionDetail {
+	0x04: instructionDetail{"beq", "%05X %s $%[4]d, $%[5]d, address %05[7]X%[8]s"},
+	0x05: instructionDetail{"bne", "%05X %s $%[4]d,$%[5]d, address %05[7]X%[8]s"},
+	0x23: instructionDetail{"lw", "%05X %s $%[5]d, %[6]d($%[4]d)%[8]s"},
+	0x2B: instructionDetail{"sw", "%05X %s $%[5]d, %[6]d($%[4]d)%[8]s"},
 }
-func GetInstruction(value uint32) (Instruction, error) {
+var rFormatDetails = map[uint8]instructionDetail {
+	0x20: instructionDetail{"add", "%05X %s $%d, $%d, $%d%[8]s"},
+	0x22: instructionDetail{"sub", "%05X %s $%d, $%d, $%d%[8]s"},
+	0x24: instructionDetail{"and", "%05X %s $%d, $%d, $%d%[8]s"},
+	0x25: instructionDetail{"or", "%05X %s $%d, $%d, $%d%[8]s"},
+}
+func GetInstruction(value uint32) (InstructionFields, error) {
 	var fields []uint32
 	var err error
-	fields, err = GetBitSplit(value, 16, 5, 5, 6)
-	result := Instruction{format: "I", opcode: uint8(fields[3]), rs: uint8(fields[2]), rt: uint8(fields[1])}
-	if err == nil && result.opcode == 0 {
-			fields, err = GetBitSplit(value, 6, 5, 5, 5, 5, 6)
-		result.format = "R"
-	}
-	if err == nil {
-		switch result.format {
-		case "I":
-			result.immediate = int16(fields[0])
-			result.mnemonic = IFormatMnemonics[result.opcode]
-		case "R":
-			result.rd = uint8(fields[2])
+	var result InstructionFields
+	if fields, err = GetBitSplit(value, 16, 5, 5, 6); err == nil {
+		result = InstructionFields{opcode: uint8(fields[3]), rs: uint8(fields[2]), rt: uint8(fields[1]), immediate: int16(fields[0])}
+		if fields, err = GetBitSplit(value, 6, 5, 5); err == nil {
 			result.funct = uint8(fields[0])
-			result.mnemonic = RFormatMnemonics[result.funct]
+			result.shamt = uint8(fields[1])
+			result.rd = uint8(fields[2])
 		}
-		return result, nil
-	} else {
-		return result, err
 	}
-	return result, nil
+	if result.opcode == 0 {
+		result.format = "R"
+		result.detail = rFormatDetails[result.funct]
+	} else {
+		result.format = "I"
+		result.detail = iFormatDetails[result.opcode]
+	}
+	return result, err
 }
-func (i Instruction) ToString() string {
-	return i.mnemonic
+func (i InstructionFields) ToString(pwc uint32) string {
+	return fmt.Sprintf(i.detail.outputFormat, pwc, i.detail.mnemonic, i.rd, i.rs, i.rt, i.immediate, uint32(int(pwc) + int(i.immediate)), "")
 }
+
