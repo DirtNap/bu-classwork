@@ -2,8 +2,6 @@ package disassembler
 
 import (
 	"errors"
-//	"fmt"
-//	"os"
 )
 
 func GetBitMask(size int, shift uint8) (mask uint32, err error)  {
