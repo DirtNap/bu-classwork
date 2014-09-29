@@ -54,6 +54,11 @@ func GetInstruction(value uint32) (InstructionFields, error) {
 	return result, err
 }
 func (i InstructionFields) ToString(pwc uint32) string {
-	return fmt.Sprintf(i.detail.outputFormat, pwc, i.detail.mnemonic, i.rd, i.rs, i.rt, i.immediate, uint32(int(pwc) + int(i.immediate)), "")
+	return fmt.Sprintf(i.detail.outputFormat, pwc, i.detail.mnemonic, i.rd, i.rs, i.rt, i.immediate, i.GetTargetAddress(pwc), "")
 }
 
+func (i InstructionFields) GetTargetAddress(pwc uint32) uint32 {
+	base := pwc + 4 // Work from the next instruction
+	moveAmount := i.immediate << 2
+	return  uint32(int(base) + int(moveAmount))
+}
