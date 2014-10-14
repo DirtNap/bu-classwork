@@ -13,6 +13,7 @@ public class ChopstickMonitorTest {
         private boolean shouldRun;
 
         public ChopstickMonitorTestThread(ChopstickMonitor monitor, int left, int right) {
+            super("Test Monitor Thread");
             this.monitor = monitor;
             this.left = left;
             this.right = right;
@@ -59,7 +60,7 @@ public class ChopstickMonitorTest {
     public final void testGetChopsticks() {
         ChopstickMonitor monitor = new ChopstickMonitor(4);
         ChopstickMonitorTestThread cmtt = new ChopstickMonitorTestThread(monitor, 0, 1);
-        cmtt.run();
+        cmtt.start();
         assertTrue("Can acquire open chopsticks.",
                 monitor.claimChopsticks("Test Assertion", 2, 3, 10));
         assertFalse("Can not acquire used chopsticks.",
