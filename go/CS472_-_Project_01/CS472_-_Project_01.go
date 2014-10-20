@@ -29,7 +29,6 @@ func getInstructions() (instructions []uint32) {
 func main() {
 	instructions := getInstructions()
 	for i, pwc := 0, uint32(0x7A060); i < len(instructions); i, pwc = i + 1, pwc + uint32(4) {
-//		fmt.Printf("0x%08X %032b ", instructions[i], instructions[i])
 		instruction, _ := disassembler.GetInstruction(instructions[i])
 		fmt.Println(instruction.ToString(pwc))
 	}
