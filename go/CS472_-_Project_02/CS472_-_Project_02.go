@@ -6,6 +6,7 @@ import (
 	"github.com/DirtNap/bu-classwork/go/cache"
 	"os"
 	"strings"
+	"strconv"
 )
 
 var memory [2048]byte
@@ -32,11 +33,31 @@ func main() {
 func getInstructionsFromStdIn(c chan cache.CacheInstruction) {
 	response := ""
 	reader := bufio.NewReader(os.Stdin)
-	for response != "X" {
-		fmt.Println("(R)ead, (W)rite, or (D)isplay the cache, or e(X)it?")
+Repl:
+	for {
+		var address uint16
+		fmt.Print("(R)ead, (W)rite, or (D)isplay the cache, or e(X)it? ")
 		input, _ := reader.ReadString('\n')
 		response = strings.ToUpper(strings.TrimSpace(input))
-		c <- cache.CacheInstruction{Cmd: response}
+		switch response {
+		case "R", "W":
+			fmt.Print("Address:  ")
+			input, _ := reader.ReadString('\n')
+			num, err := strconv.ParseUint(fmt.Sprintf("0x%s", strings.TrimSpace(input)), 0, 64)
+			if err == nil {
+				address = uint16(num)
+			} else {
+				fmt.Printf("Invalid Hexadecimal Number:  %s\n", err)
+				continue Repl
+			}
+		case "D":
+			address = 0
+		case "X":
+			break Repl
+		default:
+			continue Repl
+		}
+		c <- cache.CacheInstruction{Cmd: response, Address: address}
 	}
 	close(c)
 }
