@@ -1,7 +1,9 @@
 package cache
 
-import ("fmt"
-	"bytes")
+import (
+	"bytes"
+	"fmt"
+)
 
 type flag_bit bool
 type tag uint32
@@ -27,6 +29,7 @@ func (t tag) String() string {
 func (cb cacheBlock) String() string {
 	var result bytes.Buffer
 	space := ""
+
 	for i := 0; i < len(cb); i++ {
 		result.WriteString(space)
 		result.WriteString(cb[i].String())
@@ -36,12 +39,17 @@ func (cb cacheBlock) String() string {
 }
 
 type CacheSlot struct {
-	Valid     flag_bit
-	Dirty     flag_bit
-	Tag       tag
-	Elements  cacheBlock
+	Valid    flag_bit
+	Dirty    flag_bit
+	Tag      tag
+	Elements cacheBlock
 }
 
 func (cs CacheSlot) String() string {
 	return fmt.Sprintf("%s %s %s %s", cs.Valid, cs.Dirty, cs.Tag, cs.Elements)
+}
+
+type CacheInstruction struct {
+	Cmd     string
+	Address uint16
 }
