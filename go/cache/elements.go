@@ -51,5 +51,6 @@ func (cs CacheSlot) String() string {
 
 type CacheInstruction struct {
 	Cmd     string
-	Address uint16
+	Address uint32
+	Data    byte
 }
