@@ -37,7 +37,6 @@ func (cs *CacheSimulation) decodeAddress(address uint32) (addressInfo decodedAdd
 	addressInfo.tag = parts[2]
 	addressInfo.slot = int(parts[1])
 	addressInfo.offset = int(parts[0])
-	fmt.Println(addressInfo)
 	return
 }
 
@@ -55,10 +54,10 @@ func (cs *CacheSimulation) writeBack(da decodedAddress) {
 	}
 }
 
-func (cs *CacheSimulation) loadInCache(da decodedAddress) bool {
+func (cs *CacheSimulation) loadInCache(da decodedAddress) Hit {
 	if cs.slots[da.slot].Valid {
 		if cs.slots[da.slot].Tag == tag(da.tag) {
-			return true
+			return Hit(true)
 		} else {
 			if cs.slots[da.slot].Dirty {
 				wda := cs.encodeAddress(uint32(cs.slots[da.slot].Tag), da.slot, da.offset)
@@ -72,7 +71,7 @@ func (cs *CacheSimulation) loadInCache(da decodedAddress) bool {
 	}
 	cs.slots[da.slot].Valid = true
 	cs.slots[da.slot].Tag = tag(da.tag)
-	return false
+	return Hit(false)
 }
 
 func (cs *CacheSimulation) Init(memBytes int, cacheSlots int) {
@@ -98,14 +97,14 @@ func (cs *CacheSimulation) Display() {
 
 }
 
-func (cs *CacheSimulation) Read(address uint32) (data byte, hit bool) {
+func (cs *CacheSimulation) Read(address uint32) (data byte, hit Hit) {
 	da := cs.decodeAddress(address)
 	hit = cs.loadInCache(da)
 	data = byte(cs.slots[da.slot].Elements[da.offset])
 	return
 }
 
-func (cs *CacheSimulation) Write(address uint32, data byte) (hit bool) {
+func (cs *CacheSimulation) Write(address uint32, data byte) (hit Hit) {
 	da := cs.decodeAddress(address)
 	hit = cs.loadInCache(da)
 	cs.slots[da.slot].Elements[da.offset] = element(data)

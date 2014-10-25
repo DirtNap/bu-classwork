@@ -19,24 +19,16 @@ func main() {
 	readControl := make(chan bool)
 	go getInstructionsFromStdIn(inputs, readControl)
 	readControl <- true
-	for i, ok := <-inputs, true; ok; i, ok = <-inputs {
+	for i, ok := <-inputs; ok; i, ok = <-inputs {
 		switch i.Cmd {
 		case "D":
 			simulator.Display()
 		case "R":
 			data, hit := simulator.Read(i.Address)
-			hitDesc := "miss"
-			if hit {
-				hitDesc = "hit"
-			}
-			fmt.Printf("%0X (Cache %s)\n", data, hitDesc)
+			fmt.Printf("%0X (Cache %s)\n", data, hit)
 		case "W":
 			hit := simulator.Write(i.Address, i.Data)
-			hitDesc := "miss"
-			if hit {
-				hitDesc = "hit"
-			}
-			fmt.Printf("(Cache %s)\n", hitDesc)
+			fmt.Printf("(Cache %s)\n", hit)
 		}
 
 		readControl <- true
@@ -48,6 +40,7 @@ func getInstructionsFromStdIn(c chan cache.CacheInstruction, r chan bool) {
 	response := ""
 	shouldRead := <-r
 	reader := bufio.NewReader(os.Stdin)
+	history := make([]cache.CacheInstruction, 0)
 Repl:
 	for shouldRead {
 		var address uint32
@@ -84,7 +77,9 @@ Repl:
 		default:
 			continue Repl
 		}
-		c <- cache.CacheInstruction{Cmd: response, Address: address, Data: data}
+		ci := cache.CacheInstruction{Cmd: response, Address: address, Data: data}
+		c <- ci
+		history = append(history, ci)
 		shouldRead = <-r
 	}
 	close(c)
