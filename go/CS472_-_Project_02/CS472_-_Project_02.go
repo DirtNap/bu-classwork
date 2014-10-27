@@ -25,10 +25,10 @@ func main() {
 			simulator.Display()
 		case "R":
 			data, hit := simulator.Read(i.Address)
-			fmt.Printf("%0X (Cache %s)\n", data, hit)
+			fmt.Printf("At that byte there is the value %0X (Cache %s)\n", data, hit)
 		case "W":
 			hit := simulator.Write(i.Address, i.Data)
-			fmt.Printf("(Cache %s)\n", hit)
+			fmt.Printf("Value %0X has been written to address %0X. (Cache %s)\n", i.Data, i.Address, hit)
 		}
 
 		readControl <- true
@@ -45,12 +45,12 @@ Repl:
 	for shouldRead {
 		var address uint32
 		var data byte
-		fmt.Print("(R)ead, (W)rite, or (D)isplay the cache, or e(X)it? ")
+		fmt.Print("(R)ead, (W)rite, or (D)isplay Cache, or e(X)it? ")
 		input, _ := reader.ReadString('\n')
 		response = strings.ToUpper(strings.TrimSpace(input))
 		switch response {
 		case "R", "W":
-			fmt.Print("Address:  ")
+			fmt.Print("What address would you like to use?  ")
 			input, _ := reader.ReadString('\n')
 			num, err := strconv.ParseUint(fmt.Sprintf("0x%s", strings.TrimSpace(input)), 0, 32)
 			if err == nil {
@@ -60,7 +60,7 @@ Repl:
 				continue Repl
 			}
 			if response == "W" {
-				fmt.Print("Data to write:  ")
+				fmt.Print("What data would you like to write at that address?  ")
 				input, _ := reader.ReadString('\n')
 				num, err := strconv.ParseUint(fmt.Sprintf("0x%s", strings.TrimSpace(input)), 0, 8)
 				if err == nil {

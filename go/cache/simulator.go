@@ -92,7 +92,7 @@ func (cs *CacheSimulation) Init(memBytes int, cacheSlots int) {
 func (cs *CacheSimulation) Display() {
 	fmt.Println("S# V D T        Data")
 	for i := 0; i < len(cs.slots); i++ {
-		fmt.Printf("%02d %s\n", i, cs.slots[i])
+		fmt.Printf("%2X %s\n", i, cs.slots[i])
 	}
 
 }
