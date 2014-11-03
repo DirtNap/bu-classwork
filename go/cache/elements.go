@@ -64,3 +64,7 @@ func (cb cacheBlock) String() string {
 func (cs CacheSlot) String() string {
 	return fmt.Sprintf("%s %s %s %s", cs.Valid, cs.Dirty, cs.Tag, cs.Elements)
 }
+
+func (ci CacheInstruction) String() string {
+	return fmt.Sprintf("%s-0x%X-0x%X", ci.Cmd, ci.Address, ci.Data)
+}

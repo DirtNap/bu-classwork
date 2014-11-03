@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"github.com/DirtNap/bu-classwork/go/cache"
 	"os"
@@ -11,13 +12,21 @@ import (
 
 var memory [2048]byte
 var slots [16]cache.CacheSlot
+var infile, outfile string
 
 func main() {
+	flag.StringVar(&infile, "input-file", "", "File from which to read commands.")
+	flag.StringVar(&outfile, "output-file", "", "File in which to save commands.")
+	flag.Parse()
 	simulator := new(cache.CacheSimulation)
 	simulator.Init(0, 0)
 	inputs := make(chan cache.CacheInstruction)
 	readControl := make(chan bool)
-	go getInstructionsFromStdIn(inputs, readControl)
+	if infile == "" {
+		go getInstructionsFromStdIn(outfile, inputs, readControl)
+	} else {
+		go getInstructionsFromFile(infile, inputs, readControl)
+	}
 	readControl <- true
 	for i, ok := <-inputs; ok; i, ok = <-inputs {
 		switch i.Cmd {
@@ -36,11 +45,41 @@ func main() {
 	close(readControl)
 }
 
-func getInstructionsFromStdIn(c chan cache.CacheInstruction, r chan bool) {
+func getInstructionsFromFile(file string, c chan cache.CacheInstruction, r chan bool) {
+	fh, err := os.Open(file)
+	if err != nil {
+		panic(err)
+	}
+	scanner := bufio.NewScanner(fh)
+	shouldRead := <- r
+	var address uint32
+	var data byte
+	for shouldRead && scanner.Scan() {
+		parts := strings.Split(scanner.Text(), "-")
+		num, _ :=  strconv.ParseUint(parts[1], 0, 32)
+		address = uint32(num)
+		num, _ =  strconv.ParseUint(parts[2], 0, 8)
+		data = byte(num)
+		ci := cache.CacheInstruction{Cmd: parts[0], Address: address, Data: data}
+		switch ci.Cmd {
+		case "R":
+			fmt.Printf("Read from address %X\n", ci.Address)
+		case "W":
+			fmt.Printf("Write %X to address %X\n", ci.Data, ci.Address)
+		case "D":
+			fmt.Println("Display Cache")
+		}
+		c <- ci
+		shouldRead = <- r
+	}
+	close(c)
+}
+func getInstructionsFromStdIn(file string, c chan cache.CacheInstruction, r chan bool) {
 	response := ""
 	shouldRead := <-r
 	reader := bufio.NewReader(os.Stdin)
 	history := make([]cache.CacheInstruction, 0)
+	fmt.Printf("file: %s\n", file)
 Repl:
 	for shouldRead {
 		var address uint32
@@ -83,4 +122,22 @@ Repl:
 		shouldRead = <-r
 	}
 	close(c)
+	if file != "" {
+		saveToFile(file, history)
+	}
+}
+
+func saveToFile(file string, history []cache.CacheInstruction) {
+	f, err := os.Create(file)
+	defer f.Close()
+	if (err == nil) {
+		fmt.Println("Saving file.")
+		w := bufio.NewWriter(f)
+		for i := 0; i < len(history); i++ {
+			w.WriteString(fmt.Sprintf("%s\n", history[i]))
+		}
+		w.Flush()
+	} else {
+		fmt.Println("Error")
+	}
 }
