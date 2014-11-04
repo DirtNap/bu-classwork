@@ -46,7 +46,7 @@ func (e element) String() string {
 }
 
 func (t tag) String() string {
-	return fmt.Sprintf("%08X", uint32(t))
+	return fmt.Sprintf("%X", uint32(t))
 }
 
 func (cb cacheBlock) String() string {
