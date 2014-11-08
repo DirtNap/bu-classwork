@@ -23,10 +23,13 @@ type instructionDetail struct {
 var iFormatDetails = map[uint8]instructionDetail {
 	0x04: instructionDetail{"beq", "%05X %s $%[4]d, $%[5]d, address %05[7]X%[8]s"},
 	0x05: instructionDetail{"bne", "%05X %s $%[4]d,$%[5]d, address %05[7]X%[8]s"},
+	0x20: instructionDetail{"lb", "%05X %s $%[5]d, %[6]d($%[4]d)%[8]s"},
 	0x23: instructionDetail{"lw", "%05X %s $%[5]d, %[6]d($%[4]d)%[8]s"},
+	0x28: instructionDetail{"sb", "%05X %s $%[5]d, %[6]d($%[4]d)%[8]s"},
 	0x2B: instructionDetail{"sw", "%05X %s $%[5]d, %[6]d($%[4]d)%[8]s"},
 }
 var rFormatDetails = map[uint8]instructionDetail {
+	0x00: instructionDetail{"nop", "05X %s %[8]s"},
 	0x20: instructionDetail{"add", "%05X %s $%d, $%d, $%d%[8]s"},
 	0x22: instructionDetail{"sub", "%05X %s $%d, $%d, $%d%[8]s"},
 	0x24: instructionDetail{"and", "%05X %s $%d, $%d, $%d%[8]s"},
