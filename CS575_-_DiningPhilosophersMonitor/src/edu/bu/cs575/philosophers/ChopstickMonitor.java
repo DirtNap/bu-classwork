@@ -3,6 +3,11 @@ package edu.bu.cs575.philosophers;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 
+ * @author Michael Donnelly
+ * 
+ */
 public class ChopstickMonitor {
 
     private static class Chopstick {
@@ -49,6 +54,14 @@ public class ChopstickMonitor {
     private Chopstick[] chopsticks;
     private ReentrantLock monitorLock;
 
+    private void log(String who, String what, Chopstick with) {
+        System.err.printf("%s %s", who, what);
+        if (null != with) {
+            System.err.printf(" with %s", with);
+        }
+        System.err.println();
+    }
+
     public ChopstickMonitor(int positions) {
         this.chopsticks = new Chopstick[positions];
         this.monitorLock = new ReentrantLock();
@@ -72,27 +85,39 @@ public class ChopstickMonitor {
         Chopstick right = this.chopsticks[rightStick % this.length()];
         CumulativeWaitTimer timer = new CumulativeWaitTimer(timeOutInMilliseconds);
         try {
+            this.log(forWhom, "Attempting to get monitor lock", null);
             this.monitorLock.tryLock(timer.getRemainingTime(), TimeUnit.MILLISECONDS);
+            this.log(forWhom, "Got monitor lock", null);
             try {
+                this.log(forWhom, "Attempting to get left chopstick", left);
                 boolean leftResult = left.claim(timer.getRemainingTime());
                 if (leftResult) {
+                    this.log(forWhom, "Got left chopstick", left);
                     try {
+                        this.log(forWhom, "Attempting to get right chopstick", right);
                         boolean rightResult = right.claim(timer.getRemainingTime());
                         if (rightResult) {
+                            this.log(forWhom, "Got right chopstick", right);
                             return true;
+                        } else {
+                            this.log(forWhom, "Failed to get right chopstick", right);
                         }
                     } catch (InterruptedException ex) {
-                        ; // Didn't get the right chopstick
+                        this.log(forWhom, "Error getting right chopstick", right);
                     }
                     left.release();
+                } else {
+                    this.log(forWhom, "Failed to get chopstick", left);
                 }
             } catch (InterruptedException ex) {
-                ; // Didn't get the left chopstick
+                this.log(forWhom, "Error getting left chopstick", left);
             } finally {
-                this.monitorLock.unlock();
+                if (this.monitorLock.isHeldByCurrentThread()) {
+                    this.monitorLock.unlock();
+                }
             }
         } catch (InterruptedException ex) {
-            ; // Didn't get the monitor lock
+            this.log(forWhom, "Timed out waiting for monitor lock.", null);
         }
         return false;
     }
