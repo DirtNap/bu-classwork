@@ -20,8 +20,10 @@ type IDEXRegister struct {
 
 type EXMEMRegister struct {
 	DecodedInstruction disassembler.InstructionFields
+	ALUResult int
 }
 
 type MEMWBRegister struct {
 	DecodedInstruction disassembler.InstructionFields
+	ALUResult int
 }
