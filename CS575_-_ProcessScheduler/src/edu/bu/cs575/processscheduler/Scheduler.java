@@ -15,6 +15,14 @@ public abstract class Scheduler implements Comparator<ProcessRunQueueEntry> {
         Collections.sort(this.runQueue, this);
     }
 
+    protected void removeRunQueueEntry(ProcessRunQueueEntry entry) {
+      this.runQueue.remove(entry);
+    }
+    
+    protected void removeRunQueueEntry() {
+      this.removeRunQueueEntry(this.current);
+    }
+    
     public abstract SchedulingAlgorithm getQueueType();
 
     public abstract void processTick();
@@ -23,12 +31,18 @@ public abstract class Scheduler implements Comparator<ProcessRunQueueEntry> {
         if (null != newProcess) {
             this.runQueue.add(newProcess);
             this.sortRunQueue();
+            if (null == this.current) {
+              this.current = newProcess;
+            }
         }
         ++this.tickCount;
-        this.current = this.runQueue.get(0);
+        if (!this.current.equals(this.runQueue.get(0))) {
+          this.current.registerInterrupt();
+          this.current = this.runQueue.get(0);
+        }
         this.processTick();
         if (this.current.isBurstComplete()) {
-            this.runQueue.remove(this.current);
+            this.removeRunQueueEntry();
             return this.current;
         }
         return null;

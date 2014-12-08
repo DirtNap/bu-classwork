@@ -30,6 +30,6 @@ public class FCFSScheduler extends Scheduler {
      */
     @Override
     public void processTick() {
-        this.current.registerTick();
+        this.current.registerTick(this.tickCount);
     }
 }

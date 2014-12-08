@@ -7,15 +7,23 @@ public class ProcessRunQueueEntry {
   public final ProcessBurstRequest request;
   private int registeredTicks;
   private SchedulingAlgorithm queueType;
+  private int registeredInterrupts;
+  private int lastServiceTime;
   
   public ProcessRunQueueEntry(ProcessBurstRequest request, SchedulingAlgorithm queueType) {
     this.request = request;
     this.queueType = queueType;
     this.registeredTicks = 0;
+    this.registeredInterrupts = 0;
   }
   
-  public void registerTick() {
+  public void registerTick(int tick) {
     ++this.registeredTicks;
+    this.lastServiceTime = tick;
+  }
+  
+  public void registerInterrupt() {
+    ++this.registeredInterrupts;
   }
   
   public boolean isBurstComplete() {
