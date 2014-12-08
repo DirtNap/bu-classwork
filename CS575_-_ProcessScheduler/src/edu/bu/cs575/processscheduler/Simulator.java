@@ -86,7 +86,7 @@ public class Simulator {
             this.processes[i] = new Process(i, this.simulationOptions.varianceDegree,
                     this.simulationOptions.avgPriority, this.simulationOptions.avgBurstTime);
         }
-        this.schedulers = new Scheduler[] { new FCFSScheduler(), new PriorityScheduler(), new RoundRobinScheduler() };
+        this.schedulers = new Scheduler[] { new FCFSScheduler(), new PriorityScheduler(), new RoundRobinScheduler(), new SJFScheduler() };
         List<Process> freeProcesses = new ArrayList<Process>(Arrays.asList(this.processes));
         int tickCount = 0;
         while (tickCount < this.simulationOptions.burstCount) {
