@@ -5,8 +5,20 @@ package edu.bu.cs575.processscheduler;
  */
 public class ProcessRunQueueEntry {
   public final ProcessBurstRequest request;
+  private int registeredTicks;
+  private SchedulingAlgorithm queueType;
   
-  public ProcessRunQueueEntry(ProcessBurstRequest request) {
+  public ProcessRunQueueEntry(ProcessBurstRequest request, SchedulingAlgorithm queueType) {
     this.request = request;
+    this.queueType = queueType;
+    this.registeredTicks = 0;
+  }
+  
+  public void registerTick() {
+    ++this.registeredTicks;
+  }
+  
+  public boolean isBurstComplete() {
+    return (this.registeredTicks == this.request.burstSize);
   }
 }
