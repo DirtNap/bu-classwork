@@ -74,7 +74,7 @@ public class Simulator {
     private int getVariableNumber(int base, int varianceDegree, int minimum) {
         double factor = Simulator.getRandom().nextGaussian();
         factor *= varianceDegree;
-        double intermediate = (double) base;
+        double intermediate = base;
         intermediate += factor;
         int result = 0;
         switch (Simulator.getRandom().nextInt(1)) {
