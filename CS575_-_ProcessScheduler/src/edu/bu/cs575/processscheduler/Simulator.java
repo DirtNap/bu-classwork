@@ -78,6 +78,7 @@ public class Simulator {
         SimulationResult result = self.runSimulation();
         result.printReportHeader();
         result.printProcessReport();
+        result.printBurstReport();
     }
 
     private void processSchedulers(ProcessBurstRequest request, List<Process> freeProcesses) {

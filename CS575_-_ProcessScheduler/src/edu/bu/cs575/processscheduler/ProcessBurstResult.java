@@ -9,21 +9,39 @@ public class ProcessBurstResult {
     private Map<SchedulingAlgorithm, ProcessRunQueueResult> runResults;
     private SchedulingAlgorithm lowestTurnaroundTimeType;
     private SchedulingAlgorithm highestTurnaroundTimeType;
-    private int lowestTurnaroundTimeValue;
-    private int highestTurnaroundTimeValue;
-    private int lowestResponseTimeValue;
-    private int highestResponseTimeValue;
+    private int lowestTurnaroundTimeValue = -1;
+    private int highestTurnaroundTimeValue = -1;
+    private int lowestResponseTimeValue = -1;
+    private int highestResponseTimeValue = -1;
     private SchedulingAlgorithm lowestResponseTimeType;
     private SchedulingAlgorithm highestResponseTimeType;
-    private int lowestWaitTimeValue;
+    private int lowestWaitTimeValue = -1;
     private SchedulingAlgorithm lowestWaitTimeType;
     private SchedulingAlgorithm highestWaitTimeType;
-    private int highestWaitTimeValue;
+    private int highestWaitTimeValue = -1;
     private double avgWaitTime;
     private double avgResponseTime;
     private double avgTurnaroundTime;
+    private int processId;
+    private int priority;
+    
+    @Override
+    public String toString() {
+      String format = "%d, %d, %d, %.2f, %d, %s, %d, %s, %.2f, %d, %s, %d, %s, %.2f, %d, %s, %d, %s";
+      StringBuilder sb = new StringBuilder();
+      sb.append(String.format(format, this.processId, this.priority, this.burstSize,
+          this.getAvgResponseTime(), this.getLowestResponseTimeValue(), this.getLowestResponseTimeType().name(),
+          this.getHighestResponseTimeValue(), this.getHighestResponseTimeType().name(),
+          this.getAvgTurnaroundTime(), this.getLowestTurnaroundTimeValue(), this.getLowestTurnaroundTimeType().name(),
+          this.getHighestTurnaroundTimeValue(), this.getHighestTurnaroundTimeType().name(),
+          this.getAvgWaitTime(), this.getLowestWaitTimeValue(), this.getLowestWaitTimeType().name(),
+          this.getHighestWaitTimeValue(), this.getHighestWaitTimeType().name()));
+      return sb.toString();
+    }
 
     public ProcessBurstResult(ProcessBurstRequest request) {
+      this.processId = request.process.processId;
+      this.priority = request.process.priority;
       this.burstSize = request.burstSize;
       this.enqueueTime = request.enqueueTime;
       this.runResults = new HashMap<SchedulingAlgorithm, ProcessRunQueueResult>();
@@ -34,23 +52,26 @@ public class ProcessBurstResult {
         ProcessRunQueueResult result = new ProcessRunQueueResult(this.burstSize, this.enqueueTime, request.requests.get(qType));
         this.runResults.put(qType, result);
         if (result.turnaroundTime >= this.highestTurnaroundTimeValue) {
-          this.highestResponseTimeType = qType;
-          this.highestResponseTimeValue = result.turnaroundTime;
-        } else if (result.turnaroundTime <= this.lowestTurnaroundTimeValue) {
+          this.highestTurnaroundTimeType = qType;
+          this.highestTurnaroundTimeValue = result.turnaroundTime;
+        } 
+        if (this.lowestTurnaroundTimeValue < 0 || result.turnaroundTime <= this.lowestTurnaroundTimeValue) {
           this.lowestTurnaroundTimeType = qType;
           this.lowestTurnaroundTimeValue = result.turnaroundTime;
         }
         if (result.responseTime >= this.highestResponseTimeValue) {
           this.highestResponseTimeType = qType;
           this.highestResponseTimeValue = result.responseTime;
-        } else if (result.responseTime <= this.lowestResponseTimeValue) {
+        } 
+        if (this.lowestResponseTimeValue < 0 || result.responseTime <= this.lowestResponseTimeValue) {
           this.lowestResponseTimeType = qType;
           this.lowestResponseTimeValue = result.responseTime;
         }
         if (result.waitTime >= this.highestWaitTimeValue) {
-          this.highestResponseTimeType = qType;
-          this.highestResponseTimeValue = result.waitTime;
-        } else if (result.waitTime <= this.lowestWaitTimeValue) {
+          this.highestWaitTimeType = qType;
+          this.highestWaitTimeValue = result.waitTime;
+        }
+        if (this.lowestWaitTimeValue < 0 || result.waitTime <= this.lowestWaitTimeValue) {
           this.lowestWaitTimeType = qType;
           this.lowestWaitTimeValue = result.waitTime;
         }

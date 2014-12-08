@@ -5,6 +5,7 @@ public class ProcessResult {
   public final int processId;
   public final int priority;
   public final int totalBursts;
+  ProcessBurstResult[] burstResults;
   private int totalCPUTime = 0;
   private double avgResponseTime = 0.0d;
   private double avgTurnaroundTime = 0.0d;
@@ -14,12 +15,15 @@ public class ProcessResult {
     this.processId = p.processId;
     this.priority = p.priority;
     this.totalBursts = p.burstRequests.size();
+    this.burstResults = new ProcessBurstResult[this.totalBursts];
+    int idx = 0;
     for (ProcessBurstRequest request : p.burstRequests) {
       ProcessBurstResult result = new ProcessBurstResult(request);
       this.totalCPUTime  += result.getBurstSize();
       this.avgWaitTime += result.getAvgWaitTime();
       this.avgTurnaroundTime += result.getAvgTurnaroundTime();
       this.avgResponseTime += result.getAvgResponseTime();
+      this.burstResults[idx++] = result;
     }
   }
 

@@ -44,4 +44,17 @@ public class SimulationResult {
       System.out.println(this.results[i]);
     }
   }
+
+  public void printBurstReport() {
+    System.out.println("Detailed Burst Report");
+    System.out.println("PID, Priority, Burst Size, " +
+        "Average Response Time, Lowest Response Time, Lowest Response Time (Type), Highest Response Time, Highest Response Time (Type)" +
+        "Average Turnaround Time, Lowest Turnaround Time, Lowest Turnaround Time (Type), Highest Turnaround Time, Highest Turnaround Time (Type)" +
+        "Average Wait Time, Lowest Wait Time, Lowest Wait Time (Type), Highest Wait Time, Highest Wait Time (Type)");
+    for (int i = 0; i < this.results.length; ++i) {
+      for (int j = 0; j < this.results[i].burstResults.length; ++j) {
+        System.out.println(this.results[i].burstResults[j]);
+      }
+    }
+  }
 }

@@ -15,7 +15,8 @@ public class ProcessRunQueueResult {
     this.firstServiceTime = entry.getFirstServiceTime();
     this.responseTime = this.firstServiceTime - this.enqueueTime;
     this.lastServiceTime = entry.getLastServiceTime();
-    this.turnaroundTime = this.lastServiceTime - this.enqueueTime;
+    this.turnaroundTime = this.lastServiceTime + 1 - this.enqueueTime;
     this.waitTime = this.turnaroundTime - this.burstSize;
+    
   }
 }
