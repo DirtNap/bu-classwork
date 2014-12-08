@@ -1,18 +1,6 @@
 package edu.bu.cs575.processscheduler;
 
-import java.util.Random;
-
 public class Simulator {
-
-    private static Random randomNumberGenerator;
-
-    static Random getRandom() {
-        if (null == Simulator.randomNumberGenerator) {
-            Simulator.randomNumberGenerator = new Random();
-        }
-        return Simulator.randomNumberGenerator;
-    }
-
     private class Options {
         public final int avgBurstTime;
         public final int varianceDegree;
@@ -63,32 +51,6 @@ public class Simulator {
         return new Options(pc, bc, vd, abt, pri);
     }
 
-    private int getVariableNumber(int base) {
-        return this.getVariableNumber(base, this.simulationOptions.varianceDegree);
-    }
-
-    private int getVariableNumber(int base, int varianceDegree) {
-        return this.getVariableNumber(base, varianceDegree, 1);
-    }
-
-    private int getVariableNumber(int base, int varianceDegree, int minimum) {
-        double factor = Simulator.getRandom().nextGaussian();
-        factor *= varianceDegree;
-        double intermediate = base;
-        intermediate += factor;
-        int result = 0;
-        switch (Simulator.getRandom().nextInt(1)) {
-        case 0:
-            result = (int) Math.floor(intermediate);
-        case 1:
-            result = (int) Math.ceil(intermediate);
-        }
-        if (minimum > result) {
-            result = minimum;
-        }
-        return result;
-    }
-
     public Simulator(String arguments[]) {
         this.simulationOptions = this.getOptions(arguments);
     }
@@ -101,18 +63,7 @@ public class Simulator {
     public void runSimulation() {
         this.processes = new Process[this.simulationOptions.processCount];
         for (int i = 0; i < this.processes.length; ++i) {
-            this.processes[i] = new Process(1 + i,
-                    this.getVariableNumber(this.simulationOptions.avgPriority));
-        }
-        int[] ps = new int[this.processes.length];
-        for (int i = 0; i < this.simulationOptions.burstCount; ++i) {
-            int processIndex = Simulator.getRandom().nextInt(this.processes.length);
-            this.processes[processIndex].setBurstTime(this
-                    .getVariableNumber(this.simulationOptions.avgBurstTime));
-            ps[processIndex]++;
-        }
-        for (int i = 0; i < ps.length; ++i) {
-            System.out.println(ps[i]);
+            this.processes[i] = new Process(1000 + 1, this.simulationOptions.varianceDegree, this.simulationOptions.avgPriority, this.simulationOptions.avgBurstTime);
         }
     }
 }

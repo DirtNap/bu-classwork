@@ -1,66 +1,82 @@
 package edu.bu.cs575.processscheduler;
 
-public class Process implements Cloneable {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    public final long created;
-    public final int processId;
-    public final int priority;
-    private int enqueueTime;
-    private int burstTime;
-    private int ticksInBurst;
+public class Process {
 
-    @Override
-    public boolean equals(Object o) {
-        if (null == o) {
-            return false;
-        }
-        if (this == o) {
-            return true;
-        }
-        try {
-            Process test = (Process) o;
-            return this.created == test.created && this.processId == test.processId;
-        } catch (ClassCastException ex) {
-            return false;
-        }
+  public final long created;
+  public final int processId;
+  public final int priority;
+  private int burstBase;
+  private int varianceDegree;
+  private List<ProcessBurstRequest> burstRequests;
+
+  private static Random randomNumberGenerator;
+
+  static Random getRandom() {
+    if (null == Process.randomNumberGenerator) {
+      Process.randomNumberGenerator = new Random();
     }
+    return Process.randomNumberGenerator;
+  }
 
-    public Process(int processId, int priority) {
-        this.processId = processId;
-        this.created = System.currentTimeMillis();
-        this.priority = priority;
+  @Override
+  public boolean equals(Object o) {
+    if (null == o) {
+      return false;
     }
+    if (this == o) {
+      return true;
+    }
+    try {
+      Process test = (Process) o;
+      return this.created == test.created && this.processId == test.processId;
+    } catch (ClassCastException ex) {
+      return false;
+    }
+  }
 
-    private Process(Process from) {
-        this.processId = from.processId;
-        this.priority = from.priority;
-        this.created = from.created;
-        this.setBurstTime(from.getBurstTime());
-    }
+  public Process(int processId, int varianceDegree, int targetPriority, int targetBurstBase) {
+    this.processId = processId;
+    this.created = System.currentTimeMillis();
+    this.varianceDegree = this.getVariableNumber(varianceDegree, 1, varianceDegree);
+    this.priority = this.getVariableNumber(targetPriority);
+    this.burstBase = this.getVariableNumber(targetBurstBase);
+    this.burstRequests = new ArrayList<ProcessBurstRequest>();
+  }
 
-    public int getBurstTime() {
-        return this.burstTime;
-    }
+  private int getVariableNumber(int base) {
+    return this.getVariableNumber(base, this.varianceDegree);
+  }
 
-    public int getEnqueueTime() {
-        return this.enqueueTime;
-    }
+  private int getVariableNumber(int base, int varianceDegree) {
+    return this.getVariableNumber(base, varianceDegree, 1);
+  }
 
-    public void setEnqueueTime(int ticks) {
-        this.enqueueTime = ticks;
+  private int getVariableNumber(int base, int varianceDegree, int minimum) {
+    double factor = Process.getRandom().nextGaussian();
+    factor *= varianceDegree;
+    double intermediate = base;
+    intermediate += factor;
+    int result = 0;
+    switch (Process.getRandom().nextInt(1)) {
+      case 0:
+        result = (int) Math.floor(intermediate);
+      case 1:
+        result = (int) Math.ceil(intermediate);
     }
+    if (minimum > result) {
+      result = minimum;
+    }
+    return result;
+  }
 
-    public void setBurstTime(int burstTime) {
-        this.burstTime = burstTime;
-    }
+  public ProcessBurstRequest getBurstRequest(int ticks) {
+    ProcessBurstRequest result =  new ProcessBurstRequest(this, ticks, this.getVariableNumber(this.burstBase));
+    this.burstRequests.add(result);
+    return result;
+  }
 
-    public boolean applyBurstTick() {
-        this.ticksInBurst++;
-        return (this.ticksInBurst == this.burstTime);
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return new Process(this);
-    }
 }
