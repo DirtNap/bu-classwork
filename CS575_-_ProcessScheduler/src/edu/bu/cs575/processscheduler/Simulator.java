@@ -11,14 +11,18 @@ public class Simulator {
         public final int avgPriority;
         public final int processCount;
         public final int burstCount;
+        public final int quantumSize;
+        public final int previousBurstWeightPercentage;
 
         public Options(int processCount, int burstCount, int varianceDegree, int avgBurstTime,
-                int avgPriority) {
+                int avgPriority, int quantumSize, int previousBurstWeightPercentage) {
             this.avgBurstTime = avgBurstTime;
             this.avgPriority = avgPriority;
             this.varianceDegree = varianceDegree;
             this.burstCount = burstCount;
             this.processCount = processCount;
+            this.quantumSize = quantumSize;
+            this.previousBurstWeightPercentage = previousBurstWeightPercentage;
         }
     }
 
@@ -32,6 +36,8 @@ public class Simulator {
         int pri = 3;
         int pc = 100;
         int bc = 10000;
+        int qs = 4;
+        int pbw = 50;
         for (int i = 0; i < arguments.length; ++i) {
             switch (arguments[i].toLowerCase()) {
             case "--average-burst-time":
@@ -48,12 +54,19 @@ public class Simulator {
                 break;
             case "--burst-count":
                 bc = Integer.parseInt(arguments[++i]);
+                break;
+            case "--quantum-size":
+                qs = Integer.parseInt(arguments[++i]);
+                break;
+            case "--previous-burst-weight":
+              pbw = Integer.parseInt(arguments[++i]);
+              break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown argument:  %s",
                         arguments[i]));
             }
         }
-        return new Options(pc, bc, vd, abt, pri);
+        return new Options(pc, bc, vd, abt, pri, qs, pbw);
     }
 
     public Simulator(String arguments[]) {
@@ -86,7 +99,9 @@ public class Simulator {
             this.processes[i] = new Process(i, this.simulationOptions.varianceDegree,
                     this.simulationOptions.avgPriority, this.simulationOptions.avgBurstTime);
         }
-        this.schedulers = new Scheduler[] { new FCFSScheduler(), new PriorityScheduler(), new RoundRobinScheduler(), new SJFScheduler() };
+        this.schedulers = new Scheduler[] { new FCFSScheduler(), new PriorityScheduler(),
+            new RoundRobinScheduler(this.simulationOptions.quantumSize),
+            new SJFScheduler(this.simulationOptions.previousBurstWeightPercentage, this.simulationOptions.avgBurstTime) };
         List<Process> freeProcesses = new ArrayList<Process>(Arrays.asList(this.processes));
         int tickCount = 0;
         while (tickCount < this.simulationOptions.burstCount) {

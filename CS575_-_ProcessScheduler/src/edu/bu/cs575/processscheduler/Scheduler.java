@@ -23,16 +23,20 @@ public abstract class Scheduler implements Comparator<ProcessRunQueueEntry> {
       this.removeRunQueueEntry(this.current);
     }
     
+    protected void addRunQueueEntry(ProcessRunQueueEntry entry) {
+      this.runQueue.add(entry);
+    }
+    
     public abstract SchedulingAlgorithm getQueueType();
 
     public abstract void processTick();
 
     public ProcessRunQueueEntry ExecuteTick(ProcessRunQueueEntry newProcess) {
         if (null != newProcess) {
-            this.runQueue.add(newProcess);
+            this.addRunQueueEntry(newProcess);
             this.sortRunQueue();
             if (null == this.current) {
-              this.current = newProcess;
+              this.current = this.runQueue.get(0);
             }
         }
         ++this.tickCount;
