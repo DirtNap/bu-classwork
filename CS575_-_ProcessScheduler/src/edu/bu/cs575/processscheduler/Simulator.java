@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Simulator {
-    private class Options {
+    class Options {
         public final int avgBurstTime;
         public final int varianceDegree;
         public final int avgPriority;
@@ -75,7 +75,9 @@ public class Simulator {
 
     public static void main(String args[]) {
         Simulator self = new Simulator(args);
-        self.runSimulation();
+        SimulationResult result = self.runSimulation();
+        result.printReportHeader();
+        result.printProcessReport();
     }
 
     private void processSchedulers(ProcessBurstRequest request, List<Process> freeProcesses) {
@@ -93,7 +95,7 @@ public class Simulator {
         }
     }
 
-    public void runSimulation() {
+    public SimulationResult runSimulation() {
         this.processes = new Process[this.simulationOptions.processCount];
         for (int i = 0; i < this.processes.length; ++i) {
             this.processes[i] = new Process(i, this.simulationOptions.varianceDegree,
@@ -117,6 +119,6 @@ public class Simulator {
             tickCount++;
             this.processSchedulers(null, freeProcesses);
         }
-        System.out.println(tickCount);
+        return new SimulationResult(this.simulationOptions, tickCount, this.processes);
     }
 }

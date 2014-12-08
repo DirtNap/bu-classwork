@@ -8,6 +8,7 @@ public class ProcessRunQueueEntry {
   private int registeredTicks;
   private SchedulingAlgorithm queueType;
   private int registeredInterrupts;
+  private int firstServiceTime;
   private int lastServiceTime;
   
   public ProcessRunQueueEntry(ProcessBurstRequest request, SchedulingAlgorithm queueType) {
@@ -15,10 +16,15 @@ public class ProcessRunQueueEntry {
     this.queueType = queueType;
     this.registeredTicks = 0;
     this.registeredInterrupts = 0;
+    this.lastServiceTime = 0;
+    this.firstServiceTime = -1;
   }
   
   public void registerTick(int tick) {
     ++this.registeredTicks;
+    if (0 > this.firstServiceTime) {
+      this.firstServiceTime = tick;
+    }
     this.lastServiceTime = tick;
   }
   
@@ -29,4 +35,21 @@ public class ProcessRunQueueEntry {
   public boolean isBurstComplete() {
     return (this.registeredTicks == this.request.burstSize);
   }
+
+  public SchedulingAlgorithm getQueueType() {
+    return queueType;
+  }
+
+  public int getRegisteredInterrupts() {
+    return registeredInterrupts;
+  }
+
+  public int getFirstServiceTime() {
+    return firstServiceTime;
+  }
+
+  public int getLastServiceTime() {
+    return lastServiceTime;
+  }
+
 }

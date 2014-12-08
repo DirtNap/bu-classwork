@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class ProcessBurstRequest {
     public final Process process;
-    private Map<SchedulingAlgorithm, ProcessRunQueueEntry> requests;
+    Map<SchedulingAlgorithm, ProcessRunQueueEntry> requests;
     public final int enqueueTime;
     public final int burstSize;
 

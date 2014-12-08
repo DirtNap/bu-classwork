@@ -11,7 +11,7 @@ public class Process {
   public final int priority;
   private int burstBase;
   private int varianceDegree;
-  private List<ProcessBurstRequest> burstRequests;
+  List<ProcessBurstRequest> burstRequests;
 
   private static Random randomNumberGenerator;
 
