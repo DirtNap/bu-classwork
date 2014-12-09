@@ -10,23 +10,24 @@ public abstract class Scheduler implements Comparator<ProcessRunQueueEntry> {
     protected List<ProcessRunQueueEntry> runQueue;
     protected int tickCount;
     protected ProcessRunQueueEntry current;
+    protected int idleCycles;
 
     protected void sortRunQueue() {
         Collections.sort(this.runQueue, this);
     }
 
     protected void removeRunQueueEntry(ProcessRunQueueEntry entry) {
-      this.runQueue.remove(entry);
+        this.runQueue.remove(entry);
     }
-    
+
     protected void removeRunQueueEntry() {
-      this.removeRunQueueEntry(this.current);
+        this.removeRunQueueEntry(this.current);
     }
-    
+
     protected void addRunQueueEntry(ProcessRunQueueEntry entry) {
-      this.runQueue.add(entry);
+        this.runQueue.add(entry);
     }
-    
+
     public abstract SchedulingAlgorithm getQueueType();
 
     public abstract void processTick();
@@ -36,13 +37,17 @@ public abstract class Scheduler implements Comparator<ProcessRunQueueEntry> {
             this.addRunQueueEntry(newProcess);
             this.sortRunQueue();
             if (null == this.current) {
-              this.current = this.runQueue.get(0);
+                this.current = this.runQueue.get(0);
             }
         }
         ++this.tickCount;
+        if (this.runQueue.size() == 0) {
+            ++this.idleCycles;
+            return null;
+        }
         if (!this.current.equals(this.runQueue.get(0))) {
-          this.current.registerInterrupt();
-          this.current = this.runQueue.get(0);
+            this.current.registerInterrupt();
+            this.current = this.runQueue.get(0);
         }
         this.processTick();
         if (this.current.isBurstComplete()) {
@@ -55,6 +60,7 @@ public abstract class Scheduler implements Comparator<ProcessRunQueueEntry> {
     public Scheduler() {
         this.runQueue = new ArrayList<ProcessRunQueueEntry>();
         this.tickCount = 0;
+        this.idleCycles = 0;
     }
 
 }

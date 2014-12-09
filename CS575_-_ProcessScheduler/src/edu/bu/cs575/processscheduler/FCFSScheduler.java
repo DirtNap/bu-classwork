@@ -8,11 +8,6 @@ public class FCFSScheduler extends Scheduler {
         super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.bu.cs575.processscheduler.Scheduler#getQueueType()
-     */
     @Override
     public SchedulingAlgorithm getQueueType() {
         return SchedulingAlgorithm.FCFS;
@@ -23,11 +18,6 @@ public class FCFSScheduler extends Scheduler {
         return Integer.compare(prqe1.request.enqueueTime, prqe2.request.enqueueTime);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.bu.cs575.processscheduler.Scheduler#processTick()
-     */
     @Override
     public void processTick() {
         this.current.registerTick(this.tickCount);
