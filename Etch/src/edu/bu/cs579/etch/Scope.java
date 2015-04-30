@@ -8,7 +8,7 @@ import edu.bu.cs579.etch.exceptions.VariableNotFoundException;
 public class Scope {
 	private final Scope parent;
 	private Map<String, Variable> symbolTable;
-	public Scope() {
+	private Scope() {
 		this(null);
 	}
 	public Scope(Scope parent) {
@@ -24,7 +24,14 @@ public class Scope {
 		}
 		throw new VariableNotFoundException(String.format("Variable %s not found.", name));
 	}
-	public boolean addToScope(String name, Object value) {
-		return false;
+	public boolean addToScope(String name, Variable value) {
+		if (this.symbolTable.containsKey(name)) {
+			return false;
+		} else {
+			return (this.symbolTable.put(name, value) == null);
+		}
+	}
+	public static Scope newGlobalScope() {
+		return new Scope();
 	}
 }
