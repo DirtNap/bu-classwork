@@ -11,7 +11,7 @@ public class Scope {
 	private Scope() {
 		this(null);
 	}
-	public Scope(Scope parent) {
+	private Scope(Scope parent) {
 		this.parent = parent;
 		this.symbolTable = new HashMap<>();
 	}
@@ -30,6 +30,9 @@ public class Scope {
 		} else {
 			return (this.symbolTable.put(name, value) == null);
 		}
+	}
+	public Scope getChildScope() {
+		return new Scope(this);
 	}
 	public static Scope newGlobalScope() {
 		return new Scope();
