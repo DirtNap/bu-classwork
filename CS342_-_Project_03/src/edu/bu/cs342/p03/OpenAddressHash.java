@@ -225,7 +225,15 @@ public class OpenAddressHash<E> extends CollectionHash<E> {
     @Override
     public void showHash(PrintStream output) {
         for (int i = 0; i < this.buckets.length; ++i) {
-            output.printf("% 3d\t%s%n", i + 1, this.buckets[i]);
+            String value = "unused";
+            if (null == this.buckets[i]) {
+                if (this.usedBuckets[i]) {
+                    value = "currently empty";
+                }
+            } else {
+                value = this.buckets[i].toString();
+            }
+            output.printf("% 3d\t%s%n", i + 1, value);
         }
     }
 
