@@ -1,0 +1,5 @@
+etch 5 on foo;  # Store 5 in foo
+etch all 6, 2, 3 on bar;  # Store 6, 2 and 3 into bar
+tell foo;  # Print foo on stdout
+yell bar;  # Print bar on stderr
+
