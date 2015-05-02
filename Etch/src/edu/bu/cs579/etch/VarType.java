@@ -4,4 +4,5 @@ public enum VarType {
 	STRING,
 	INT,
 	FLOAT,
+	SYMBOL,
 }

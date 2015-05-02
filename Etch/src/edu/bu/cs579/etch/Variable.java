@@ -1,6 +1,6 @@
 package edu.bu.cs579.etch;
 
-import edu.bu.cs579.etch.exceptions.InvalidVariableType;
+import edu.bu.cs579.etch.exceptions.InvalidVariableTypeException;
 
 public class Variable {
 	public final VarType type;
@@ -23,7 +23,7 @@ public class Variable {
 		if (this.checkType(value)) {
 			this.value = value;
 		} else {
-			throw new InvalidVariableType();
+			throw new InvalidVariableTypeException();
 		}
 	}
 	private boolean checkType(Object value) {
@@ -36,9 +36,27 @@ public class Variable {
 			case STRING:
 				value.toString();
 			}
-		} catch (ClassCastException ex) {
+		} catch (NumberFormatException ex) {
 			return false;
 		}
 		return true;
+	}
+	public static Variable Create(String name, String value) {
+		if (value.toString().matches("^\".*\"$")) {
+			return new Variable(name, VarType.STRING, value);
+		}
+		try {
+			Integer.parseInt(value);
+			return new Variable(name, VarType.INT, Integer.parseInt(value));
+		} catch (NumberFormatException ex) {
+			;
+		}
+		try {
+			Double.parseDouble(value);
+			return new Variable(name, VarType.FLOAT, Double.parseDouble(value));
+		} catch (NumberFormatException ex) {
+			;
+		}
+		return new Variable(name, VarType.SYMBOL, value);
 	}
 }
