@@ -1,4 +1,4 @@
-package edu.bu.cs579.etch;
+package edu.bu.cs565.etch;
 
 public enum VarType {
 	STRING,

@@ -1,6 +1,6 @@
-package edu.bu.cs579.etch;
+package edu.bu.cs565.etch;
 
-import edu.bu.cs579.etch.exceptions.InvalidVariableTypeException;
+import edu.bu.cs565.etch.exceptions.InvalidVariableTypeException;
 
 public class Variable {
 	public final VarType type;

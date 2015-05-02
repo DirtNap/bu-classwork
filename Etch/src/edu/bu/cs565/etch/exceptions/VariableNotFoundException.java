@@ -1,4 +1,4 @@
-package edu.bu.cs579.etch.exceptions;
+package edu.bu.cs565.etch.exceptions;
 
 public class VariableNotFoundException extends RuntimeException {
 

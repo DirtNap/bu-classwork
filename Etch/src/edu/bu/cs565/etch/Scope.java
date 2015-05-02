@@ -1,11 +1,11 @@
-package edu.bu.cs579.etch;
+package edu.bu.cs565.etch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import edu.bu.cs579.etch.exceptions.VariableNotFoundException;
+import edu.bu.cs565.etch.exceptions.VariableNotFoundException;
 
 public class Scope implements Executable{
 	private final Scope parent;
