@@ -1,0 +1,4 @@
+LOAD DATA LOCAL INFILE "dependent.dat" 
+INTO TABLE dependent 
+FIELDS ENCLOSED BY "\"" TERMINATED BY ","
+;

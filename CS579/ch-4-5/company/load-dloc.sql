@@ -1,0 +1,4 @@
+LOAD DATA LOCAL INFILE "dloc.dat" 
+INTO TABLE dept_locations 
+FIELDS ENCLOSED BY "\"" TERMINATED BY ","
+;

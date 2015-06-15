@@ -1,0 +1,4 @@
+LOAD DATA LOCAL INFILE "worksOn.dat" 
+INTO TABLE works_on
+FIELDS ENCLOSED BY "\"" TERMINATED BY ","
+;
