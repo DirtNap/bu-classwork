@@ -1,0 +1,21 @@
+There are three files for each table in this directory. For example for the
+DEPARTMENT table the three files are: 
+
+<ol>
+<li> department.sql: contains the SQL Create Table statement to create the table.
+<li> department.dat: contains data for the table to be loaded using the MySQL load command.
+<li> load-department.sql: contains the LOAD command to load data into the table.
+</ol>
+
+<P>
+The file, source.sql, contains MySQL "source" commands to execute the "create table" and
+"load" commands for each table.
+
+<P>
+After signing in to MySQL and changing to "company" database, simply run the following
+command to create and populate the tables:
+
+<P>
+mysql> source source.sql
+
+

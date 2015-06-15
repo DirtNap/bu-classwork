@@ -1,0 +1,117 @@
+<html>
+<head>
+<title>Add HTML</title>
+</head>
+
+<BODY>
+<SCRIPT language=JavaScript type=text/javascript>
+	
+	function validate_form(){
+    	var message ="";
+    	message += checkAlphabet("First name", document.addform.fname.value);
+    	message += checkAlphabet("Last name", document.addform.lname.value);
+		message += checkEmail(document.addform.email.value);
+    	message += checkPhone("Home phone", document.addform.homePhone.value);
+		message += checkPhone("Cell phone", document.addform.cellPhone.value);
+		message += checkPhone("Office phone", document.addform.officePhone.value);
+    	message += checkAlphabet("Address", document.addform.address.value);
+    
+    	if (message == ""){
+      		return true;
+    	} else {
+      		alert(message);
+      	return false;
+    	}    
+  	}
+
+
+	function checkEmail(itemcontent){
+    	var emailregexp = /^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/;
+    
+    	if (!itemcontent.match(/[a-zA-Z]+/)){
+      		return "E-mail address is required!\n";
+    	} else if (itemcontent.match(emailregexp)){
+      		return "";
+    	} else {
+      		return "Invalid E-mail Address!\n";
+    	}
+  	}
+  
+  	function checkAlphabet(field, itemcontent){
+    	var nameregexp = /[a-zA-Z]+/;
+    	if (!itemcontent.match(nameregexp)){
+      		return field+" is required!\n";
+    	}
+    	return "";
+  	}
+	
+	function checkPhone(field, itemcontent){
+    	var phoneregexp = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/;
+		
+    	if ((field =="Home phone") && (itemcontent=="")){
+      		return field+" is required!\n";
+		} else if ((itemcontent!="") && !itemcontent.match(phoneregexp)){
+      		return field+" is in incorrect format!\n";
+    	} else{
+    		return "";
+  		}
+	}
+</SCRIPT>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<blockquote>
+  <p><h2>Add Contact Information</h2>
+  <form name="addform" action="add.php" method=post onSubmit="return validate_form()" >
+    <table width="60%" border="0" cellpadding="3" cellspacing="12">
+    <tr>
+      <td width="130"><strong>First Name : &nbsp;<span class="style1">*</span></strong></td>
+      <td><input name="fname" type="text" size="30" maxlength="30" />
+        &nbsp;</td>
+    </tr>
+    <tr>
+      <td width="130"><strong>Last Name :</strong> &nbsp;<span class="style1">*</span></td>
+      <td><input name="lname" type="text" size="30" maxlength="30" /></td>
+    </tr>
+    <tr>
+      <td width="130"><strong>E-mail Address :</strong>  &nbsp;<span class="style1">*</span></td>
+      <td><input name="email" type="text" size="30" maxlength="30" /></td>
+    </tr>
+    <tr>
+      <td width="130"><p><strong>Home Phone :</strong> &nbsp;<span class="style1">*</span><br />
+      xxx-xxx-xxxx</p>
+        </td>
+      <td><input name="homePhone" type="text" size="30" maxlength="20" /></td>
+    </tr>
+    <tr>
+      <td width="130"><strong>Cell Phone : <br />
+      </strong>xxx-xxx-xxxx</td>
+      <td><input name="cellPhone" type="text" size="30" maxlength="20" /></td>
+    </tr>
+    <tr>
+      <td width="130"><strong>Office Phone : <br />
+      </strong>xxx-xxx-xxxx</td>
+      <td><input name="officePhone" type="text" size="30" maxlength="20" /></td>
+    </tr>
+    <tr valign="top">
+      <td width="130"><strong>Address :</strong> &nbsp;<span class="style1">*</span></td>
+      <td><textarea name="address" cols="25" rows="4"></textarea></td>
+	  
+    </tr>
+    <tr valign="top">
+      <td width="130"><strong>Comment :</strong> </td>
+      <td><textarea name="comment" cols="25" rows="4"></textarea></td>
+    </tr>
+    <tr>
+      <td width="130">&nbsp;</td>
+      <td><input type="reset" name="Reset" value="Reset" />
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" name="Submit" value="Submit" /></td>
+    </tr>
+  </table>
+  </form>
+   </p>
+</blockquote>
+</body>
+</html>

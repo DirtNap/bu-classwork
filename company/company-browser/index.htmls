@@ -1,0 +1,11 @@
+<html>
+<head>
+<title>Addressbook</title>
+</head>
+<frameset rows="*" cols="18%,*" framespacing="0" 
+          frameborder="no" border="0">
+  <frame src="mainMenu.html" name="leftFrame" scrolling="No" 
+         noresize="noresize" id="leftFrame" />
+  <frame src="Welcome.html" name="mainFrame" id="mainFrame" />
+</frameset>
+</html>

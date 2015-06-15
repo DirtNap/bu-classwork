@@ -1,0 +1,4 @@
+LOAD DATA LOCAL INFILE "department.dat"
+INTO TABLE department
+FIELDS ENCLOSED BY "\"" TERMINATED BY ","
+;
