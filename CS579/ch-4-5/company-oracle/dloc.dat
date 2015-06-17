@@ -1,0 +1,16 @@
+INSERT INTO dept_locations VALUES (1,'Houston');
+INSERT INTO dept_locations VALUES (4,'Stafford');
+INSERT INTO dept_locations VALUES (5,'Bellaire');
+INSERT INTO dept_locations VALUES (5,'Houston');
+INSERT INTO dept_locations VALUES (5,'Sugarland');
+INSERT INTO dept_locations VALUES (6,'Atlanta');
+INSERT INTO dept_locations VALUES (6,'Sacramento');
+INSERT INTO dept_locations VALUES (7,'Milwaukee');
+INSERT INTO dept_locations VALUES (8,'Chicago');
+INSERT INTO dept_locations VALUES (8,'Dallas');
+INSERT INTO dept_locations VALUES (8,'Miami');
+INSERT INTO dept_locations VALUES (8,'Philadephia');
+INSERT INTO dept_locations VALUES (8,'Seattle');
+COMMIT
+/
+
