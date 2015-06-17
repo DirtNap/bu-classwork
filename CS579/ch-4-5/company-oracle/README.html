@@ -1,21 +1,10 @@
-There are three files for each table in this directory. For example for the
-DEPARTMENT table the three files are: 
+There are three steps to creating the company schema:
 
-<ol>
-<li> department.sql: contains the SQL Create Table statement to create the table.
-<li> department.dat: contains data for the table to be loaded using the MySQL load command.
-<li> load-department.sql: contains the LOAD command to load data into the table.
-</ol>
-
-<P>
-The file, source.sql, contains MySQL "source" commands to execute the "create table" and
-"load" commands for each table.
-
-<P>
-After signing in to MySQL and changing to "company" database, simply run the following
-command to create and populate the tables:
-
-<P>
-mysql> source source.sql
-
-
+<dl>To run these scripts, you must log in to sqlplus as a user with the DBA role.
+ <dt>Create the user</dt>
+ <dd>run @create_user.  This creates a user <em>company</em> with password <em>CS579</em>, and grants the appropriate roles.</dd>
+ <dt>Create the tables</dt>
+ <dd>First, make sure to log on as the new <em>company</em> user:  <pre>conn company/CS579@connect_string</pre>.<br />Next, run @createall.</dd>
+ <dt>Load the data</dt>
+ <dd>Finally, run @loadall</dd>
+</dl>
