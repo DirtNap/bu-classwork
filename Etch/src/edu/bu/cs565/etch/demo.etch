@@ -1,7 +1,0 @@
-etch 5 on foo;  # Store 5 in foo
-etch 19 on bar;  # Store 19 into bar
-tell foo;  # Print foo on stdout
-yell bar;  # Print bar on stderr
-#each 1, 2, 3 on baz [
-#	tell baz;
-#];
